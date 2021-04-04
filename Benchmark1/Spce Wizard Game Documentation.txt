@@ -1,0 +1,89 @@
+Space Wizard
+Game Design Document
+by Garrison Shu, Elijah Harris, Kevin Zheng
+
+INTRODUCTION
+This document describes a game called "Space Wizard', which is a multi leveled 2D castle siege defense like game that takes place in space. This game will employe nav-mesh for AI movement, a multiple single screen maps, sprite based animations, collision detection for projectiles, and basic 2D game techniques.
+
+TECHNOLOGY
+Space Wizard will be deplyed online using Google's fiebase hosting service and be developed using Richard McKenna and Joe Weaver's Wolfie2D game engine for creating 2D games.  Art will be created using online sprite generators and background images on photo editing software.  Music and sound effects will be created using audacity and apps like Petaptron.
+
+BACK STORY
+You are an wizard in training tasked with the protection of unprotected planets given to you by an intergalactic police force.  While scouring additional planets to protect, you find one made entirely out of cookies.  But wait, there seems to be an alien race approaching this planet ready to drain the planet of all its resources.  It is up to you to use your powers to protect the planet from impending destruction.
+
+OBJECTIVE
+Your task will be to use your cosmic like powers to defense this por planet from destruction.  Aliens will attack in waves while you put youreself in front of the planet and hurl intergalactic spells at the enemy.  You must hurl your spells past the asteroid of space to hit the aliens who will use all thier might to get that delicous cookie. 
+
+GAMEPLAY
+The game will work like a single screen castle siege tower defense like game where your main form of defense is a point and click projectile that can be hurled from your character's location.  Enemies will follow a predetermined path plotted out by the connecting lines of a constallations that will change for every stage.  You have 4 spells alongsize 3 different preplaced towers to defend your planet.
+Towers are situated along the path and will augment spells that pass near them giving them effects that allow the spells to hit more enemies.
+The preplaced towers are as follows:
+Piercing Tower: Spells will continue to move ignoring enemies and applied damage and status effects. Can be upgraded to pierce more enemies.
+Forking Tower: Spell will split into two after passing through the tower.  Can be upgraded to fork into more projectiles.
+Explodin Tower: Spells will explode after hitting an enemy and apply damage and status in an area of effect.  Can be upgraded for more area of effect.
+
+Asteroid Spell: Deals damage and will augment into a file which will deal damage over time.
+Ice Comet Spell: Deals damage and will slow enemies.
+Laser Spell: Player channels a laser which deals more damage the longer the channel.
+Clone Spell: Player selects a tower and empowers their next spell with the tower's special effect.
+
+Resource:
+Your wizard will use a mana pool to cast your spells with asteroid spell being the cheapest and laser spell being the most expensive.  
+Spells will have a short cooldown so they cannot be spammed. At most 5 spells per second. You may upgrade your mana to increase mana regen per second or increase total mana pool.
+
+Enemies:
+Big tanky aliens, small fast aliens, and normal aliens.
+
+CONTROLS
+The controls will consist of pointing and clicking at your enemies to shoot projectiles at that position. 
+Choosing your spells using the number keys.
+1-Asteroid Spell
+2-Ice Comet Spell
+3-Laser Spell
+4-Clone spell
+Point and click on a GUI to choose the upgrade path for your spells.
+ESC- pauses the game and opens popup option menu.
+
+GRAPHICAL USER INTERFACE
+
+
+ARTWORK
+Space Background picture.
+Artwork for the wizard sprite.
+Wizard Animations:
+	Idle Animation
+	Spells Casting animation for each spell
+Enemy Animations:
+	Sprites for the 3 enemy types, fast, tanky, normal. (More may be added in development)
+	Death animation
+	Walking animation
+	Damage animation
+	Slowed animation
+	On fire animation
+Background wil have a constellation picture to indicate the enemy movement path.
+Artwork for a gient cookie planet.
+Animations for each of the spell projectiles:
+	Moving animation 
+	Collision animation 
+	Explosion animation
+	Piercing animation 
+	(Forking animation can be the same as the normal projectile animation)
+Sprite icons for each spell in the UI
+The rest of the UI interface can just be text
+
+SOUND EFFECTS
+Explosion sound
+Alien damage sounds
+Laser sounds
+Ice sound
+Fire sound
+Burning sound
+Enemy death sound
+Planet exploding sound
+Sound when you change spells
+Sound when you click on a tower
+Sound when a projectile gets shot
+Soud when projectile passes through tower aura
+
+MUSIC
+Spaced themed background music.
