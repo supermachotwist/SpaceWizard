@@ -31,8 +31,33 @@ Resource:
 Your wizard will use a mana pool to cast your spells with asteroid spell being the cheapest and laser spell being the most expensive.  
 Spells will have a short cooldown so they cannot be spammed. At most 5 spells per second. You may upgrade your mana to increase mana regen per second or increase total mana pool.
 
-Enemies:
+Possible Enemies:
+Zuma: Connected orbs that pulls the front part of its bodies back if any of its orbs is destroyed.
+	Orbs do not share health, and if 2+ orbs with the share color are adjacent, they self destruct and deals DMG to surronding units.
+
+Dyson Sphere: Slowing moving orb that absorbs nearby units, gaining a portion of the absorbed unit's health. 
+		Releases absorbed units when killed.
+
+Cursed: Only takes damage while debuffed. Damage taken while not debuffed is given to nearby enemies instead.
+
+Cockroaches: Speedy units that interrupts channels when hitting the wizard, and reduce the damage of the next casted spell.
+
+Ghost: Take reduced damage from projectiles, but projectiles do not collide with it.
+
+Bannerman: While on the field, all units moves at the same speed, ignoring movement impairing debuffs(or not)
+
+Type II Supernova: Transform into a Black Hole or a Neutron Star after a period of time, depending on stardust collected.
+	Black Hole(Collect alot): Deals damage to units moving over it, and deals applies DOT to all unit on the map after dealing X DMG
+	Neutron Star: Enemies killed drop significantly more stardust, and after X secs, deals x% of stardust collected to all units on the map.
+
+MER-B(Opportunity): Lose health over time, but gain health from taking damage. Gives mana on death. 
+
+Voyager: Ignores predetermined path.  
+
+
 Big tanky aliens, small fast aliens, and normal aliens.
+
+
 
 CONTROLS
 The controls will consist of pointing and clicking at your enemies to shoot projectiles at that position. 
