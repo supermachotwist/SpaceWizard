@@ -1,16 +1,101 @@
 <h1><strong>Space Wizard</strong><br /><strong>Game Design Document</strong></h1>
 <h2>by Garrison Shu, Elijah Harris, Kevin Zheng</h2>
-<p><strong>INTRODUCTION</strong><br />This document describes a game called "Space Wizard', which is a multi leveled 2D castle siege defense like game that takes place in space. This game will employe nav-mesh for AI movement, a multiple single screen maps, sprite based animations, collision detection for projectiles, and basic 2D game techniques.</p>
-<p><strong>TECHNOLOGY</strong><br />Space Wizard will be deplyed online using Google's fiebase hosting service and be developed using Richard McKenna and Joe Weaver's Wolfie2D game engine for creating 2D games. Art will be created using online sprite generators and background images on photo editing software. Music and sound effects will be created using audacity and apps like Petaptron.</p>
-<p><strong>BACK STORY</strong><br />You are an wizard in training tasked with the protection of unprotected planets given to you by an intergalactic police force. While scouring additional planets to protect, you find one made entirely out of cookies. But wait, there seems to be an alien race approaching this planet ready to drain the planet of all its resources. It is up to you to use your powers to protect the planet from impending destruction.</p>
-<p><strong>OBJECTIVE</strong><br />Your task will be to use your cosmic like powers to defense this por planet from destruction. Aliens will attack in waves while you put youreself in front of the planet and hurl intergalactic spells at the enemy. You must hurl your spells past the asteroid of space to hit the aliens who will use all thier might to get that delicous cookie.</p>
-<p><strong>GAMEPLAY</strong><br />The game will work like a single screen castle siege tower defense like game where your main form of defense is a point and click projectile that can be hurled from your character's location. Enemies will follow a predetermined path plotted out by the connecting lines of a constallations that will change for every stage. You have 4 spells along side 3 different preplaced towers to defend your planet.<br />Towers are situated along the path and will augment spells that pass near them giving them effects that allow the spells to hit more enemies.<br />The preplaced towers are as follows:<br /><strong>Piercing Tower</strong>: Spells will continue to move ignoring enemies and applied damage and status effects. Can be upgraded to pierce more enemies.<br /><strong>Forking Tower</strong>: Spell will split into two after passing through the tower. Can be upgraded to fork into more projectiles.<br /><strong>Exploding Tower</strong>: Spells will explode after hitting an enemy and apply damage and status in an area of effect. Can be upgraded for more area of effect.</p>
-<p><strong>Asteroid Spell</strong>: Deals damage and will augment into a file which will deal damage over time.<br /><strong>Ice Comet Spell</strong>: Deals damage and will slow enemies.<br /><strong>Laser Spell:</strong> Player channels a laser which deals more damage the longer the channel.<br /><strong>Clone Spell</strong>: Player selects a tower and empowers their next spell with the tower's special effect.</p>
-<p><strong>Resource:</strong><br />Your wizard will use a mana pool to cast your spells with asteroid spell being the cheapest and laser spell being the most expensive. <br />Spells will have a short cooldown so they cannot be spammed. At most 5 spells per second. You may upgrade your mana to increase mana regen per second or increase total mana pool. Star dust is the form of currency that can be used to upgrade mana, towers and spells. Star dust are earned by killing enemies.</p>
-<p><strong>Enemies:</strong><br />Big tanky aliens, small fast aliens, and normal aliens.</p>
-<p><strong>CONTROLS</strong><br />The controls will consist of pointing and clicking at your enemies to shoot projectiles at that position. <br />Choosing your spells using the number keys.<br /><strong>1- </strong>Asteroid Spell<br /><strong>2- </strong>Ice Comet Spell<br /><strong>3- </strong>Laser Spell<br /><strong>4- </strong>Clone spell<br /><strong>ESC-</strong> pauses the game and opens popup option menu.<br />Point and click on a GUI to choose the upgrade path for your spells.</p>
+<p><strong>INTRODUCTION</strong><br />This document describes a game called "Space Wizard', which is a multi leveled 2D
+    castle siege defense like game that takes place in space. This game will employe nav-mesh for AI movement, a
+    multiple single screen maps, sprite based animations, collision detection for projectiles, and basic 2D game
+    techniques.</p>
+<p><strong>TECHNOLOGY</strong><br />Space Wizard will be deplyed online using Google's fiebase hosting service and be
+    developed using Richard McKenna and Joe Weaver's Wolfie2D game engine for creating 2D games. Art will be created
+    using online sprite generators and background images on photo editing software. Music and sound effects will be
+    created using audacity and apps like Petaptron.</p>
+<p><strong>BACK STORY</strong><br />You are an wizard in training tasked with the protection of unprotected planets
+    given to you by an intergalactic police force. While scouring additional planets to protect, you find one made
+    entirely out of cookies. But wait, there seems to be an alien race approaching this planet ready to drain the planet
+    of all its resources. It is up to you to use your powers to protect the planet from impending destruction.</p>
+<p><strong>OBJECTIVE</strong><br />Your task will be to use your cosmic like powers to defense this por planet from
+    destruction. Aliens will attack in waves while you put youreself in front of the planet and hurl intergalactic
+    spells at the enemy. You must hurl your spells past the asteroid of space to hit the aliens who will use all thier
+    might to get that delicous cookie.</p>
+<p><strong>GAMEPLAY</strong><br />The game will work like a single screen castle siege tower defense like game where
+    your main form of defense is a point and click projectile that can be hurled from your character's location. Enemies
+    will follow a predetermined path plotted out by the connecting lines of a constallations that will change for every
+    stage. You have 4 spells along side 3 different preplaced towers to defend your planet.<br />Towers are situated
+    along the path and will augment spells that pass near them giving them effects that allow the spells to hit more
+    enemies.<br />The preplaced towers are as follows:<br /><strong>Piercing Tower</strong>: Spells will continue to
+    move ignoring enemies and applied damage and status effects. Can be upgraded to pierce more
+    enemies.<br /><strong>Forking Tower</strong>: Spell will split into two after passing through the tower. Can be
+    upgraded to fork into more projectiles.<br /><strong>Exploding Tower</strong>: Spells will explode after hitting an
+    enemy and apply damage and status in an area of effect. Can be upgraded for more area of effect.</p>
+<p><strong>Asteroid Spell</strong>: Deals damage and will augment into a file which will deal damage over
+    time.<br /><strong>Ice Comet Spell</strong>: Deals damage and will slow enemies.<br /><strong>Laser Spell:</strong>
+    Player channels a laser which deals more damage the longer the channel.<br /><strong>Clone Spell</strong>: Player
+    selects a tower and empowers their next spell with the tower's special effect.</p>
+<p><strong>Resource:</strong><br />Your wizard will use a mana pool to cast your spells with asteroid spell being the
+    cheapest and laser spell being the most expensive. <br />Spells will have a short cooldown so they cannot be
+    spammed. At most 5 spells per second. You may upgrade your mana to increase mana regen per second or increase total
+    mana pool. Star dust is the form of currency that can be used to upgrade mana, towers and spells. Star dust are
+    earned by killing enemies.</p>
+<p><strong>Possible Enemies:</strong><br />
+<strong>
+    <br>Zuma: 
+</strong>
+Connected orbs that pulls the front part of its bodies back if any of its orbs is destroyed.
+<br>Orbs do not share health, and adjacent orbs with the same color self destruct and deals DMG to surronding units.
+<br>
+<strong>
+    <br>Dyson Sphere: 
+</strong>
+Slowing moving orb that absorbs nearby units, gaining a portion of the absorbed unit's health. 
+		Releases absorbed units when killed.
+<br>
+<strong>
+    <br>Cursed:
+</strong>
+ Only takes damage while debuffed. Damage taken while not debuffed is given to nearby enemies instead.
+<br>
+<strong>
+    <br>Cockroaches:
+</strong> Speedy units that interrupts channels when hitting the wizard, and reduce the damage of the next casted spell.
+<br>
+<strong>
+    <br>Ghost:
+</strong> Take reduced damage from projectiles, but projectiles do not collide with it.
+<br>
+<strong>
+    <br>Bannerman:
+</strong> While on the field, all units moves at the same speed, ignoring movement impairing debuffs(or not)
+<br>
+<strong>
+    <br>Type II Supernova:
+</strong> Transform into a Black Hole or a Neutron Star after a period of time, depending on stardust collected.
+	<br>Black Hole(Collect alot): Deals damage to units moving over it, and applies DOT to all unit on the map after dealing X DMG
+	<br>Neutron Star: Enemies killed drop significantly more stardust, and after X secs, deals x% of stardust collected to all units on the map.
+<br>
+<strong>
+    <br>MER-B(Opportunity):
+</strong> Lose health over time, but gain health from taking damage. Gives mana on death. 
+<br>
+<strong>
+    <br>Voyager:
+</strong> Ignores predetermined path.  
+</p>
+<p><strong>CONTROLS</strong><br />The controls will consist of pointing and clicking at your enemies to shoot
+    projectiles at that position. <br />Choosing your spells using the number keys.<br /><strong>1- </strong>Asteroid
+    Spell<br /><strong>2- </strong>Ice Comet Spell<br /><strong>3- </strong>Laser Spell<br /><strong>4- </strong>Clone
+    spell<br /><strong>ESC-</strong> pauses the game and opens popup option menu.<br />Point and click on a GUI to
+    choose the upgrade path for your spells.</p>
 <p><strong>GRAPHICAL USER INTERFACE</strong></p>
 <p><img src="SpaceWizardMockup.png" alt="Mockup" style="width:1300px;height:7000px;"></p>
-<p><br /><strong>ARTWORK</strong><br />Space Background picture.<br />Artwork for the wizard sprite.<br />Wizard Animations:<br />Idle Animation<br />Spells Casting animation for each spell<br />Enemy Animations:<br />Sprites for the 3 enemy types, fast, tanky, normal. (More may be added in development)<br />Death animation<br />Walking animation<br />Damage animation<br />Slowed animation<br />On fire animation<br />Background wil have a constellation picture to indicate the enemy movement path.<br />Artwork for a gient cookie planet.<br />Animations for each of the spell projectiles:<br />Moving animation <br />Collision animation <br />Explosion animation<br />Piercing animation <br />(Forking animation can be the same as the normal projectile animation)<br />Sprite icons for each spell in the UI<br />The rest of the UI interface can just be text</p>
-<p><strong>SOUND EFFECTS</strong><br />Explosion sound<br />Alien damage sounds<br />Laser sounds<br />Ice sound<br />Fire sound<br />Burning sound<br />Enemy death sound<br />Planet exploding sound<br />Sound when you change spells<br />Sound when you click on a tower<br />Sound when a projectile gets shot<br />Soud when projectile passes through tower aura</p>
+<p><br /><strong>ARTWORK</strong><br />Space Background picture.<br />Artwork for the wizard sprite.<br />Wizard
+    Animations:<br />Idle Animation<br />Spells Casting animation for each spell<br />Enemy Animations:<br />Sprites for
+    the 3 enemy types, fast, tanky, normal. (More may be added in development)<br />Death animation<br />Walking
+    animation<br />Damage animation<br />Slowed animation<br />On fire animation<br />Background wil have a
+    constellation picture to indicate the enemy movement path.<br />Artwork for a gient cookie planet.<br />Animations
+    for each of the spell projectiles:<br />Moving animation <br />Collision animation <br />Explosion
+    animation<br />Piercing animation <br />(Forking animation can be the same as the normal projectile
+    animation)<br />Sprite icons for each spell in the UI<br />The rest of the UI interface can just be text</p>
+<p><strong>SOUND EFFECTS</strong><br />Explosion sound<br />Alien damage sounds<br />Laser sounds<br />Ice
+    sound<br />Fire sound<br />Burning sound<br />Enemy death sound<br />Planet exploding sound<br />Sound when you
+    change spells<br />Sound when you click on a tower<br />Sound when a projectile gets shot<br />Soud when projectile
+    passes through tower aura</p>
 <p>MUSIC<br />Spaced themed background music.</p>
