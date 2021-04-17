@@ -7,7 +7,7 @@
     "rows": 3,
     "animations": [
         {
-            "name": "Idle",
+            "name": "IDLE",
             "frames": [
                 {
                     "index": 3,
@@ -36,7 +36,7 @@
             ]
         },
         {
-            "name": "Firing",
+            "name": "FIRING",
             "frames": [
                 {
                     "index": 0,

@@ -7,7 +7,7 @@
     "rows": 3,
     "animations": [
         {
-            "name": "Moving",
+            "name": "MOVING",
             "frames": [
                 {
                     "index": 3,
@@ -24,7 +24,7 @@
             ]
         },
         {
-            "name": "Explosion",
+            "name": "EXPLOSION",
             "frames": [
                 {
                     "index": 0,
