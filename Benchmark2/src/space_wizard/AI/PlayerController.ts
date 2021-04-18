@@ -4,7 +4,10 @@ import Input from "../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
-import SpellManager from "../GameSystems/SpellManager"
+import SpellManager from "../GameSystems/Spells/SpellManager";
+import { space_wizard_events } from "../space_wizard_events";
+import SpellController from "./SpellController";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 
 
 export default class PlayerController implements AI {
@@ -25,6 +28,8 @@ export default class PlayerController implements AI {
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
         this.health = 100;
+
+        this.inventory = options.inventory;
     }
 
     activate(options: Record<string, any>): void {}
@@ -38,6 +43,16 @@ export default class PlayerController implements AI {
         this.lookDirection = this.owner.position.dirTo(Input.getGlobalMousePosition());
 
         if(Input.isMouseJustPressed()){
+            let spell = this.inventory.getItem();
+
+            // If spell slot is not empty
+            if (spell) {
+                spell.use(this.owner, this.lookDirection);
+            }
+        }
+
+        if(Input.isMouseJustPressed()){
+            this.owner.animation.play("FIRING");
         }
 
         // Flip sprite when looking right
@@ -49,6 +64,4 @@ export default class PlayerController implements AI {
             this.owner.rotation = Vec2.UP.angleToCCW(this.lookDirection) - Math.PI/2;
         }
     }
-
-
 }

@@ -1,10 +1,10 @@
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Color from "../../Wolfie2D/Utils/Color";
-import Item from "./Spells";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Rect from "../../../Wolfie2D/Nodes/Graphics/Rect";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
+import Scene from "../../../Wolfie2D/Scene/Scene";
+import Color from "../../../Wolfie2D/Utils/Color";
+import Item from "./Spell";
 
 export default class SpellManager {
 
