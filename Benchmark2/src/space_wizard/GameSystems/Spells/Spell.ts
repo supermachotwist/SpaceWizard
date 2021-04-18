@@ -17,6 +17,11 @@ export default class Spell {
     /** The cooldown timer for this weapon's use */
     cooldownTimer: Timer;
 
+    /** Whether Explosion, Fork and Pierce effects are active */
+    explosion: boolean;
+    fork: boolean;
+    pierce: boolean;
+
     constructor(sprite: Sprite, type: SpellType){
         this.sprite = sprite;
 
@@ -51,7 +56,8 @@ export default class Spell {
                 fireball.addAI(SpellController,{
                     owner: fireball,
                     speed: 200,
-                    direction: lookDirection
+                    direction: lookDirection,
+                    spell: this
                 });
                 this.cooldownTimer.start();
                 return true;

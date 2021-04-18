@@ -55,6 +55,17 @@ export default class PlayerController implements AI {
             this.owner.animation.play("FIRING");
         }
 
+        // Check for slot change
+        if(Input.isJustPressed("slot1")){
+            this.inventory.changeSlot(0);
+        } else if(Input.isJustPressed("slot2")){
+            this.inventory.changeSlot(1);
+        } else if(Input.isJustPressed("slot3")){
+            this.inventory.changeSlot(2);
+        } else if(Input.isJustPressed("slot4")){
+            this.inventory.changeSlot(3);
+        }
+
         // Flip sprite when looking right
         if (this.lookDirection.x > 0){
             this.owner.invertX = true;

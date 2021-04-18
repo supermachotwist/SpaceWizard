@@ -4,6 +4,8 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Spell from "../GameSystems/Spells/Spell";
+import Tower from "../GameSystems/Towers/Tower";
 
 
 export default class SpellController extends ControllerAI {
@@ -20,10 +22,22 @@ export default class SpellController extends ControllerAI {
     // Direction of movement
     direction: Vec2;
 
+    // The spell this controller has a hold of
+    spell: Spell;
+
+    /** A list of towers in the game world */
+    private towers: Array<Tower>;
+
+    /** A list of enemies the tower has collided with */
+    /** This is to prevent the tower from hitting the same tower twice */
+
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
+
         this.speed = options.speed;
         this.direction = options.direction;
+        this.towers = options.towers;
+        this.spell = options.spell;
     }
 
     activate(options: Record<string, any>): void {}
@@ -37,6 +51,23 @@ export default class SpellController extends ControllerAI {
         // Move the meteor in direction of movement
         this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
+        // If the spell has explosion status
+        if (this.spell.explosion){
+
+        }
+
+        // If the spell has fork status. Divide into two additional projectiles
+        if (this.spell.fork){
+
+        }
+
+        if (this.spell.pierce){
+
+        }
+        
+
+
+        // Detonate the spell on impact with side of screen
         if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
             this.speed = 0;
             this.owner.animation.playIfNotAlready("EXPLOSION");
