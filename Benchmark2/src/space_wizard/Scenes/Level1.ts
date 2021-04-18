@@ -18,21 +18,14 @@ import GameLevel from "./Gamelevel";
 
 
 
-export default class Level extends GameLevel {
+export default class Level1 extends GameLevel {
     // The player
     private player: AnimatedSprite;
     // Logo
     private logo: Sprite;
 
-    //temp stuff for the demo, idk how we are handling some of these infos
-    private healthBar:Graphic; 
-    private manaBar:Graphic;
-    private health:number=100;
-    private mana:number=100;
-
-    private spell_1_Cooldown:number=1;//sec? or frames, maybe frames would be neat
-
     loadScene(): void {
+        super.loadScene(); //possibly shouldn't be here because we can choose the needed asset moving forward
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
         this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
 
@@ -43,14 +36,7 @@ export default class Level extends GameLevel {
     // or where you should initialize any other things you will need in your scene
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
-        let center = this.viewport.getCenter();
-
-        this.addUILayer("UI");
-        this.healthBar = this.add.graphic(GraphicType.RECT,"UI",{position: new Vec2(center.x, center.y*2-30), size: new Vec2(500, 10)});
-        this.manaBar = this.add.graphic(GraphicType.RECT,"UI",{position: new Vec2(center.x, center.y*2-10), size: new Vec2(500, 10)});
-        this.manaBar.setColor(Color.BLUE);
-
-
+        super.startScene();
 
         // Create any game objects here. For example, to add the sprite we previously loaded:
 
@@ -62,7 +48,7 @@ export default class Level extends GameLevel {
         this.logo = this.add.sprite("logo", "primary");
 
         // Now, let's make sure our logo is in a good position
-        //let center = this.viewport.getCenter();
+        let center = this.viewport.getCenter();
         this.logo.position.set(center.x, center.y);
 
         this.initializePlayer();
@@ -83,50 +69,8 @@ export default class Level extends GameLevel {
         this.player.animation.play("IDLE", true);
     }
 
-    //UI Stuff
-    //What do I need?
-    //Just Health and Mana
-    //Cooldown System
-    //that line from sprite to cursor when button is pressed
-    //thats should be about it
-
-    //I think I need to attack these code to the player character
-    //I think for now I will just stick it here for the demo
-
-    //loads the stuff for the UI
-    loadUIFiles(){
-        //health and mana
-
-        //spells
-        //spell icon, line assist?
-    }
-
-    //draw health and mana bar for setup
-    drawHealthAndMana(layer:string){
-        this.healthBar = this.add.graphic(GraphicType.RECT,layer,{position: new Vec2(0, 0), size: new Vec2(100, 100)});
-    }
-
-    //draw health and mana bars as X/100
-    //caps at 100%
-    updateHealthAndMana(deltaHealth:number,deltaMana:number){
-        this.health= this.health+deltaHealth;
-        this.mana = this.mana+deltaMana;
-
-        let percentHealth = this.health/100;
-        let percentMana = this.mana/100;
-
-        //cap to 100 percent
-        percentHealth>1 ? percentHealth=1 : percentHealth;
-        percentMana>1 ? percentMana=1 :percentMana; 
-
-        //draw the box, how hard can it be?
-    }
-
-    //render spells casted to cooldown, and reduce cooldown for all spells?
-    //not too sure how to reduce cooldown, maybe a percentage kind of thing
-    //maybe draw the assist line here
-    drawSpell(spell1:boolean){
-
+    updateScene(){
+        super.updateScene();
     }
 
 
