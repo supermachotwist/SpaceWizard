@@ -16,19 +16,15 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 
 
-export default class hw3_scene extends Scene {
+export default class Level1 extends Scene {
     // The player
     private player: AnimatedSprite;
+    
 
     // Logo
     private logo: Sprite;
 
     loadScene(): void {
-        // Load any assets here. For example, to load an image (or a sprite):
-
-        // The first argument is the key of the sprite (you get to decide what it is).
-        // The second argument is the path to the actual image.
-        // Paths start in the "dist/" folder, so start building your path from there
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
         this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
     }
@@ -65,4 +61,38 @@ export default class hw3_scene extends Scene {
         // Start player is idle animation on loop
         this.player.animation.play("IDLE", true);
     }
+
+    //UI Stuff
+    //What do I need?
+    //Just Health and Mana
+    //Cooldown System
+    //that line from sprite to cursor when button is pressed
+    //thats should be about it
+
+    //draw health and mana bars 
+    loadHealthAndMana(){
+        
+    }
+
+    //render changes in health/mana
+    //
+    updateHealthAndMana(deltaHealth:number,deltaMana:number){
+
+    }
+
+    //load the required files for spellsUI
+    //this include spell icon, and that line assist thing, I think, idk
+    loadSpellsUI(){
+
+    }
+
+    //render spells casted to cooldown, and reduce cooldown for all spells?
+    //not too sure how to reduce cooldown, maybe a percentage kind of thing
+    //maybe draw the assist line. 
+    updateSpell(spell1:boolean){
+
+    }
+
+
+
 }
