@@ -11,6 +11,13 @@ import ExplosionTower from "../GameSystems/Towers/ExplosionTower";
 import ForkTower from "../GameSystems/Towers/ForkTower";
 import PierceTower from "../GameSystems/Towers/PierceTower";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Color from "../../Wolfie2D/Utils/Color";
+import GameLoop from "../../Wolfie2D/Loop/GameLoop";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import UIElement from "../../Wolfie2D/Nodes/UIElement";
 
 
 
@@ -46,6 +53,7 @@ export default class GameLevel extends Scene {
     startScene(): void {
 
         // First, create a layer for it to go on
+        this.addLayer("settingMenu",100);
         this.addLayer("primary", 50);
         this.addLayer("background", 0);
 
@@ -56,15 +64,11 @@ export default class GameLevel extends Scene {
         // Now, let's make sure our logo is in a good position
         let center = this.viewport.getCenter();
         this.logo.position.set(center.x, center.y);
+        this.settingButton();
 
 
         // Initialize array of towers
         this.towers = new Array();
-<<<<<<< HEAD
-        this.initializePlayer();
-=======
-
->>>>>>> babe980135dc06d99fef7c555ddc6c20e2ab28c8
         this.spawnTowers();
 
         this.initializePlayer();
@@ -132,15 +136,42 @@ export default class GameLevel extends Scene {
             }
         }        
     }
-<<<<<<< HEAD
 
-    //here lies my healthbar D:
-    //um, its just two rectange, so I am sure it just fine. 
+    //replace button with a image at a later date
+    settingButton(){
+        let midpoint = this.viewport.getCenter();
+        let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y+120),text:"Setting"});
+        playButton.backgroundColor = Color.BLACK;
+        playButton.borderColor = Color.BLACK;
+        playButton.borderRadius = 10;
+        playButton.setPadding(new Vec2(50, 10));
+        playButton.font = "PixelSimple";
+        playButton.onClick = () => {
+            this.createSettingMenu();
+        }
+        return playButton;
+    }
 
+    //wait, how to pause game????
+    
+    createSettingMenu(){
+        let center = this.viewport.getCenter();
 
+        let musicSliderLabel = <UIElement> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x-400,center.y),text:"muusic"});
+        let musicSlider = <UIElement> this.add.uiElement(UIElementType.SLIDER,"settingMenu",{position: new Vec2(center.x-100,center.y)});
+        musicSlider.backgroundColor = Color.GREEN; //there might be a bug with the slider, idk
+        musicSliderLabel.backgroundColor=Color.BLUE;
+        // let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenu",{position:new Vec2(center.x,center.y),size:new Vec2(1000,500)});
+        // settingBackground.color = Color.WHITE;
 
+        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"exit"});
+        exitButton.onClick = () =>{
+            musicSlider.destroy();
+            exitButton.destroy();
+            musicSliderLabel.destroy();
+          //  settingBackground.destroy();
+            console.log("Exit Setting");
+        }
+    }
+    
 }
-
-=======
-}
->>>>>>> babe980135dc06d99fef7c555ddc6c20e2ab28c8
