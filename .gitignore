@@ -64,3 +64,5 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+./Benchmark2/dist/bundle.js
