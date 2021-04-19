@@ -10,7 +10,7 @@ export default class Meteor extends SpellType {
         super();
         this.damage = 5;
         this.displayName = "Fireball";
-        this.cooldown = 300;
+        this.cooldown = 0;
     }
     /**
      * Initializes this weapon type with data

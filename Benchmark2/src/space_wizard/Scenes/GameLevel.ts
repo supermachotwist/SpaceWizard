@@ -61,16 +61,16 @@ export default class GameLevel extends Scene {
         // Initialize array of towers
         this.towers = new Array();
 
-        this.initializePlayer();
-
         this.spawnTowers();
+
+        this.initializePlayer();
     }
 
     initializePlayer(): void {
         // Create the inventory
         let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(16, 16), 4);
         let fireballSprite = this.add.sprite("meteor", "primary");
-        let startingSpell = new Spell(fireballSprite, new Meteor());
+        let startingSpell = new Spell(fireballSprite, new Meteor(), this.towers);
         inventory.addItem(startingSpell);
 
         // Get center of viewport

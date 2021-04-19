@@ -1,4 +1,5 @@
 import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Input from "../../Wolfie2D/Input/Input";
@@ -25,6 +26,9 @@ export default class SpellController extends ControllerAI {
     // The spell this controller has a hold of
     spell: Spell;
 
+    // Flag to tell whether spell is dead or not
+    dead: boolean;
+
     /** A list of towers in the game world */
     private towers: Array<Tower>;
 
@@ -33,6 +37,8 @@ export default class SpellController extends ControllerAI {
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
+        
+        this.dead = false;
 
         this.speed = options.speed;
         this.direction = options.direction;
@@ -45,40 +51,68 @@ export default class SpellController extends ControllerAI {
     handleEvent(event: GameEvent): void {}
 
     update(deltaT: number): void {
-        // Rorate the meteor in the direction of movement
-        this.owner.rotation = Vec2.UP.angleToCCW(this.direction) + Math.PI/2;
+        if (!this.dead){
+            // Rotate the meteor in the direction of movement
+            this.owner.rotation = Vec2.UP.angleToCCW(this.direction) + Math.PI/2;
 
-        // Move the meteor in direction of movement
-        this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
+            // Move the meteor in direction of movement
+            this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
-        // If the spell has explosion status
-        if (this.spell.explosion){
+            // See if the spell collides with the tower hitbox
+            for (let tower of this.towers){
+                if (this.owner.collisionShape.overlaps(tower.owner.collisionShape)) {
+                    if (tower.displayName === "ExplosionTower" && !this.spell.explosion){
+                        this.spell.explosion = true;
+                        let newCollsion = new AABB(Vec2.ZERO, this.owner.collisionShape.halfSize.scaled(5));
+                        this.owner.collisionShape = newCollsion;
+                    }
+                    else if (tower.displayName === "PierceTower"){
 
-        }
-
-        // If the spell has fork status. Divide into two additional projectiles
-        if (this.spell.fork){
-
-        }
-
-        // If spell has 
-        if (this.spell.pierce){
-
-        }
-        
-
-
-        // Detonate the spell on impact with side of screen
-        if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
-            this.speed = 0;
-            this.owner.animation.playIfNotAlready("EXPLOSION");
-            // Only remove animatedSprite when explosion animation is finished
-            if (!this.owner.animation.isPlaying("EXPLOSION")){
-                this.owner.visible = false;
-                this.owner.destroy();
+                    }
+                    else if (tower.displayName === "ForkTower" && !this.spell.fork){
+                        // Do not fork again after forking once
+                        this.spell.fork = true;
+                        this.spell.use(this.owner, this.direction.rotateCCW(Math.PI/8).clone());
+                        this.direction.rotateCCW(-1 * Math.PI/8)
+                        this.spell.use(this.owner, this.direction.rotateCCW(-1 * Math.PI/8).clone());
+                        this.destroySpell();
+                    }
+                }
             }
-        } else {
-            this.owner.animation.playIfNotAlready("MOVING", true);
+
+            // Detonate the spell on impact with side of screen
+            if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
+                this.destroySpell();
+            } else {
+                if (!this.owner.animation.isPlaying("EXPLOSION")) {
+                    this.owner.animation.playIfNotAlready("MOVING", true);
+                }
+            }
+            // If the spell has explosion status
+            if (this.spell.explosion){
+
+            }
+
+            // If the spell has fork status. Divide into two additional projectiles
+            if (this.spell.fork){
+                    
+            }
+
+            // If spell has 
+            if (this.spell.pierce){
+
+            }
         }
+        // Only remove animatedSprite when explosion animation is finished
+        else if (this.dead && !this.owner.animation.isPlaying("EXPLOSION")) {
+            this.owner.visible = false;
+            this.owner.destroy();
+        }    
+    }
+
+    destroySpell(): void {
+        this.speed = 0;
+        this.owner.animation.playIfNotAlready("EXPLOSION");
+        this.dead = true;
     }
 }
