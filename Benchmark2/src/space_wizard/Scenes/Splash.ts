@@ -19,26 +19,26 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 //
 //chrome has this dumb issue where you need user input before audio plays
 //idk how to deal with it. 
-export default class Splash extends Scene{
+export default class Splash extends Scene {
     private logo: Sprite;
     animatedSprite: AnimatedSprite;
-    loadScene():void{
+    loadScene(): void {
         console.log("hi");
         //Splash Screen Sound?
         // use the "/"
-       this.load.audio("splashMusic","space_wizard_assets/sounds/Splash.mp3");
-        this.load.image("splash","space_wizard_assets/images/Splash.png");
-        
-        
+        this.load.audio("splashMusic", "space_wizard_assets/sounds/Splash.mp3");
+        this.load.image("splash", "space_wizard_assets/images/Splash.png");
+
+
     }
 
-    startScene():void{
+    startScene(): void {
         this.addUILayer("splashScreen");
-        this.logo = this.add.sprite("splash","splashScreen")
+        this.logo = this.add.sprite("splash", "splashScreen")
 
         //viewport
         let center = this.viewport.getCenter();
-        this.logo.position.set(center.x,center.y);
+        this.logo.position.set(center.x, center.y);
         this.viewport.setFocus(this.viewport.getHalfSize());
 
         //set the background
@@ -46,19 +46,17 @@ export default class Splash extends Scene{
         // let bg = this.add.sprite("splash","splash")
         // bg.position.set(bg.size.x/2, bg.size.y/2);
 
-        this.emitter.fireEvent(GameEventType.PLAY_MUSIC,{key:"splashMusic",loop:false,holdReference:true});
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, { key: "splashMusic", loop: false, holdReference: true });
 
-        
+
     }
 
-    updateScene():void{
-        if(Input.isMousePressed()){
-           this.emitter.fireEvent(GameEventType.PLAY_MUSIC,{key:"splashMusic",loop:false,holdReference:true});
-           this.emitter.fireEvent(GameEventType.PLAY_MUSIC,{key:"splashMusic",loop:false,holdReference:true});
-
-           //not sure why this doesnt work
-          this.sceneManager.changeToScene(MainMenu,{},{});
+    updateScene(): void {
+        if (Input.isMousePressed()) {
+            this.emitter.fireEvent(GameEventType.PLAY_MUSIC, { key: "splashMusic", loop: false, holdReference: true });
+            //not sure why this doesnt work
+            this.sceneManager.changeToScene(MainMenu, {}, {});
         }
-        
+
     }
-    }
+}

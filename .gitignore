@@ -64,3 +64,6 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+#generated files
+SpaceWizard/Benchmark2/dist/bundle.js

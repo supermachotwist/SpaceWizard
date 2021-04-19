@@ -24,7 +24,7 @@ import GameLevel from "./space_wizard/Scenes/Gamelevel";
     const game = new Game(options);
 
     // Start our game
-    game.start(GameLevel, {});
+    game.start(Splash, {});
 })();
 
 function runTests(){};
