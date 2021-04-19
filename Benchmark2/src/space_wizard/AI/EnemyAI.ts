@@ -2,12 +2,18 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Enemy from "../GameSystems/Enemys/Enemy";
 
+<<<<<<< HEAD
 export default class EnemyAI extends ControllerAI
+=======
+export default class EnemyAI implements AI
+>>>>>>> fb3e1a6ac75de095a9e9820d1ce6f278a998d1ae
 {
 
     // The enemy sprite
@@ -38,6 +44,12 @@ export default class EnemyAI extends ControllerAI
         this.player = options.player;
         this.enemy = options.enemy;
     }
+
+    activate(options: Record<string, any>): void {}
+
+    handleEvent(event: GameEvent): void {}
+
+    destroy(): void {}
 
     getPlayerPosition(): Vec2 
     {
@@ -79,5 +91,10 @@ export default class EnemyAI extends ControllerAI
                 }
             }
         }
+    }
+
+    update(deltaT: number): void 
+    {
+        
     }
 }
