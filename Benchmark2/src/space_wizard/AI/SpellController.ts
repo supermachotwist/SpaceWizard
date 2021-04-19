@@ -61,6 +61,7 @@ export default class SpellController extends ControllerAI {
 
         }
 
+        // If spell has 
         if (this.spell.pierce){
 
         }
