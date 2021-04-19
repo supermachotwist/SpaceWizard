@@ -20,16 +20,15 @@ import GameLevel from "./Gamelevel";
 
 export default class Level1 extends GameLevel {
     // The player
-    private player: AnimatedSprite;
+    //private player: AnimatedSprite;
     // Logo
-    private logo: Sprite;
+    //private logo: Sprite;
 
     loadScene(): void {
         super.loadScene(); //possibly shouldn't be here because we can choose the needed asset moving forward
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
         this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
 
-        this.loadUIFiles();
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -45,11 +44,11 @@ export default class Level1 extends GameLevel {
 
         // The first argument is the key we specified in "this.load.image"
         // The second argument is the name of the layer
-        this.logo = this.add.sprite("logo", "primary");
+        //this.logo = this.add.sprite("logo", "primary");
 
         // Now, let's make sure our logo is in a good position
         let center = this.viewport.getCenter();
-        this.logo.position.set(center.x, center.y);
+        //this.logo.position.set(center.x, center.y);
 
         this.initializePlayer();
 
@@ -61,16 +60,15 @@ export default class Level1 extends GameLevel {
         let center = this.viewport.getCenter();
 
         // Create the player
-        this.player = this.add.animatedSprite("player", "primary");
-        this.player.position.set(center.x, center.y + 100);
-        this.player.addAI(PlayerController,{});
+        //this.player = this.add.animatedSprite("player", "primary");
+        //this.player.position.set(center.x, center.y + 100);
+        //this.player.addAI(PlayerController,{});
 
         // Start player is idle animation on loop
-        this.player.animation.play("IDLE", true);
+        //this.player.animation.play("IDLE", true);
     }
 
     updateScene(){
-        super.updateScene();
     }
 
 

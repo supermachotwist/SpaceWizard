@@ -65,6 +65,7 @@ export default class SpellController extends ControllerAI {
                         this.spell.explosion = true;
                         let newCollsion = new AABB(Vec2.ZERO, this.owner.collisionShape.halfSize.scaled(5));
                         this.owner.collisionShape = newCollsion;
+                        this.destroySpell(5);
                     }
                     else if (tower.displayName === "PierceTower"){
 
@@ -75,7 +76,7 @@ export default class SpellController extends ControllerAI {
                         this.spell.use(this.owner, this.direction.rotateCCW(Math.PI/8).clone());
                         this.direction.rotateCCW(-1 * Math.PI/8)
                         this.spell.use(this.owner, this.direction.rotateCCW(-1 * Math.PI/8).clone());
-                        this.destroySpell();
+                        this.destroySpell(0);
                     }
                 }
             }
@@ -88,20 +89,6 @@ export default class SpellController extends ControllerAI {
                     this.owner.animation.playIfNotAlready("MOVING", true);
                 }
             }
-            // If the spell has explosion status
-            if (this.spell.explosion){
-
-            }
-
-            // If the spell has fork status. Divide into two additional projectiles
-            if (this.spell.fork){
-                    
-            }
-
-            // If spell has 
-            if (this.spell.pierce){
-
-            }
         }
         // Only remove animatedSprite when explosion animation is finished
         else if (this.dead && !this.owner.animation.isPlaying("EXPLOSION")) {
@@ -110,8 +97,9 @@ export default class SpellController extends ControllerAI {
         }    
     }
 
-    destroySpell(): void {
+    destroySpell(scale:number=1): void {
         this.speed = 0;
+        this.owner.scale.scale(scale);
         this.owner.animation.playIfNotAlready("EXPLOSION");
         this.dead = true;
     }
