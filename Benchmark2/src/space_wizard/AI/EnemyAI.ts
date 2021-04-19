@@ -2,9 +2,11 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 
-export default class EnemyAI 
+export default class EnemyAI implements AI
 {
     // Enemy health
     health: number;
@@ -41,6 +43,12 @@ export default class EnemyAI
             this.owner.visible = false;
         }
     }
+
+    activate(options: Record<string, any>): void {}
+
+    handleEvent(event: GameEvent): void {}
+
+    destroy(): void {}
 
     getPlayerPosition(): Vec2 
     {
@@ -82,5 +90,10 @@ export default class EnemyAI
                 }
             }
         }
+    }
+
+    update(deltaT: number): void 
+    {
+        
     }
 }
