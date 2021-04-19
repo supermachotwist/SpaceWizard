@@ -6,14 +6,9 @@ import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
-import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Enemy from "../GameSystems/Enemys/Enemy";
 
-<<<<<<< HEAD
 export default class EnemyAI extends ControllerAI
-=======
-export default class EnemyAI implements AI
->>>>>>> fb3e1a6ac75de095a9e9820d1ce6f278a998d1ae
 {
 
     // The enemy sprite
@@ -34,6 +29,17 @@ export default class EnemyAI implements AI
 
     // The enemy does not do anything right now
     update(deltaT: number): void {
+        if (!this.enemy.dead){
+            if(!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")){
+                this.owner.animation.playIfNotAlready("IDLE", true);
+            }
+        }
+        // Destroy dead enemy
+        else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){
+            // Only destroy dead enemy when dying animation is done
+            this.owner.visible = false;
+            this.owner.destroy();
+        }
     }
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void 
@@ -44,12 +50,6 @@ export default class EnemyAI implements AI
         this.player = options.player;
         this.enemy = options.enemy;
     }
-
-    activate(options: Record<string, any>): void {}
-
-    handleEvent(event: GameEvent): void {}
-
-    destroy(): void {}
 
     getPlayerPosition(): Vec2 
     {
@@ -91,10 +91,5 @@ export default class EnemyAI implements AI
                 }
             }
         }
-    }
-
-    update(deltaT: number): void 
-    {
-        
     }
 }

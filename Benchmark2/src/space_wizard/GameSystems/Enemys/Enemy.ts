@@ -17,11 +17,15 @@ export default class Enemy {
     // Enemy health
     health: number;
 
+    // If the enemy is dead
+    dead: boolean;
+
     constructor(owner: AnimatedSprite, displayName: String){
         this.owner = owner;
         this.displayName = displayName;
         this.speed = 100;
         this.health = 50;
+        this.dead = false;
     }
 
     moveSprite(position: Vec2, layer?: string){
@@ -38,17 +42,19 @@ export default class Enemy {
         this.owner.position.copy(position);
     }
 
-    damage(damage: number): void 
+    // return value, whether or not the enemy died
+    damage(damage: number): boolean
     {
         console.log("Took damage");
         this.health -= damage;
     
         if(this.health <= 0)
         {
-            this.owner.setAIActive(false, {});
-            this.owner.isCollidable = false;
-            this.owner.visible = false;
-            this.owner.destroy();
+            this.owner.animation.stop();
+            this.owner.animation.queue("DYING", false);
+            this.dead = true;
+            return true;
         }
+        return false;
     }
 }

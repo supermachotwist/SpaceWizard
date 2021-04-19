@@ -63,12 +63,10 @@ export default class SpellController extends ControllerAI {
                 if (this.owner.collisionShape.overlaps(tower.owner.collisionShape)) {
                     if (tower.displayName === "ExplosionTower" && !this.spell.explosion){
                         this.spell.explosion = true;
-                        let newCollsion = new AABB(Vec2.ZERO, this.owner.collisionShape.halfSize.scaled(5));
-                        this.owner.collisionShape = newCollsion;
                         this.explosionSize = 5;
                     }
                     else if (tower.displayName === "PierceTower"){
-
+                        this.spell.pierce = true;
                     }
                     else if (tower.displayName === "ForkTower" && !this.spell.fork){
                         // Do not fork again after forking once
@@ -81,14 +79,7 @@ export default class SpellController extends ControllerAI {
                 }
             }
 
-            // See if the spell colldies with an enemy
-            for (let enemy of this.spell.enemies){
-                if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
-                    enemy.damage(this.spell.damage);
-                    this.spell.enemiesHit.push(enemy);
-                    this.destroySpell(this.explosionSize);
-                }
-            }
+            this.checkEnemyCollision();
 
             // Detonate the spell on impact with side of screen
             if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
@@ -111,5 +102,50 @@ export default class SpellController extends ControllerAI {
         this.owner.scale.scale(scale);
         this.owner.animation.playIfNotAlready("EXPLOSION");
         this.dead = true;
+    }
+
+    checkEnemyCollision(): void {
+        // See if the spell colldies with an enemy
+        for (let enemy of this.spell.enemies){
+            if (enemy.dead){
+                continue;
+            }
+            if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
+                this.spell.enemiesHit.push(enemy);
+                // If the spell has an explosion status
+                if (this.spell.explosion){
+                    this.checkExplosionCollision();
+                }
+                if (enemy.damage(this.spell.damage)){
+                    enemy.owner.animation.play("DYING", false);
+                }
+                else {
+                    enemy.owner.animation.play("DAMAGE", false);
+                }
+                if (!this.spell.pierce) {
+                    this.destroySpell(this.explosionSize);
+                }
+            }
+        }
+    }
+
+    checkExplosionCollision(): void {
+        // Increase give the spell area of affect
+        this.owner.collisionShape.halfSize.scale(5);
+        // See if the spell colldies with an enemy
+        for (let enemy of this.spell.enemies){
+            if (enemy.dead){
+                continue;
+            }
+            if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
+                this.spell.enemiesHit.push(enemy);
+                if (enemy.damage(this.spell.damage)){
+                    enemy.owner.animation.play("DYING", false);
+                }
+                else {
+                    enemy.owner.animation.play("DAMAGE", false);
+                }
+            }
+        }
     }
 }

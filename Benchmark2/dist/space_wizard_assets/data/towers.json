@@ -10,7 +10,7 @@
         },
         {
             "type": "pierce",
-            "position": [600, 600]
+            "position": [600, 300]
         }
     ]
 }

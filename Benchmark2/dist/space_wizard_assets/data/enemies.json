@@ -3,17 +3,32 @@
         {
             "type": "default",
             "time": 1000,
-            "position": [1000, 100]
+            "position": [200, 100]
         },
         {
             "type": "default",
             "time": 1000,
-            "position": [1050, 300]
+            "position": [250, 50]
         },
         {
             "type": "default",
             "time": 1000,
-            "position": [600, 750]
+            "position": [150, 150]
+        },
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [1050, 150]
+        },
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [950, 50]
+        },
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [600, 200]
         }
     ]
 }
