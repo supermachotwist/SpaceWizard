@@ -189,6 +189,18 @@ export default class AABB extends Shape {
     overlaps(other: Shape): boolean {
         if(other instanceof AABB){
             return this.overlapsAABB(other);
+        } else if (other instanceof Circle) {
+            let x: number;
+			let y: number;
+			// Figure out which corner of the circle the rectangle overlap with	
+			x = other.x - this.x;
+			y = other.y - this.y;
+			let distance:number = Math.sqrt((x*x) + (y*y));
+
+			if ((distance * 0.75) <= other.radius) {
+				return true;
+			}
+			return false;
         }
         throw "Overlap not defined between these shapes."
     }

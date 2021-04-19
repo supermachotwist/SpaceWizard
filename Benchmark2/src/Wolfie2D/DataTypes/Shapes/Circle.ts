@@ -62,6 +62,19 @@ export default class Circle extends Shape {
 
 	// @override
 	overlaps(other: Shape): boolean {
+		if (other instanceof AABB) {
+			let x: number;
+			let y: number;
+			// Figure out which corner of the circle the rectangle overlap with	
+			x = this.x - other.x;
+			y = this.y - other.y;
+			let distance:number = Math.sqrt((x*x) + (y*y));
+
+			if ((distance * 0.75) <= this.radius) {
+				return true;
+			}
+			return false;
+		}
 		throw new Error("Method not implemented.");
 	}
 

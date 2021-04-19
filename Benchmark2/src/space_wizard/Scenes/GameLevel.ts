@@ -60,15 +60,21 @@ export default class GameLevel extends Scene {
 
         // Initialize array of towers
         this.towers = new Array();
+<<<<<<< HEAD
         this.initializePlayer();
+=======
+
+>>>>>>> babe980135dc06d99fef7c555ddc6c20e2ab28c8
         this.spawnTowers();
+
+        this.initializePlayer();
     }
 
     initializePlayer(): void {
         // Create the inventory
         let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(16, 16), 4);
         let fireballSprite = this.add.sprite("meteor", "primary");
-        let startingSpell = new Spell(fireballSprite, new Meteor());
+        let startingSpell = new Spell(fireballSprite, new Meteor(), this.towers);
         inventory.addItem(startingSpell);
 
         // Get center of viewport
@@ -126,6 +132,7 @@ export default class GameLevel extends Scene {
             }
         }        
     }
+<<<<<<< HEAD
 
     //here lies my healthbar D:
     //um, its just two rectange, so I am sure it just fine. 
@@ -134,3 +141,6 @@ export default class GameLevel extends Scene {
 
 }
 
+=======
+}
+>>>>>>> babe980135dc06d99fef7c555ddc6c20e2ab28c8
