@@ -5,8 +5,10 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Enemy from "../GameSystems/Enemys/Enemy";
 import Spell from "../GameSystems/Spells/Spell";
 import Tower from "../GameSystems/Towers/Tower";
+import EnemyAI from "./EnemyAI";
 
 
 export default class SpellController extends ControllerAI {
@@ -17,9 +19,6 @@ export default class SpellController extends ControllerAI {
     // Speed of movement
     speed: number;
 
-    // Damage
-    damage: number;
-
     // Direction of movement
     direction: Vec2;
 
@@ -29,8 +28,8 @@ export default class SpellController extends ControllerAI {
     // Flag to tell whether spell is dead or not
     dead: boolean;
 
-    /** A list of towers in the game world */
-    private towers: Array<Tower>;
+    // Size of explosion
+    explosionSize: number;
 
     /** A list of enemies the tower has collided with */
     /** This is to prevent the tower from hitting the same tower twice */
@@ -42,8 +41,9 @@ export default class SpellController extends ControllerAI {
 
         this.speed = options.speed;
         this.direction = options.direction;
-        this.towers = options.towers;
         this.spell = options.spell;
+
+        this.explosionSize = 1;
     }
 
     activate(options: Record<string, any>): void {}
@@ -59,13 +59,13 @@ export default class SpellController extends ControllerAI {
             this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
             // See if the spell collides with the tower hitbox
-            for (let tower of this.towers){
+            for (let tower of this.spell.towers){
                 if (this.owner.collisionShape.overlaps(tower.owner.collisionShape)) {
                     if (tower.displayName === "ExplosionTower" && !this.spell.explosion){
                         this.spell.explosion = true;
                         let newCollsion = new AABB(Vec2.ZERO, this.owner.collisionShape.halfSize.scaled(5));
                         this.owner.collisionShape = newCollsion;
-                        this.destroySpell(5);
+                        this.explosionSize = 5;
                     }
                     else if (tower.displayName === "PierceTower"){
 
@@ -74,10 +74,19 @@ export default class SpellController extends ControllerAI {
                         // Do not fork again after forking once
                         this.spell.fork = true;
                         this.spell.use(this.owner, this.direction.rotateCCW(Math.PI/8).clone());
-                        this.direction.rotateCCW(-1 * Math.PI/8)
+                        this.direction.rotateCCW(-1 * Math.PI/8);
                         this.spell.use(this.owner, this.direction.rotateCCW(-1 * Math.PI/8).clone());
                         this.destroySpell(0);
                     }
+                }
+            }
+
+            // See if the spell colldies with an enemy
+            for (let enemy of this.spell.enemies){
+                if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
+                    enemy.damage(this.spell.damage);
+                    this.spell.enemiesHit.push(enemy);
+                    this.destroySpell(this.explosionSize);
                 }
             }
 

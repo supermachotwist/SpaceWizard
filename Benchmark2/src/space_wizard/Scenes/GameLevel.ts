@@ -11,6 +11,10 @@ import ExplosionTower from "../GameSystems/Towers/ExplosionTower";
 import ForkTower from "../GameSystems/Towers/ForkTower";
 import PierceTower from "../GameSystems/Towers/PierceTower";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
+import EnemyAI from "../AI/EnemyAI";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import Enemy from "../GameSystems/Enemys/Enemy";
+import ArrayUtils from "../../Wolfie2D/Utils/ArrayUtils";
 
 
 
@@ -24,6 +28,9 @@ export default class GameLevel extends Scene {
     /** A list of towers in the game world */
     private towers: Array<Tower>;
 
+    /** A list of enemies in the game world */
+    private enemies: Array<Enemy>;
+
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
         this.load.spritesheet("meteor", "space_wizard_assets/spritesheets/meteor.json");
@@ -32,12 +39,16 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
         this.load.spritesheet("forkTower", "space_wizard_assets/spritesheets/ForkTower.json");
         this.load.spritesheet("pierceTower", "space_wizard_assets/spritesheets/PierceTower.json");
+
+        // Enemy Spritesheets
+        this.load.spritesheet("enemySpaceship", "space_wizard_assets/spritesheets/enemy_spaceship.json");
         
         this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
         this.load.image("meteor", "space_wizard_assets/sprites/meteor.png");
 
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
+        this.load.object("enemyData", "space_wizard_assets/data/enemies.json")
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -61,16 +72,42 @@ export default class GameLevel extends Scene {
         // Initialize array of towers
         this.towers = new Array();
 
+        // Initialize array of enemies
+        this.enemies = new Array();
+
+        this.spawnEnemies();
+
         this.spawnTowers();
 
         this.initializePlayer();
+    }
+
+    spawnEnemies(): void {
+
+        // Get the enemy data
+        let enemyData = this.load.getObject("enemyData");
+
+        for (let enemy of enemyData.enemies) {
+            let enemySprite = this.add.animatedSprite("enemySpaceship", "primary");
+            enemySprite.scale.scale(0.5);
+            // Add collision to sprite
+            enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(32, 32)));
+            enemySprite.position.set(enemy.position[0], enemy.position[1]);
+            let enemySpaceship = new Enemy(enemySprite, "enemySpaceship")
+            enemySprite.addAI(EnemyAI, {
+                player: this.player,
+                enemy: enemySpaceship
+            });
+            enemySprite.animation.play("IDLE", true);
+            this.enemies.push(enemySpaceship);
+        }
     }
 
     initializePlayer(): void {
         // Create the inventory
         let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(16, 16), 4);
         let fireballSprite = this.add.sprite("meteor", "primary");
-        let startingSpell = new Spell(fireballSprite, new Meteor(), this.towers);
+        let startingSpell = new Spell(fireballSprite, new Meteor(), this.towers, this.enemies);
         inventory.addItem(startingSpell);
 
         // Get center of viewport
@@ -91,7 +128,7 @@ export default class GameLevel extends Scene {
     }
 
     spawnTowers(): void {
-        // Get the item data
+        // Get the tower data
         let towerData = this.load.getObject("towerData");
 
         for(let tower of towerData.towers){

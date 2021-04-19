@@ -1,0 +1,19 @@
+{
+    "enemies": [
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [1000, 100]
+        },
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [1050, 300]
+        },
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [600, 750]
+        }
+    ]
+}
