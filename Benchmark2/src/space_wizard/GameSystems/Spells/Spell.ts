@@ -4,6 +4,7 @@ import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import SpellController from "../../AI/SpellController";
+import Enemy from "../Enemys/Enemy";
 import Tower from "../Towers/Tower";
 import SpellType from "./SpellType";
 
@@ -20,12 +21,19 @@ export default class Spell {
 
     towers: Array<Tower>;
 
+    enemies: Array<Enemy>
+
+    enemiesHit: Array<Enemy>
+
+    // Damage
+    damage: number;
+
     /** Whether Explosion, Fork and Pierce effects are active */
     explosion: boolean;
     fork: boolean;
     pierce: boolean;
 
-    constructor(sprite: Sprite, type: SpellType, towers: Array<Tower>, explosion:boolean=false, fork:boolean=false, pierce:boolean=false){
+    constructor(sprite: Sprite, type: SpellType, towers: Array<Tower>, enemies: Array<Enemy>, explosion:boolean=false, fork:boolean=false, pierce:boolean=false){
         this.sprite = sprite;
 
         // Set the weapon type
@@ -36,6 +44,13 @@ export default class Spell {
 
         // All the towers on the map
         this.towers = towers;
+
+        // All the enemies on the map
+        this.enemies = enemies;
+
+        this.damage = this.type.damage;
+
+        this.enemiesHit = new Array();
 
         this.explosion = explosion;
         this.fork = fork;
@@ -67,7 +82,7 @@ export default class Spell {
                     owner: fireball,
                     speed: 200,
                     direction: lookDirection,
-                    spell: new Spell(this.sprite, this.type, this.towers, this.explosion, this.fork, this.pierce),
+                    spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),
                     towers: this.towers
                 });
                 this.cooldownTimer.start();

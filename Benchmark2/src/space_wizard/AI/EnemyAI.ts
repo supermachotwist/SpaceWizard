@@ -2,12 +2,19 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import Enemy from "../GameSystems/Enemys/Enemy";
 
-export default class EnemyAI 
+<<<<<<< HEAD
+export default class EnemyAI extends ControllerAI
+=======
+export default class EnemyAI implements AI
+>>>>>>> fb3e1a6ac75de095a9e9820d1ce6f278a998d1ae
 {
-    // Enemy health
-    health: number;
 
     // The enemy sprite
     owner: AnimatedSprite;
@@ -15,32 +22,34 @@ export default class EnemyAI
     // Current movement direction
     private moveDirection: Vec2;
 
-    // Movement Speed
-    speed: number;
+    // Reference to enemy that this AI controls
+    enemy: Enemy;
 
     // Reference to wizard/player
     player: GameNode;
+
+    activate(options: Record<string, any>): void {}
+
+    handleEvent(event: GameEvent): void {}
+
+    // The enemy does not do anything right now
+    update(deltaT: number): void {
+    }
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void 
     {
         this.owner = owner;
         this.moveDirection = Vec2.ZERO;
-        this.health = 50;
-        this.speed = 20;
+
+        this.player = options.player;
+        this.enemy = options.enemy;
     }
 
-    damage(damage: number): void 
-    {
-        console.log("Took damage");
-        this.health -= damage;
-    
-        if(this.health <= 0)
-        {
-            this.owner.setAIActive(false, {});
-            this.owner.isCollidable = false;
-            this.owner.visible = false;
-        }
-    }
+    activate(options: Record<string, any>): void {}
+
+    handleEvent(event: GameEvent): void {}
+
+    destroy(): void {}
 
     getPlayerPosition(): Vec2 
     {
@@ -82,5 +91,10 @@ export default class EnemyAI
                 }
             }
         }
+    }
+
+    update(deltaT: number): void 
+    {
+        
     }
 }
