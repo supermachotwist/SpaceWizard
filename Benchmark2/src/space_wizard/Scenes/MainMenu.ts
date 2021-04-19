@@ -18,7 +18,7 @@ export default class MainMenu extends Scene {
     setting:boolean;
 
     loadScene():void{
-        this.load.image("mainMenuBackground","space_wizard_assets/images/MainMenu.png");
+        this.load.image("mainMenuBackground","space_wizard_assets/images/Space Wizard Logo.png");
         //this.load.audio("mainMenuMusic","space_wizard_assets/sounds/PlaceholderMusic.mp3");
     }
 
@@ -30,7 +30,7 @@ export default class MainMenu extends Scene {
         this.background = this.add.sprite("mainMenuBackground","mainMenuBackground");
 
         let center = this.viewport.getCenter();
-        this.background.position.set(center.x,center.y);
+        this.background.position.set(center.x,center.y-200);
         this.viewport.setFocus(this.viewport.getHalfSize());
 
         let midpoint = this.viewport.getHalfSize();
