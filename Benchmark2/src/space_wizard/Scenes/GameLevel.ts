@@ -19,6 +19,10 @@ import UIElement from "../../Wolfie2D/Nodes/UIElement";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Color from "../../Wolfie2D/Utils/Color";
+import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
+import {space_wizard_names} from "../space_wizard_events";
 
 
 
@@ -34,6 +38,9 @@ export default class GameLevel extends Scene {
 
     /** A list of enemies in the game world */
     private enemies: Array<Enemy>;
+
+    // The position graph for navmesh
+    private graph: PositionGraph;
 
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
@@ -53,6 +60,9 @@ export default class GameLevel extends Scene {
 
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
         this.load.object("enemyData", "space_wizard_assets/data/enemies.json")
+
+        // Navmesh for Enemies
+        this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -170,6 +180,33 @@ export default class GameLevel extends Scene {
                 this.towers.push(pierceTower);
             }
         }        
+    }
+
+    createNavmesh(): void {
+        // Add a layer to display the graph
+        let gLayer = this.addLayer("graph");
+        gLayer.setHidden(true);
+
+        let navmeshData = this.load.getObject("navmesh");
+
+         // Create the graph
+        this.graph = new PositionGraph();
+
+        // Add all nodes to our graph
+        for(let node of navmeshData.nodes){
+            this.graph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, "graph", {position: new Vec2(node[0], node[1])})
+        }
+
+        // Add all edges to our graph
+        for(let edge of navmeshData.edges){
+            this.graph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, "graph", {start: this.graph.getNodePosition(edge[0]), end: this.graph.getNodePosition(edge[1])})
+        }
+
+        // Set this graph as a navigable entity
+        let navmesh = new Navmesh(this.graph);
+        this.navManager.addNavigableEntity(space_wizard_names.NAVMESH, navmesh);
     }
 
     //replace button with a image at a later date
