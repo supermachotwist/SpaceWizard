@@ -90,5 +90,23 @@ export default class Spell {
             }
             return false;
         }
+        else if (this.type.displayName == "Comet"){
+            // Shoot fireball when off cooldown
+            if (this.cooldownTimer.isStopped() || this.fork){
+                let comet = owner.getScene().add.animatedSprite("comet", "primary");
+                comet.position.set(owner.position.x, owner.position.y);
+                comet.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+                comet.addAI(SpellController,{
+                    owner: comet,
+                    speed: 200,
+                    direction: lookDirection,
+                    spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),
+                    towers: this.towers
+                });
+                this.cooldownTimer.start();
+                return true;
+            }
+            return false;
+        }
     }
 }

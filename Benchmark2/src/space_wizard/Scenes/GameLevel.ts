@@ -23,6 +23,7 @@ import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import {space_wizard_names} from "../space_wizard_events";
+import Comet from "../GameSystems/Spells/SpellTypes/Comet";
 
 
 
@@ -44,7 +45,10 @@ export default class GameLevel extends Scene {
 
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
+
+        // Spell Spritesheets
         this.load.spritesheet("meteor", "space_wizard_assets/spritesheets/meteor.json");
+        this.load.spritesheet("comet", "space_wizard_assets/spritesheets/comet.json");
 
         // Tower Spritesheets
         this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
@@ -56,7 +60,9 @@ export default class GameLevel extends Scene {
         
         this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
-        this.load.image("meteor", "space_wizard_assets/sprites/meteor.png");
+        this.load.image("meteorSprite", "space_wizard_assets/sprites/meteor.png");
+        this.load.image("cometSprite", "space_wizard_assets/sprites/comet.png");
+        this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
 
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
         this.load.object("enemyData", "space_wizard_assets/data/enemies.json")
@@ -75,15 +81,7 @@ export default class GameLevel extends Scene {
         this.addLayer("primary", 50);
         this.addLayer("background", 0);
 
-        // The first argument is the key we specified in "this.load.image"
-        // The second argument is the name of the layer
-        this.logo = this.add.sprite("logo", "background");
-
-        // Now, let's make sure our logo is in a good position
-        let center = this.viewport.getCenter();
-        this.logo.position.set(center.x, center.y);
-        // this.settingButton();
-
+        this.createBackground();
 
         // Initialize array of towers
         this.towers = new Array();
@@ -98,6 +96,22 @@ export default class GameLevel extends Scene {
         this.spawnTowers();
     }
 
+    createBackground(): void {
+        // The first argument is the key we specified in "this.load.image"
+        // The second argument is the name of the layer
+        this.logo = this.add.sprite("logo", "background");
+
+        // Now, let's make sure our logo is in a good position
+        let center = this.viewport.getCenter();
+        this.logo.position.set(center.x, center.y);
+        // this.settingButton();
+
+        // Create the cookie planet background
+        let cookiePlanet = this.add.sprite("cookiePlanet", "background");
+        cookiePlanet.scale.scale(10);
+        cookiePlanet.position.set(center.x, center.y + this.viewport.getHalfSize().y - 64);
+    }
+
     spawnEnemies(): void {
 
         // Get the enemy data
@@ -107,7 +121,7 @@ export default class GameLevel extends Scene {
             let enemySprite = this.add.animatedSprite("enemySpaceship", "primary");
             enemySprite.scale.scale(0.5);
             // Add collision to sprite
-            enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(32, 32)));
+            enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(28, 28)));
             enemySprite.position.set(enemy.position[0], enemy.position[1]);
             let enemySpaceship = new Enemy(enemySprite, "enemySpaceship")
             enemySprite.addAI(EnemyAI, {
@@ -121,10 +135,21 @@ export default class GameLevel extends Scene {
 
     initializePlayer(): void {
         // Create the inventory
-        let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(16, 16), 4);
-        let fireballSprite = this.add.sprite("meteor", "primary");
-        let startingSpell = new Spell(fireballSprite, new Meteor(), this.towers, this.enemies);
+        let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,775), 48);
+
+        // Add Meteor spell
+        let meteorSprite = this.add.sprite("meteorSprite", "primary");
+        meteorSprite.scale.scale(2.8);
+        let startingSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
         inventory.addItem(startingSpell);
+
+        // Add Comet spell
+        inventory.changeSlot(1);
+        let cometSprite = this.add.sprite("cometSprite", "primary");
+        cometSprite.scale.scale(2.8);
+        cometSprite.rotation += Math.PI/4;
+        let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
+        inventory.addItem(secondSpell);
 
         // Get center of viewport
         let center = this.viewport.getCenter();

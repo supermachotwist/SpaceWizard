@@ -1,8 +1,4 @@
 import SpellType from "../SpellType";
-import Scene from "../../../../Wolfie2D/Scene/Scene";
-import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
-
-
 
 export default class Meteor extends SpellType {
 

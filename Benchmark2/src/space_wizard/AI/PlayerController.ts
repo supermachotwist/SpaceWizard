@@ -43,8 +43,6 @@ export default class PlayerController implements AI {
     destroy(): void {}
 
     update(deltaT: number): void {
-        // Get the unit vector in the look direction
-        this.lookDirection = this.owner.position.dirTo(Input.getGlobalMousePosition());
 
         // Get the movement direction
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
@@ -54,16 +52,13 @@ export default class PlayerController implements AI {
         this.owner.move(this.direction.normalized().scale(100 * deltaT));
 
         if(Input.isMouseJustPressed()){
+            this.owner.animation.play("FIRING");
             let spell = this.inventory.getItem();
 
             // If spell slot is not empty
             if (spell) {
                 spell.use(this.owner, this.lookDirection);
             }
-        }
-
-        if(Input.isMouseJustPressed()){
-            this.owner.animation.play("FIRING");
         }
 
         // Check for slot change
@@ -76,6 +71,9 @@ export default class PlayerController implements AI {
         } else if(Input.isJustPressed("slot4")){
             this.inventory.changeSlot(3);
         }
+
+        // Get the unit vector in the look direction
+        this.lookDirection = this.owner.position.dirTo(Input.getGlobalMousePosition());
 
         // Flip sprite when looking right
         if (this.lookDirection.x > 0){
