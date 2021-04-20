@@ -23,7 +23,7 @@ export default class Enemy {
     constructor(owner: AnimatedSprite, displayName: String){
         this.owner = owner;
         this.displayName = displayName;
-        this.speed = 100;
+        this.speed = 50;
         this.health = 50;
         this.dead = false;
     }

@@ -16,7 +16,11 @@ import GameLevel from "./space_wizard/Scenes/Gamelevel";
             {name: "slot1", keys: ["1"]},
             {name: "slot2", keys: ["2"]},
             {name: "slot3", keys: ["3"]},
-            {name: "slot4", keys: ["4"]}
+            {name: "slot4", keys: ["4"]},
+            {name: "up", keys: ["w"]},
+            {name: "down", keys: ["s"]},
+            {name: "left", keys: ["a"]},
+            {name: "right", keys: ["d"]}
         ],
     }
 

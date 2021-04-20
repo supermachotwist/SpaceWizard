@@ -33,6 +33,12 @@ export default class EnemyAI extends ControllerAI
             if(!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")){
                 this.owner.animation.playIfNotAlready("IDLE", true);
             }
+            // Look in the direction of the player
+            let lookDirection = this.owner.position.dirTo(this.player.position);
+            this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
+
+            // Move the enemy in direction of movement
+            // this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
         }
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){

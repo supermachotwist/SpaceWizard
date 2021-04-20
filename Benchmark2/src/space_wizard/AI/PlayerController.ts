@@ -20,6 +20,9 @@ export default class PlayerController implements AI {
     // Attacking
     private lookDirection: Vec2;
 
+    // Direction of movement
+    private direction: Vec2;
+
     // The spells of the player
     private inventory: SpellManager;
 
@@ -27,6 +30,7 @@ export default class PlayerController implements AI {
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
+        this.direction = Vec2.ZERO;
         this.health = 100;
 
         this.inventory = options.inventory;
@@ -41,6 +45,13 @@ export default class PlayerController implements AI {
     update(deltaT: number): void {
         // Get the unit vector in the look direction
         this.lookDirection = this.owner.position.dirTo(Input.getGlobalMousePosition());
+
+        // Get the movement direction
+        this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
+        this.direction.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
+
+        // Move the player
+        this.owner.move(this.direction.normalized().scale(100 * deltaT));
 
         if(Input.isMouseJustPressed()){
             let spell = this.inventory.getItem();

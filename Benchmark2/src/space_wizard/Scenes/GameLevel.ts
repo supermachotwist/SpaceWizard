@@ -81,11 +81,11 @@ export default class GameLevel extends Scene {
         // Initialize array of enemies
         this.enemies = new Array();
 
+        this.initializePlayer();
+
         this.spawnEnemies();
 
         this.spawnTowers();
-
-        this.initializePlayer();
     }
 
     spawnEnemies(): void {
@@ -131,6 +131,9 @@ export default class GameLevel extends Scene {
     }
 
     updateScene(deltaT: number) {
+        if (this.enemies.length == 0){
+            this.spawnEnemies();
+        }
     }
 
     spawnTowers(): void {

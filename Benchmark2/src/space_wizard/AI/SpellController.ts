@@ -108,7 +108,8 @@ export default class SpellController extends ControllerAI {
         // See if the spell colldies with an enemy
         for (let enemy of this.spell.enemies){
             if (enemy.dead){
-                continue;
+                // Remove enemy from list in place
+                this.spell.enemies.splice(this.spell.enemies.indexOf(enemy), 1);
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);

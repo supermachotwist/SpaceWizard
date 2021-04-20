@@ -29,6 +29,16 @@
             "type": "default",
             "time": 1000,
             "position": [600, 200]
+        },
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [600, 150]
+        },
+        {
+            "type": "default",
+            "time": 1000,
+            "position": [600, 100]
         }
     ]
 }
