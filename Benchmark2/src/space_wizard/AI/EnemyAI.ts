@@ -7,6 +7,9 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
 import Enemy from "../GameSystems/Enemys/Enemy";
+import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
+import {space_wizard_names} from "../space_wizard_events";
+
 
 export default class EnemyAI extends ControllerAI
 {
@@ -23,6 +26,9 @@ export default class EnemyAI extends ControllerAI
     // Reference to wizard/player
     player: GameNode;
 
+    // Route for enemies to follow
+    private route: NavigationPath;
+
     activate(options: Record<string, any>): void {}
 
     handleEvent(event: GameEvent): void {}
@@ -32,6 +38,9 @@ export default class EnemyAI extends ControllerAI
         if (!this.enemy.dead){
             if(!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")){
                 this.owner.animation.playIfNotAlready("IDLE", true);
+            
+            //this.route = this.owner.getScene().getNavigationManager().getPath(space_wizard_names.NAVMESH, this.owner.position, /*Insert_end_pos_here*/);    
+            //this.owner.moveOnPath(this.enemy.speed * deltaT, this.route);
             }
         }
         // Destroy dead enemy
@@ -93,3 +102,4 @@ export default class EnemyAI extends ControllerAI
         }
     }
 }
+
