@@ -1,19 +1,20 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
-import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
 import Enemy from "../GameSystems/Enemys/Enemy";
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
-import {space_wizard_names} from "../space_wizard_events";
 import GameLevel from "../Scenes/Gamelevel";
+import PlayerController from "./PlayerController";
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import { space_wizard_events } from "../space_wizard_events";
 
 
 export default class EnemyAI extends ControllerAI
 {
+    // Emitter
+    emitter: Emitter;
 
     // The enemy sprite
     owner: AnimatedSprite;
@@ -48,9 +49,22 @@ export default class EnemyAI extends ControllerAI
             //this.route = this.owner.getScene().getNavigationManager().getPath(space_wizard_names.NAVMESH, this.owner.position, /*Insert_end_pos_here*/);    
             //this.owner.moveOnPath(this.enemy.speed * deltaT, this.route);
             }
+
+            if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
+                this.emitter.fireEvent(space_wizard_events.PLAYER_DAMAGE);
+            }
+
             // Look in the direction of the player
             let lookDirection = this.owner.position.dirTo(this.player.position);
             this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
+
+            // Enemy will occasionally shoot on cooldown
+            if (this.enemy.cooldownTimer.isStopped){
+                if (Math.random() < 0.01){
+                    this.enemy.shoot(lookDirection);
+                    this.enemy.cooldownTimer.start();
+                }
+            }
 
             // Move the enemy in direction of movement
             this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
@@ -70,6 +84,8 @@ export default class EnemyAI extends ControllerAI
 
         this.player = options.player;
         this.enemy = options.enemy;
+
+        this.emitter = new Emitter();
     }
 
 }

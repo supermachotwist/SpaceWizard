@@ -14,7 +14,7 @@ import { space_wizard_events } from "../space_wizard_events";
 import EnemyAI from "./EnemyAI";
 
 
-export default class EnemyProjectile extends ControllerAI {
+export default class EnemyProjectileController extends ControllerAI {
     // Emitter
     emitter: Emitter;
 
@@ -46,6 +46,7 @@ export default class EnemyProjectile extends ControllerAI {
 
         this.speed = options.speed;
         this.direction = options.direction;
+        this.player = options.player;
 
         // Initialize Emitter
         this.emitter = new Emitter();
@@ -63,13 +64,14 @@ export default class EnemyProjectile extends ControllerAI {
         }
 
         if (!this.dead){
-            // Rotate the meteor in the direction of movement
-            this.owner.rotation = Vec2.UP.angleToCCW(this.direction) + Math.PI/2;
-
-            // Move the meteor in direction of movement
+            // Move the projectile in direction of movement
             this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
-            this.checkEnemyCollision();
+            // If the projectile hits the player
+            if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
+                this.emitter.fireEvent(space_wizard_events.PLAYER_DAMAGE);
+                this.destroyProjectile();
+            }
 
             // Detonate the spell on impact with side of screen
             if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
@@ -88,11 +90,5 @@ export default class EnemyProjectile extends ControllerAI {
     destroyProjectile(scale:number=1): void {
         this.speed = 0;
         this.dead = true;
-    }
-
-    checkEnemyCollision(): void {
-        if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
-            this.emitter.fireEvent(space_wizard_events.PLAYER_DAMAGE);
-        }
     }
 }

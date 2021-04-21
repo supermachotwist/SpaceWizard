@@ -1,6 +1,10 @@
+import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
+import EnemyProjectileController from "../../AI/EnemyProjectileController";
+import GameLevel from "../../Scenes/Gamelevel";
 import EnemyType from "./EnemyType";
 
 /** Enemy Class mainly controls */
@@ -71,10 +75,14 @@ export default class Enemy {
 
     // Shoot a projectile in a specific direction
     shoot(direction: Vec2): void {
-        if (this.cooldownTimer.isStopped()) {
-            if (Math.random() < 0.01) {
-
-            }
-        }
+        let projectileSprite = this.owner.getScene().add.animatedSprite("enemyProjectile", "primary");
+        projectileSprite.scale.scale(3);
+        projectileSprite.position.set(this.owner.position.x, this.owner.position.y);
+        projectileSprite.addPhysics(new Circle(Vec2.ZERO, 2));
+        projectileSprite.addAI(EnemyProjectileController, {
+            speed: 400,
+            direction: direction,
+            player: (<GameLevel> this.owner.getScene()).player
+        })  
     }
 }

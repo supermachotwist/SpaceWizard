@@ -6,12 +6,14 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import SpellManager from "../GameSystems/Spells/SpellManager";
 import { space_wizard_events } from "../space_wizard_events";
-import SpellController from "./SpellController";
-import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import GameLevel from "../Scenes/Gamelevel";
+import Emitter from "../../Wolfie2D/Events/Emitter";
 
 
 export default class PlayerController implements AI {
+    // Emmiter for when player takes damage
+    emitter: Emitter;
+
     // Player health
     health: number;
 
@@ -30,6 +32,8 @@ export default class PlayerController implements AI {
     // Speed of player
     private speed: number;
 
+    immunityTimer: Timer;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -39,6 +43,8 @@ export default class PlayerController implements AI {
         this.speed = options.speed;
 
         this.inventory = options.inventory;
+        this.immunityTimer = new Timer(1000);
+        this.emitter = new Emitter();
     }
 
     activate(options: Record<string, any>): void {}
@@ -109,7 +115,10 @@ export default class PlayerController implements AI {
     }
 
     damage() {
-        this.health -= 1;
+        if (this.immunityTimer.isStopped()) {
+            this.health -= 1;
+            this.immunityTimer.start();
+        }
         if (this.health <= 0) {
             return true;
         }

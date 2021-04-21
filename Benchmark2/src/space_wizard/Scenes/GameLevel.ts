@@ -30,12 +30,13 @@ import MainMenu from "./MainMenu";
 import enemySpaceship from "../GameSystems/Enemys/EnemyTypes/EnemySpaceship";
 import EnemyType from "../GameSystems/Enemys/EnemyType";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 
 
 
 export default class GameLevel extends Scene {
     // The player
-    private player: AnimatedSprite;
+    player: AnimatedSprite;
 
     // Logo
     private logo: Sprite;
@@ -51,6 +52,8 @@ export default class GameLevel extends Scene {
 
     private paused: boolean;
 
+    protected healthCountLabel: Label;
+
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
 
@@ -65,6 +68,7 @@ export default class GameLevel extends Scene {
 
         // Enemy Spritesheets
         this.load.spritesheet("enemySpaceship", "space_wizard_assets/spritesheets/enemy_spaceship.json");
+        this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
         
         this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
@@ -83,15 +87,6 @@ export default class GameLevel extends Scene {
     // or where you should initialize any other things you will need in your scene
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
-
-        // First, create a layer for it to go on
-        this.addLayer("settingMenu",100);
-        this.addLayer("settingMenuBackGround",99);
-        this.addLayer("primary", 50);
-        this.addLayer("background", 0);
-
-        this.createBackground();
-
         // Initialize array of towers
         this.towers = new Array();
 
@@ -100,11 +95,29 @@ export default class GameLevel extends Scene {
 
         this.paused = false;
 
+        this.subscribeToEvents();
+
+        this.initLayers();
+
+        this.createBackground();
+
         this.initializePlayer();
+
+        this.addUI();
 
         this.spawnEnemies();
 
         this.spawnTowers();
+    }
+
+    initLayers(): void {
+        this.addLayer("settingMenu",100);
+        this.addLayer("settingMenuBackGround",99);
+        this.addLayer("primary", 50);
+        this.addLayer("background", 0);
+
+        // Add a layer for UI
+        this.addUILayer("UI");
     }
 
     createBackground(): void {
@@ -173,7 +186,7 @@ export default class GameLevel extends Scene {
         // Create the player
         this.player = this.add.animatedSprite("player", "primary");
         this.player.position.set(center.x, center.y + 300);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
         this.player.addAI(PlayerController,{
             inventory: inventory,
             speed:200
@@ -199,9 +212,11 @@ export default class GameLevel extends Scene {
             
             switch(event.type){
                 case space_wizard_events.PLAYER_DAMAGE: {
-                   let playerAI = <PlayerController> this.player.ai;
-                   if (playerAI.damage()) {
+                   if ((<PlayerController> this.player.ai).damage()) {
                        this.gameover();
+                   }
+                   else {
+                        this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
                    }
                 }
             }
@@ -213,6 +228,7 @@ export default class GameLevel extends Scene {
     }
 
     gameover(): void {
+        this.sceneManager.changeToScene(MainMenu, {}, {});
     }
 
     spawnTowers(): void {
@@ -285,11 +301,13 @@ export default class GameLevel extends Scene {
         this.paused = true;
         let center = this.viewport.getCenter();
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});
-        settingBackground.color = Color.BLACK;
+        settingBackground.color = new Color(73, 73, 73, 0.5);
+        settingBackground.borderColor = new Color(53, 53, 53, 0.5);
+        settingBackground.setBorderWidth(24);
 
         // Exit button
-        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 150),text:"EXIT"});
-        exitButton.setBackgroundColor(Color.RED);
+        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 50),text:"EXIT"});
+        exitButton.setBackgroundColor(new Color(53, 53, 53));
         exitButton.setPadding(new Vec2(50, 10));
         exitButton.onClick = () =>{
             settingBackground.destroy();
@@ -300,8 +318,8 @@ export default class GameLevel extends Scene {
         }
 
         // Resume button
-        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 50),text:"RESUME"});
-        resumeButton.setBackgroundColor(Color.RED);
+        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y - 50),text:"RESUME"});
+        resumeButton.setBackgroundColor(new Color(53, 53, 53));
         resumeButton.setPadding(new Vec2(50, 10));
         resumeButton.onClick = () =>{
             settingBackground.destroy();
@@ -310,6 +328,11 @@ export default class GameLevel extends Scene {
             this.paused = false;
             console.log("Resume Game");
         }
+    }
+
+    addUI(): void {
+        this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 700), text: "Lives: " + (<PlayerController> this.player.ai).health});
+        this.healthCountLabel.textColor = Color.WHITE
     }
 
     protected subscribeToEvents(){
