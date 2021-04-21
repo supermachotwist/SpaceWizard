@@ -1,0 +1,98 @@
+import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import Input from "../../Wolfie2D/Input/Input";
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Enemy from "../GameSystems/Enemys/Enemy";
+import Spell from "../GameSystems/Spells/Spell";
+import Tower from "../GameSystems/Towers/Tower";
+import GameLevel from "../Scenes/Gamelevel";
+import { space_wizard_events } from "../space_wizard_events";
+import EnemyAI from "./EnemyAI";
+
+
+export default class EnemyProjectile extends ControllerAI {
+    // Emitter
+    emitter: Emitter;
+
+    // The spell player sprite
+    owner: AnimatedSprite;
+
+    // Speed of movement
+    speed: number;
+
+    // Direction of movement
+    direction: Vec2;
+
+    // Flag to tell whether projectile is dead or not
+    dead: boolean;
+
+    // Player to keep track of
+    player: GameNode;
+
+    // Enemy that the projectile came from
+    enemy: Enemy;
+
+    /** A list of enemies the tower has collided with */
+    /** This is to prevent the tower from hitting the same tower twice */
+
+    initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
+        this.owner = owner;
+        
+        this.dead = false;
+
+        this.speed = options.speed;
+        this.direction = options.direction;
+
+        // Initialize Emitter
+        this.emitter = new Emitter();
+    }
+
+    activate(options: Record<string, any>): void {}
+
+    handleEvent(event: GameEvent): void {}
+
+    update(deltaT: number): void {
+        // Do nothing if game is paused
+        let gamelevel = <GameLevel> this.owner.getScene();
+        if (gamelevel.isPaused()){
+            return;
+        }
+
+        if (!this.dead){
+            // Rotate the meteor in the direction of movement
+            this.owner.rotation = Vec2.UP.angleToCCW(this.direction) + Math.PI/2;
+
+            // Move the meteor in direction of movement
+            this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
+
+            this.checkEnemyCollision();
+
+            // Detonate the spell on impact with side of screen
+            if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
+                this.destroyProjectile();
+            } else {
+                this.owner.animation.playIfNotAlready("MOVING", true);
+            }
+        }
+        // Only remove animatedSprite when explosion animation is finished
+        else if (this.dead && !this.owner.animation.isPlaying("EXPLOSION")) {
+            this.owner.visible = false;
+            this.owner.destroy();
+        }    
+    }
+
+    destroyProjectile(scale:number=1): void {
+        this.speed = 0;
+        this.dead = true;
+    }
+
+    checkEnemyCollision(): void {
+        if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
+            this.emitter.fireEvent(space_wizard_events.PLAYER_DAMAGE);
+        }
+    }
+}

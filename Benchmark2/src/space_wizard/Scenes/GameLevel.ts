@@ -22,8 +22,14 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
-import {space_wizard_names} from "../space_wizard_events";
+import {space_wizard_events, space_wizard_names} from "../space_wizard_events";
 import Comet from "../GameSystems/Spells/SpellTypes/Comet";
+import SpriteShaderType from "../../Wolfie2D/Rendering/WebGLRendering/ShaderTypes/SpriteShaderType";
+import Input from "../../Wolfie2D/Input/Input";
+import MainMenu from "./MainMenu";
+import enemySpaceship from "../GameSystems/Enemys/EnemyTypes/EnemySpaceship";
+import EnemyType from "../GameSystems/Enemys/EnemyType";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 
 
 
@@ -42,6 +48,8 @@ export default class GameLevel extends Scene {
 
     // The position graph for navmesh
     private graph: PositionGraph;
+
+    private paused: boolean;
 
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
@@ -78,6 +86,7 @@ export default class GameLevel extends Scene {
 
         // First, create a layer for it to go on
         this.addLayer("settingMenu",100);
+        this.addLayer("settingMenuBackGround",99);
         this.addLayer("primary", 50);
         this.addLayer("background", 0);
 
@@ -88,6 +97,8 @@ export default class GameLevel extends Scene {
 
         // Initialize array of enemies
         this.enemies = new Array();
+
+        this.paused = false;
 
         this.initializePlayer();
 
@@ -118,24 +129,29 @@ export default class GameLevel extends Scene {
         let enemyData = this.load.getObject("enemyData");
 
         for (let enemy of enemyData.enemies) {
-            let enemySprite = this.add.animatedSprite("enemySpaceship", "primary");
-            enemySprite.scale.scale(0.5);
+            let enemySprite;
+            // Spawn appropriate enemy
+            if (enemy.type == "enemySpaceship"){
+                enemySprite = this.add.animatedSprite("enemySpaceship", "primary");
+                enemySprite.scale.scale(0.5);
+            }
             // Add collision to sprite
             enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(28, 28)));
             enemySprite.position.set(enemy.position[0], enemy.position[1]);
-            let enemySpaceship = new Enemy(enemySprite, "enemySpaceship")
+            let enemyType = new enemySpaceship();
+            let enemyClass = new Enemy(enemySprite, "enemySpaceship", enemyType);
             enemySprite.addAI(EnemyAI, {
                 player: this.player,
-                enemy: enemySpaceship
+                enemy: enemyClass
             });
             enemySprite.animation.play("IDLE", true);
-            this.enemies.push(enemySpaceship);
+            this.enemies.push(enemyClass);
         }
     }
 
     initializePlayer(): void {
         // Create the inventory
-        let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,775), 48);
+        let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,760), 48);
 
         // Add Meteor spell
         let meteorSprite = this.add.sprite("meteorSprite", "primary");
@@ -156,9 +172,11 @@ export default class GameLevel extends Scene {
 
         // Create the player
         this.player = this.add.animatedSprite("player", "primary");
-        this.player.position.set(center.x, center.y + 100);
+        this.player.position.set(center.x, center.y + 300);
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
         this.player.addAI(PlayerController,{
-            inventory: inventory
+            inventory: inventory,
+            speed:200
         });
 
         // Start player is idle animation on loop
@@ -169,6 +187,32 @@ export default class GameLevel extends Scene {
         if (this.enemies.length == 0){
             this.spawnEnemies();
         }
+        if (Input.isPressed("pause")){
+            if (!this.paused){
+                this.createPauseMenu();
+            }
+        }
+
+        // Handle events and update the UI if needed
+        while(this.receiver.hasNextEvent()){
+            let event = this.receiver.getNextEvent();
+            
+            switch(event.type){
+                case space_wizard_events.PLAYER_DAMAGE: {
+                   let playerAI = <PlayerController> this.player.ai;
+                   if (playerAI.damage()) {
+                       this.gameover();
+                   }
+                }
+            }
+        }
+    }
+
+    isPaused(): boolean {
+        return this.paused;
+    }
+
+    gameover(): void {
     }
 
     spawnTowers(): void {
@@ -235,6 +279,43 @@ export default class GameLevel extends Scene {
         // Set this graph as a navigable entity
         let navmesh = new Navmesh(this.graph);
         this.navManager.addNavigableEntity(space_wizard_names.NAVMESH, navmesh);
+    }
+
+    createPauseMenu():void{
+        this.paused = true;
+        let center = this.viewport.getCenter();
+        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});
+        settingBackground.color = Color.BLACK;
+
+        // Exit button
+        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 150),text:"EXIT"});
+        exitButton.setBackgroundColor(Color.RED);
+        exitButton.setPadding(new Vec2(50, 10));
+        exitButton.onClick = () =>{
+            settingBackground.destroy();
+            resumeButton.destroy();
+            exitButton.destroy();
+            this.sceneManager.changeToScene(MainMenu, {}, {});
+            console.log("Exit to Menu");
+        }
+
+        // Resume button
+        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 50),text:"RESUME"});
+        resumeButton.setBackgroundColor(Color.RED);
+        resumeButton.setPadding(new Vec2(50, 10));
+        resumeButton.onClick = () =>{
+            settingBackground.destroy();
+            resumeButton.destroy();
+            exitButton.destroy();
+            this.paused = false;
+            console.log("Resume Game");
+        }
+    }
+
+    protected subscribeToEvents(){
+        this.receiver.subscribe([
+            space_wizard_events.PLAYER_DAMAGE,
+        ]);
     }
 
     //replace button with a image at a later date

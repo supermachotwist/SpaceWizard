@@ -7,7 +7,7 @@ export default class Comet extends SpellType {
         super();
         this.damage = 5;
         this.displayName = "Comet";
-        this.cooldown = 0;
+        this.cooldown = 150;
     }
     /**
      * Initializes this weapon type with data

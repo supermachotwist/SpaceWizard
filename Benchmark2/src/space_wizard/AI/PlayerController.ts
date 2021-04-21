@@ -8,6 +8,7 @@ import SpellManager from "../GameSystems/Spells/SpellManager";
 import { space_wizard_events } from "../space_wizard_events";
 import SpellController from "./SpellController";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import GameLevel from "../Scenes/Gamelevel";
 
 
 export default class PlayerController implements AI {
@@ -26,12 +27,16 @@ export default class PlayerController implements AI {
     // The spells of the player
     private inventory: SpellManager;
 
+    // Speed of player
+    private speed: number;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
         this.direction = Vec2.ZERO;
-        this.health = 100;
+        this.health = 5;
+        this.speed = options.speed;
 
         this.inventory = options.inventory;
     }
@@ -43,13 +48,31 @@ export default class PlayerController implements AI {
     destroy(): void {}
 
     update(deltaT: number): void {
+        // Do nothing if game is paused
+        let gamelevel = <GameLevel> this.owner.getScene();
+        if (gamelevel.isPaused()){
+            return;
+        }
 
         // Get the movement direction
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
         this.direction.y = (Input.isPressed("up") ? -1 : 0) + (Input.isPressed("down") ? 1 : 0);
 
         // Move the player
-        this.owner.move(this.direction.normalized().scale(100 * deltaT));
+        this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
+
+        if (this.owner.position.x >= 1168){
+            this.owner.position.x = 1168;
+        }
+        if (this.owner.position.x <= 32){
+            this.owner.position.x = 32;
+        }
+        /*if (this.owner.position.y <= 400){
+            this.owner.position.y = 400;
+        }*/
+        if (this.owner.position.y >= 700){
+            this.owner.position.y = 700;
+        }
 
         if(Input.isMouseJustPressed()){
             this.owner.animation.play("FIRING");
@@ -83,5 +106,13 @@ export default class PlayerController implements AI {
             this.owner.invertX = false;
             this.owner.rotation = Vec2.UP.angleToCCW(this.lookDirection) - Math.PI/2;
         }
+    }
+
+    damage() {
+        this.health -= 1;
+        if (this.health <= 0) {
+            return true;
+        }
+        return false;
     }
 }

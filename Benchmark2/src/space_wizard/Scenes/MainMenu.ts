@@ -6,6 +6,7 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
@@ -124,19 +125,46 @@ export default class MainMenu extends Scene {
     createHelpMenu(){
         this.setting = true;
         let center = this.viewport.getCenter();
-        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(1000,500)});
-        settingBackground.color = Color.WHITE;
+        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(1200,800)});
+        settingBackground.color = Color.BLACK;
 
-        let helpTitle = <UIElement> this.add.uiElement(UIElementType.LABEL,"settingMenu", {position: new Vec2(center.x, center.y-200), text:"Help"});
-        let helptext = "Click to shoot fireballs, placeholder Text...";
-        let helpBody = <UIElement> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y),text:helptext});
+        let helpTitle = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu", {position: new Vec2(center.x, center.y-250), text:"Help"});
+        let helptext = "Point and click at your enemies to shoot projectiles at that position.";
+        let helpBody1 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y - 200),text:helptext});
+        helpBody1.setTextColor(Color.WHITE);
+        helptext = "Choosing your spells using the number keys.";
+        let helpBody2 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y - 150),text:helptext});
+        helpBody2.setTextColor(Color.WHITE);
+        helptext = "1-Asteroid Spell";
+        let helpBody3 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y - 100),text:helptext});
+        helpBody3.setTextColor(Color.WHITE);
+        helptext = "2-Ice Comet Spell";
+        let helpBody4 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y - 50),text:helptext});
+        helpBody4.setTextColor(Color.WHITE);
+        helptext = "3-Laser Spell";
+        let helpBody5 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y - 0),text:helptext});
+        helpBody5.setTextColor(Color.WHITE);
+        helptext = "ESC- pauses the game and opens popup option menu.";
+        let helpBody6 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y + 50),text:helptext});
+        helpBody6.setTextColor(Color.WHITE);
+        helptext = "Move over powerups to gain new spells.";
+        let helpBody7 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y + 100),text:helptext});
+        helpBody7.setTextColor(Color.WHITE);
 
-        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"exit"});
+        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 150),text:"EXIT"});
+        exitButton.setBackgroundColor(Color.RED);
+        exitButton.setPadding(new Vec2(50, 10));
         exitButton.onClick = () =>{
             this.setting=false;
             helpTitle.destroy();
             exitButton.destroy();
-            helpBody.destroy();
+            helpBody1.destroy();
+            helpBody2.destroy();
+            helpBody3.destroy();
+            helpBody4.destroy();
+            helpBody5.destroy();
+            helpBody6.destroy();
+            helpBody7.destroy();
             settingBackground.destroy();
             console.log("Exit Setting");
         }

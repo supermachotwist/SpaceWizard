@@ -1,42 +1,42 @@
 {
     "enemies": [
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [200, 100]
         },
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [250, 50]
         },
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [150, 150]
         },
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [1050, 150]
         },
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [950, 50]
         },
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [600, 200]
         },
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [600, 150]
         },
         {
-            "type": "default",
+            "type": "enemySpaceship",
             "time": 1000,
             "position": [600, 100]
         }

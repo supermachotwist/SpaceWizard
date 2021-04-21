@@ -9,6 +9,7 @@ import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
 import Enemy from "../GameSystems/Enemys/Enemy";
 import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
 import {space_wizard_names} from "../space_wizard_events";
+import GameLevel from "../Scenes/Gamelevel";
 
 
 export default class EnemyAI extends ControllerAI
@@ -33,8 +34,13 @@ export default class EnemyAI extends ControllerAI
 
     handleEvent(event: GameEvent): void {}
 
-    // The enemy does not do anything right now
     update(deltaT: number): void {
+        // Do nothing if game is paused
+        let gamelevel = <GameLevel> this.owner.getScene();
+        if (gamelevel.isPaused()){
+            return;
+        }
+
         if (!this.enemy.dead){
             if(!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")){
                 this.owner.animation.playIfNotAlready("IDLE", true);
@@ -47,7 +53,7 @@ export default class EnemyAI extends ControllerAI
             this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
 
             // Move the enemy in direction of movement
-            // this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
+            this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
         }
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){
@@ -66,46 +72,5 @@ export default class EnemyAI extends ControllerAI
         this.enemy = options.enemy;
     }
 
-    getPlayerPosition(): Vec2 
-    {
-        let pos = this.player.position;
-
-        // Get the new player location
-        let start = this.owner.position.clone();
-        let delta = pos.clone().sub(start);
-
-        // Iterate through the tilemap region until we find a collision
-        let minX = Math.min(start.x, pos.x);
-        let maxX = Math.max(start.x, pos.x);
-        let minY = Math.min(start.y, pos.y);
-        let maxY = Math.max(start.y, pos.y);
-
-        // Get the wall tilemap
-        let walls = <OrthogonalTilemap>this.owner.getScene().getLayer("Wall").getItems()[0];
-
-        let minIndex = walls.getColRowAt(new Vec2(minX, minY));
-        let maxIndex = walls.getColRowAt(new Vec2(maxX, maxY));
-
-        let tileSize = walls.getTileSize();
-
-        for(let col = minIndex.x; col <= maxIndex.x; col++){
-            for(let row = minIndex.y; row <= maxIndex.y; row++){
-                if(walls.isTileCollidable(col, row)){
-                    // Get the position of this tile
-                    let tilePos = new Vec2(col * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
-
-                    // Create a collider for this tile
-                    let collider = new AABB(tilePos, tileSize.scaled(1/2));
-
-                    let hit = collider.intersectSegment(start, delta, Vec2.ZERO);
-
-                    if(hit !== null && start.distanceSqTo(hit.pos) < start.distanceSqTo(pos)){
-                        // We hit a wall, we can't see the player
-                        return null;
-                    }
-                }
-            }
-        }
-    }
 }
 

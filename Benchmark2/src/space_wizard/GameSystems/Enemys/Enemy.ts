@@ -1,9 +1,13 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import EnemyAI from "../../AI/EnemyAI";
+import Timer from "../../../Wolfie2D/Timing/Timer";
+import EnemyType from "./EnemyType";
 
 /** Enemy Class mainly controls */
 export default class Enemy {
+
+    // Type of the enemy
+    type: EnemyType;
 
     // The enemy sprite
     owner: AnimatedSprite;
@@ -20,12 +24,18 @@ export default class Enemy {
     // If the enemy is dead
     dead: boolean;
 
-    constructor(owner: AnimatedSprite, displayName: String){
+    // Cooldown timer for enemy attack
+    cooldownTimer: Timer;
+
+    constructor(owner: AnimatedSprite, displayName: String, enemyType: EnemyType){
         this.owner = owner;
         this.displayName = displayName;
+        this.type = enemyType;
         this.speed = 50;
         this.health = 50;
         this.dead = false;
+
+        this.cooldownTimer = new Timer(enemyType.cooldown);
     }
 
     moveSprite(position: Vec2, layer?: string){
@@ -47,6 +57,7 @@ export default class Enemy {
     {
         console.log("Took damage");
         this.health -= damage;
+        this.owner.animation.playIfNotAlready("DAMAGE", false);
     
         if(this.health <= 0)
         {
@@ -56,5 +67,14 @@ export default class Enemy {
             return true;
         }
         return false;
+    }
+
+    // Shoot a projectile in a specific direction
+    shoot(direction: Vec2): void {
+        if (this.cooldownTimer.isStopped()) {
+            if (Math.random() < 0.01) {
+
+            }
+        }
     }
 }

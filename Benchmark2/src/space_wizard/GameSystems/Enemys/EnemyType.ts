@@ -1,8 +1,4 @@
-export default class SpellType {
-
-    /** How much damage this weapon does */
-    damage: number;
-
+export default class EnemyType {
     /** Display name */
     displayName: string;
 

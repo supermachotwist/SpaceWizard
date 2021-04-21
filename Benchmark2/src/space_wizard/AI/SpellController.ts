@@ -8,6 +8,7 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Enemy from "../GameSystems/Enemys/Enemy";
 import Spell from "../GameSystems/Spells/Spell";
 import Tower from "../GameSystems/Towers/Tower";
+import GameLevel from "../Scenes/Gamelevel";
 import EnemyAI from "./EnemyAI";
 
 
@@ -51,6 +52,12 @@ export default class SpellController extends ControllerAI {
     handleEvent(event: GameEvent): void {}
 
     update(deltaT: number): void {
+        // Do nothing if game is pauseD
+        let gamelevel = <GameLevel> this.owner.getScene();
+        if (gamelevel.isPaused()){
+            return;
+        }
+
         if (!this.dead){
             // Rotate the meteor in the direction of movement
             this.owner.rotation = Vec2.UP.angleToCCW(this.direction) + Math.PI/2;
@@ -71,6 +78,7 @@ export default class SpellController extends ControllerAI {
                     else if (tower.displayName === "ForkTower" && !this.spell.fork){
                         // Do not fork again after forking once
                         this.spell.fork = true;
+                        this.spell.use(this.owner, this.direction.clone());
                         this.spell.use(this.owner, this.direction.rotateCCW(Math.PI/8).clone());
                         this.direction.rotateCCW(-1 * Math.PI/8);
                         this.spell.use(this.owner, this.direction.rotateCCW(-1 * Math.PI/8).clone());
@@ -120,9 +128,6 @@ export default class SpellController extends ControllerAI {
                 if (enemy.damage(this.spell.damage)){
                     enemy.owner.animation.play("DYING", false);
                 }
-                else {
-                    enemy.owner.animation.play("DAMAGE", false);
-                }
                 if (!this.spell.pierce) {
                     this.destroySpell(this.explosionSize);
                 }
@@ -142,9 +147,6 @@ export default class SpellController extends ControllerAI {
                 this.spell.enemiesHit.push(enemy);
                 if (enemy.damage(this.spell.damage)){
                     enemy.owner.animation.play("DYING", false);
-                }
-                else {
-                    enemy.owner.animation.play("DAMAGE", false);
                 }
             }
         }

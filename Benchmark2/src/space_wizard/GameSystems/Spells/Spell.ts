@@ -80,7 +80,7 @@ export default class Spell {
                 fireball.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 fireball.addAI(SpellController,{
                     owner: fireball,
-                    speed: 200,
+                    speed: 400,
                     direction: lookDirection,
                     spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),
                     towers: this.towers
@@ -98,7 +98,7 @@ export default class Spell {
                 comet.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 comet.addAI(SpellController,{
                     owner: comet,
-                    speed: 200,
+                    speed: 400,
                     direction: lookDirection,
                     spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),
                     towers: this.towers
