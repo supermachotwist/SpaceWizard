@@ -186,7 +186,7 @@ export default class GameLevel extends Scene {
         // Create the player
         this.player = this.add.animatedSprite("player", "primary");
         this.player.position.set(center.x, center.y + 300);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
         this.player.addAI(PlayerController,{
             inventory: inventory,
             speed:200
