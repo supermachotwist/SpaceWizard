@@ -4,8 +4,8 @@ export default class Meteor extends SpellType {
 
     constructor(){
         super();
-        this.damage = 5;
+        this.damage = 10;
         this.displayName = "Fireball";
-        this.cooldown = 300;
+        this.cooldown = 500;
     }
 }

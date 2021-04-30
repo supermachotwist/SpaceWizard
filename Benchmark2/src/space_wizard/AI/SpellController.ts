@@ -137,7 +137,7 @@ export default class SpellController extends ControllerAI {
 
     checkExplosionCollision(): void {
         // Increase give the spell area of affect
-        this.owner.collisionShape.halfSize.scale(5);
+        this.owner.collisionShape.halfSize.scale(4);
         // See if the spell colldies with an enemy
         for (let enemy of this.spell.enemies){
             if (enemy.dead){

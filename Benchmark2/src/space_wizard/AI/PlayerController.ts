@@ -73,9 +73,9 @@ export default class PlayerController implements AI {
         if (this.owner.position.x <= 32){
             this.owner.position.x = 32;
         }
-        /*if (this.owner.position.y <= 400){
-            this.owner.position.y = 400;
-        }*/
+        if (this.owner.position.y <= 32){
+            this.owner.position.y = 32;
+        }
         if (this.owner.position.y >= 700){
             this.owner.position.y = 700;
         }

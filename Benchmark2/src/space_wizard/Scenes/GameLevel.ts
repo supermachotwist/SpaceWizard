@@ -77,7 +77,7 @@ export default class GameLevel extends Scene {
         this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
 
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
-        this.load.object("enemyData", "space_wizard_assets/data/enemies.json")
+        this.load.object("enemyData", "space_wizard_assets/data/enemies.json");
 
         // Navmesh for Enemies
         this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
@@ -108,6 +108,12 @@ export default class GameLevel extends Scene {
         this.spawnEnemies();
 
         this.spawnTowers();
+
+
+    }
+
+    getEnemies(): Array<Enemy>{
+        return this.enemies;
     }
 
     initLayers(): void {
@@ -149,8 +155,9 @@ export default class GameLevel extends Scene {
                 enemySprite.scale.scale(0.5);
             }
             // Add collision to sprite
-            enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(28, 28)));
+            enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
             enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
             let enemyType = new enemySpaceship();
             let enemyClass = new Enemy(enemySprite, "enemySpaceship", enemyType);
             enemySprite.addAI(EnemyAI, {
@@ -189,7 +196,7 @@ export default class GameLevel extends Scene {
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
         this.player.addAI(PlayerController,{
             inventory: inventory,
-            speed:200
+            speed:300
         });
 
         // Start player is idle animation on loop

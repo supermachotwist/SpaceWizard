@@ -26,7 +26,8 @@ export default class MainMenu extends Scene {
         this.load.spritesheet("forkTower", "space_wizard_assets/spritesheets/ForkTower.json");
         this.load.spritesheet("pierceTower", "space_wizard_assets/spritesheets/PierceTower.json");
         
-        //this.load.audio("mainMenuMusic","space_wizard_assets/sounds/PlaceholderMusic.mp3");
+        //Load music and sound effects
+        this.load.audio("mainMenuMusic", "space_wizard_assets/music/menu music.wav");
     }
 
     startScene():void{
@@ -46,8 +47,9 @@ export default class MainMenu extends Scene {
         this.makePlayButton();
         this.makeHelpButton();
         this.makeSettingButton();
-    
-        
+
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "mainMenuMusic"});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mainMenuMusic", loop: true, holdReference: true});
     }
 
     updateScene():void{
@@ -55,9 +57,6 @@ export default class MainMenu extends Scene {
     }
 
     unloadScene():void{
-        //unload music here
-        //this.emitter.fireEvent(GameEventType.STOP_SOUND,{key:"mainMenu"});
-
     }
 
     makePlayButton():Button{

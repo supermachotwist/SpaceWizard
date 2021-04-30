@@ -37,7 +37,7 @@ export default class EnemyProjectileController extends ControllerAI {
     enemy: Enemy;
 
     /** A list of enemies the tower has collided with */
-    /** This is to prevent the tower from hitting the same tower twice */
+    /** This is to prevent the projectile from hitting the same tower twice */
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;

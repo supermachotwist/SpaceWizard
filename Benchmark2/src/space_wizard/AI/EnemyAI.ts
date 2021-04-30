@@ -54,20 +54,45 @@ export default class EnemyAI extends ControllerAI
                 this.emitter.fireEvent(space_wizard_events.PLAYER_DAMAGE);
             }
 
-            // Look in the direction of the player
-            let lookDirection = this.owner.position.dirTo(this.player.position);
-            this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
+            // Enemy Types. Change behavior of enemy based on their display name
+            // enemySpaceship -> Follows player and shoots on a cooldown randomly
+            if (this.enemy.type.displayName == "enemySpaceship"){
+                // Look in the direction of the player
+                let lookDirection = this.owner.position.dirTo(this.player.position);
+                this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
 
-            // Enemy will occasionally shoot on cooldown
-            if (this.enemy.cooldownTimer.isStopped){
-                if (Math.random() < 0.01){
-                    this.enemy.shoot(lookDirection);
-                    this.enemy.cooldownTimer.start();
+                // Move the enemy in direction of movement
+                this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
+
+                // Enemy will occasionally shoot on cooldown
+                if (this.enemy.cooldownTimer.isStopped){
+                    if (Math.random() < 0.01){
+                        this.enemy.shoot(lookDirection);
+                        this.enemy.cooldownTimer.start();
+                    }
                 }
-            }
 
-            // Move the enemy in direction of movement
-            this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
+                for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
+                    if (this.enemy == enemy){
+                        continue;
+                    }
+                    // Push enemies out of each other if they overlap
+                    if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
+                        if (this.owner.collisionShape.center.x >= enemy.owner.collisionShape.x){
+                            this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
+                        }
+                        if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.x){
+                            this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
+                        }
+                        if (this.owner.collisionShape.center.y >= enemy.owner.collisionShape.y){
+                            this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
+                        }
+                        if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.y){
+                            this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
+                        }  
+                    }
+                }
+            }   
         }
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){

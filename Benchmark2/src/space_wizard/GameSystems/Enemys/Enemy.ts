@@ -35,8 +35,8 @@ export default class Enemy {
         this.owner = owner;
         this.displayName = displayName;
         this.type = enemyType;
-        this.speed = 50;
-        this.health = 50;
+        this.speed = this.type.speed;
+        this.health = this.type.health;
         this.dead = false;
 
         this.cooldownTimer = new Timer(enemyType.cooldown);
@@ -78,7 +78,7 @@ export default class Enemy {
         let projectileSprite = this.owner.getScene().add.animatedSprite("enemyProjectile", "primary");
         projectileSprite.scale.scale(3);
         projectileSprite.position.set(this.owner.position.x, this.owner.position.y);
-        projectileSprite.addPhysics(new Circle(Vec2.ZERO, 2));
+        projectileSprite.addPhysics(new Circle(Vec2.ZERO, 12));
         projectileSprite.addAI(EnemyProjectileController, {
             speed: 400,
             direction: direction,

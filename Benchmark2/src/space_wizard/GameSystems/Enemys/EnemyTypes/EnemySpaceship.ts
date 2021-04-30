@@ -6,5 +6,7 @@ export default class enemySpaceship extends EnemyType {
         super();
         this.displayName = "enemySpaceship";
         this.cooldown = 10000;
+        this.speed = 50;
+        this.health = 50;
     }
 }
