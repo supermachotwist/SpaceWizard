@@ -1,5 +1,7 @@
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import Emitter from "../../../Wolfie2D/Events/Emitter";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
@@ -10,6 +12,9 @@ import SpellType from "./SpellType";
 
 
 export default class Spell {
+    // For sound effects
+    emitter: Emitter;
+
     /** The sprite that represents this spell in an inventory */
     sprite: Sprite;
 
@@ -55,6 +60,8 @@ export default class Spell {
         this.explosion = explosion;
         this.fork = fork;
         this.pierce = pierce;
+
+        this.emitter = new Emitter();
     }
 
     moveSprite(position: Vec2, layer?: string){
@@ -75,6 +82,7 @@ export default class Spell {
         if (this.type.displayName == "Fireball"){
             // Shoot fireball when off cooldown
             if (this.cooldownTimer.isStopped() || this.fork){
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
                 let fireball = owner.getScene().add.animatedSprite("meteor", "primary");
                 fireball.position.set(owner.position.x, owner.position.y);
                 fireball.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
@@ -93,6 +101,7 @@ export default class Spell {
         else if (this.type.displayName == "Comet"){
             // Shoot fireball when off cooldown
             if (this.cooldownTimer.isStopped() || this.fork){
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
                 let comet = owner.getScene().add.animatedSprite("comet", "primary");
                 comet.position.set(owner.position.x, owner.position.y);
                 comet.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));

@@ -201,8 +201,9 @@ export default class AABB extends Shape {
 				return true;
 			}
 			return false;
+        } else {
+            return false;
         }
-        throw "Overlap not defined between these shapes."
     }
 
     /**

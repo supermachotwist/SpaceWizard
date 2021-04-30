@@ -31,6 +31,7 @@ import enemySpaceship from "../GameSystems/Enemys/EnemyTypes/EnemySpaceship";
 import EnemyType from "../GameSystems/Enemys/EnemyType";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 
 
@@ -81,6 +82,17 @@ export default class GameLevel extends Scene {
 
         // Navmesh for Enemies
         this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
+
+        // Sound Effects
+        this.load.audio("laser", "space_wizard_assets/sound effect/laser.wav");
+        this.load.audio("bubbles", "space_wizard_assets/sound effect/bubbles.wav");
+        this.load.audio("bang", "space_wizard_assets/sound effect/bang.wav");
+        this.load.audio("spaceship", "space_wizard_assets/sound effect/spaceship.wav");
+        this.load.audio("thunder", "space_wizard_assets/sound effect/thunder.wav");
+        this.load.audio("playerDamage", "space_wizard_assets/sound effect/player damage.wav");
+
+        // Level music
+        this.load.audio("levelMusic", "space_wizard_assets/music/level music.wav");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -109,7 +121,11 @@ export default class GameLevel extends Scene {
 
         this.spawnTowers();
 
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
+    }
 
+    unloadScene():void{
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "levelMusic"});
     }
 
     getEnemies(): Array<Enemy>{
@@ -219,12 +235,13 @@ export default class GameLevel extends Scene {
             
             switch(event.type){
                 case space_wizard_events.PLAYER_DAMAGE: {
-                   if ((<PlayerController> this.player.ai).damage()) {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDamage", loop: false, holdReference: false});
+                    if ((<PlayerController> this.player.ai).damage()) {
                        this.gameover();
-                   }
-                   else {
+                    }
+                    else {
                         this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
-                   }
+                    }
                 }
             }
         }

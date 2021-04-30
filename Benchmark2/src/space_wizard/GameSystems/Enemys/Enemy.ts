@@ -1,5 +1,7 @@
 import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import Emitter from "../../../Wolfie2D/Events/Emitter";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
@@ -9,6 +11,8 @@ import EnemyType from "./EnemyType";
 
 /** Enemy Class mainly controls */
 export default class Enemy {
+
+    emitter: Emitter;
 
     // Type of the enemy
     type: EnemyType;
@@ -40,6 +44,8 @@ export default class Enemy {
         this.dead = false;
 
         this.cooldownTimer = new Timer(enemyType.cooldown);
+
+        this.emitter = new Emitter();
     }
 
     moveSprite(position: Vec2, layer?: string){
@@ -67,6 +73,9 @@ export default class Enemy {
         {
             this.owner.animation.stop();
             this.owner.animation.queue("DYING", false);
+            if (this.type.displayName == "enemySpaceship"){
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bubbles", loop: false});
+            }
             this.dead = true;
             return true;
         }

@@ -48,7 +48,6 @@ export default class MainMenu extends Scene {
         this.makeHelpButton();
         this.makeSettingButton();
 
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "mainMenuMusic"});
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mainMenuMusic", loop: true, holdReference: true});
     }
 
@@ -57,6 +56,7 @@ export default class MainMenu extends Scene {
     }
 
     unloadScene():void{
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "mainMenuMusic"});
     }
 
     makePlayButton():Button{

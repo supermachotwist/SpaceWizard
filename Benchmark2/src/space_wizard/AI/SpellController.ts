@@ -1,7 +1,9 @@
 import ControllerAI from "../../Wolfie2D/AI/ControllerAI";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -13,6 +15,8 @@ import EnemyAI from "./EnemyAI";
 
 
 export default class SpellController extends ControllerAI {
+
+    protected emitter: Emitter;
 
     // The spell player sprite
     owner: AnimatedSprite;
@@ -45,6 +49,8 @@ export default class SpellController extends ControllerAI {
         this.spell = options.spell;
 
         this.explosionSize = 1;
+
+        this.emitter = new Emitter();
     }
 
     activate(options: Record<string, any>): void {}
@@ -78,11 +84,10 @@ export default class SpellController extends ControllerAI {
                     else if (tower.displayName === "ForkTower" && !this.spell.fork){
                         // Do not fork again after forking once
                         this.spell.fork = true;
-                        this.spell.use(this.owner, this.direction.clone());
                         this.spell.use(this.owner, this.direction.rotateCCW(Math.PI/8).clone());
                         this.direction.rotateCCW(-1 * Math.PI/8);
                         this.spell.use(this.owner, this.direction.rotateCCW(-1 * Math.PI/8).clone());
-                        this.destroySpell(0);
+                        this.direction.rotateCCW(Math.PI/8);
                     }
                 }
             }
@@ -110,6 +115,7 @@ export default class SpellController extends ControllerAI {
         this.owner.scale.scale(scale);
         this.owner.animation.playIfNotAlready("EXPLOSION");
         this.dead = true;
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "thunder", loop: false});
     }
 
     checkEnemyCollision(): void {
