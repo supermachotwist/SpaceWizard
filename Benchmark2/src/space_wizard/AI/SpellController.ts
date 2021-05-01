@@ -127,6 +127,15 @@ export default class SpellController extends ControllerAI {
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);
+                
+                // Handle spell special effects
+                if (this.spell.type.displayName == "Fireball"){
+                    enemy.burningTimer.start();
+                }
+                else if (this.spell.type.displayName == "Comet"){
+                    enemy.slowedTimer.start();
+                }
+
                 // If the spell has an explosion status
                 if (this.spell.explosion){
                     this.checkExplosionCollision();
@@ -151,6 +160,13 @@ export default class SpellController extends ControllerAI {
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);
+                // Handle spell special effects
+                if (this.spell.type.displayName == "Fireball"){
+                    enemy.burningTimer.start();
+                }
+                else if (this.spell.type.displayName == "Comet"){
+                    enemy.slowedTimer.start();
+                }
                 if (enemy.damage(this.spell.damage)){
                     enemy.owner.animation.play("DYING", false);
                 }

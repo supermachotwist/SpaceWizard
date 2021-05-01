@@ -35,13 +35,20 @@ export default class Enemy {
     // Cooldown timer for enemy attack
     cooldownTimer: Timer;
 
-    constructor(owner: AnimatedSprite, displayName: String, enemyType: EnemyType){
+    // Status effects for enemies
+    slowedTimer: Timer;
+    burningTimer: Timer;
+
+    constructor(owner: AnimatedSprite, enemyType: EnemyType){
         this.owner = owner;
-        this.displayName = displayName;
         this.type = enemyType;
+        this.displayName = this.type.displayName;
         this.speed = this.type.speed;
         this.health = this.type.health;
         this.dead = false;
+
+        this.slowedTimer = new Timer(5000);
+        this.burningTimer = new Timer(5000);
 
         this.cooldownTimer = new Timer(enemyType.cooldown);
 

@@ -42,6 +42,18 @@ export default class EnemyAI extends ControllerAI
             return;
         }
 
+        //If the enemy is burning
+        if (!this.enemy.burningTimer.isStopped()){
+            // Damage enemy per second
+            this.enemy.damage(deltaT * 5);
+        }
+
+        // If the enemy is slowed
+        if (!this.enemy.slowedTimer.isStopped()){
+            // Slowdown enemy
+            deltaT /= 2;
+        }
+
         if (!this.enemy.dead){
             if(!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")){
                 this.owner.animation.playIfNotAlready("IDLE", true);

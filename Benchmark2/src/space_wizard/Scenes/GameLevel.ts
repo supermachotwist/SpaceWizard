@@ -182,7 +182,7 @@ export default class GameLevel extends Scene {
             enemySprite.position.set(enemy.position[0], enemy.position[1]);
 
             let enemyType = new enemySpaceship();
-            let enemyClass = new Enemy(enemySprite, "enemySpaceship", enemyType);
+            let enemyClass = new Enemy(enemySprite, enemyType);
             enemySprite.addAI(EnemyAI, {
                 player: this.player,
                 enemy: enemyClass
