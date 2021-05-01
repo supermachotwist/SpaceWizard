@@ -1,11 +1,12 @@
 import SpellType from "../SpellType";
 
-export default class Meteor extends SpellType {
+
+export default class Blackhole extends SpellType {
 
     constructor(){
         super();
         this.damage = 10;
-        this.displayName = "Fireball";
+        this.displayName = "Blackhole";
         this.cooldown = 500;
         this.cost = 300;
     }

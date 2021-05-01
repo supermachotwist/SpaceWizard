@@ -136,5 +136,24 @@ export default class Spell {
             }
             return false;
         }
+        else if (this.type.displayName == "Blackhole"){
+            // Shoot laser when off cooldown
+            if (this.cooldownTimer.isStopped() || this.fork){
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
+                let blackhole = owner.getScene().add.animatedSprite("blackhole", "primary");
+                blackhole.position.set(owner.position.x, owner.position.y);
+                blackhole.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+                blackhole.addAI(SpellController,{
+                    owner: blackhole,
+                    speed: 200,
+                    direction: lookDirection,
+                    spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),
+                    towers: this.towers
+                });
+                this.cooldownTimer.start();
+                return true;
+            }
+            return false;
+        }
     }
 }

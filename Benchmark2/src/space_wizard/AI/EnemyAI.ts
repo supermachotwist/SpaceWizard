@@ -90,18 +90,18 @@ export default class EnemyAI extends ControllerAI
                     }
                     // Push enemies out of each other if they overlap
                     if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
-                        if (this.owner.collisionShape.center.x >= enemy.owner.collisionShape.x){
+                        if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
                             this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
                         }
-                        if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.x){
+                        if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
                             this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
                         }
-                        if (this.owner.collisionShape.center.y >= enemy.owner.collisionShape.y){
+                        if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
                             this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
                         }
-                        if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.y){
+                        if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
                             this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
-                        }  
+                        }
                     }
                 }
             }   

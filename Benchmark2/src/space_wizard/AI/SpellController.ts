@@ -68,8 +68,6 @@ export default class SpellController extends ControllerAI {
             // Rotate the meteor in the direction of movement
             this.owner.rotation = Vec2.UP.angleToCCW(this.direction) + Math.PI/2;
 
-            // Move the meteor in direction of movement
-            this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
             // See if the spell collides with the tower hitbox
             for (let tower of this.spell.towers){
@@ -102,6 +100,9 @@ export default class SpellController extends ControllerAI {
                     this.owner.animation.playIfNotAlready("MOVING", true);
                 }
             }
+
+            // Move the meteor in direction of movement
+            this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
         }
         // Only remove animatedSprite when explosion animation is finished
         else if (this.dead && !this.owner.animation.isPlaying("EXPLOSION")) {
@@ -119,11 +120,18 @@ export default class SpellController extends ControllerAI {
     }
 
     checkEnemyCollision(): void {
+        // Offset used to prevent enemys from being on top of each other when using blackhole
+        let offset = 0;
         // See if the spell colldies with an enemy
         for (let enemy of this.spell.enemies){
             if (enemy.dead){
                 // Remove enemy from list in place
                 this.spell.enemies.splice(this.spell.enemies.indexOf(enemy), 1);
+            }
+            if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && this.spell.type.displayName == "Blackhole") {
+                // Suck the enemies into the center of blackhole
+                enemy.owner.position.x = this.owner.position.x + offset;
+                enemy.owner.position.y = this.owner.position.y + offset;
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);
@@ -146,11 +154,14 @@ export default class SpellController extends ControllerAI {
                 if (!this.spell.pierce) {
                     this.destroySpell(this.explosionSize);
                 }
+                offset -= 1;
             }
         }
     }
 
     checkExplosionCollision(): void {
+        // Offset used to prevent enemys from being on top of each other when using blackhole
+        let offset = 1;
         // Increase give the spell area of affect
         this.owner.collisionShape.halfSize.scale(4);
         // See if the spell colldies with an enemy
@@ -160,6 +171,7 @@ export default class SpellController extends ControllerAI {
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);
+
                 // Handle spell special effects
                 if (this.spell.type.displayName == "Fireball"){
                     enemy.burningTimer.start();
@@ -167,9 +179,16 @@ export default class SpellController extends ControllerAI {
                 else if (this.spell.type.displayName == "Comet"){
                     enemy.slowedTimer.start();
                 }
+                else if (this.spell.type.displayName == "Blackhole"){
+                    // Suck the enemies into the center of blackhole
+                    enemy.owner.position.x = this.owner.position.x + offset;
+                    enemy.owner.position.y = this.owner.position.y + offset;
+                }
+
                 if (enemy.damage(this.spell.damage)){
                     enemy.owner.animation.play("DYING", false);
                 }
+                offset += 1;
             }
         }
     }

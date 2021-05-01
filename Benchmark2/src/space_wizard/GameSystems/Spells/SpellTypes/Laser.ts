@@ -7,7 +7,7 @@ export default class Laser extends SpellType {
         super();
         this.damage = 2;
         this.displayName = "Laser";
-        this.cooldown = 100;
-        this.cost = 50;
+        this.cooldown = 0;
+        this.cost = 25;
     }
 }

@@ -33,6 +33,7 @@ import EnemyType from "../GameSystems/Enemys/EnemyType";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
 
 
 
@@ -67,6 +68,7 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("meteor", "space_wizard_assets/spritesheets/meteor.json");
         this.load.spritesheet("comet", "space_wizard_assets/spritesheets/comet.json");
         this.load.spritesheet("laser", "space_wizard_assets/spritesheets/laser.json");
+        this.load.spritesheet("blackhole", "space_wizard_assets/spritesheets/blackhole.json");
 
         // Tower Spritesheets
         this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
@@ -78,11 +80,13 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
         
         this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
+        this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
+
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
         this.load.image("meteorSprite", "space_wizard_assets/sprites/meteor.png");
         this.load.image("cometSprite", "space_wizard_assets/sprites/comet.png");
         this.load.image("laserSprite", "space_wizard_assets/sprites/laser.png");
-        this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
+        this.load.image("blackholeSprite", "space_wizard_assets/sprites/blackhole.png");
 
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
         this.load.object("enemyData", "space_wizard_assets/data/enemies.json");
@@ -216,6 +220,13 @@ export default class GameLevel extends Scene {
         laserSprite.rotation += Math.PI/4;
         let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
         inventory.addItem(thirdSpell);
+
+        inventory.changeSlot(3);
+        let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
+        blackholeSprite.scale.scale(2.8);
+        blackholeSprite.rotation += Math.PI/4;
+        let fourthSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
+        inventory.addItem(fourthSpell);
 
         inventory.changeSlot(0);
 
