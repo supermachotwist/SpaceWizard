@@ -6,6 +6,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import SpellManager from "../GameSystems/Spells/SpellManager";
 import Spell from "../GameSystems/Spells/Spell";
 import Meteor from "../GameSystems/Spells/SpellTypes/Meteor";
+import Laser from "../GameSystems/Spells/SpellTypes/Laser";
 import Tower from "../GameSystems/Towers/Tower";
 import ExplosionTower from "../GameSystems/Towers/ExplosionTower";
 import ForkTower from "../GameSystems/Towers/ForkTower";
@@ -55,12 +56,17 @@ export default class GameLevel extends Scene {
 
     protected healthCountLabel: Label;
 
+    protected manaCountLabel: Label;
+
+    protected manaBar: Rect;
+
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
 
         // Spell Spritesheets
         this.load.spritesheet("meteor", "space_wizard_assets/spritesheets/meteor.json");
         this.load.spritesheet("comet", "space_wizard_assets/spritesheets/comet.json");
+        this.load.spritesheet("laser", "space_wizard_assets/spritesheets/laser.json");
 
         // Tower Spritesheets
         this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
@@ -75,6 +81,7 @@ export default class GameLevel extends Scene {
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
         this.load.image("meteorSprite", "space_wizard_assets/sprites/meteor.png");
         this.load.image("cometSprite", "space_wizard_assets/sprites/comet.png");
+        this.load.image("laserSprite", "space_wizard_assets/sprites/laser.png");
         this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
 
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
@@ -203,11 +210,21 @@ export default class GameLevel extends Scene {
         let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
         inventory.addItem(secondSpell);
 
+        inventory.changeSlot(2);
+        let laserSprite = this.add.sprite("laserSprite", "primary");
+        laserSprite.scale.scale(2.8);
+        laserSprite.rotation += Math.PI/4;
+        let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
+        inventory.addItem(thirdSpell);
+
+        inventory.changeSlot(0);
+
         // Get center of viewport
         let center = this.viewport.getCenter();
 
         // Create the player
         this.player = this.add.animatedSprite("player", "primary");
+        this.player.scale.scale(0.5);
         this.player.position.set(center.x, center.y + 300);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
         this.player.addAI(PlayerController,{
@@ -229,6 +246,11 @@ export default class GameLevel extends Scene {
             }
         }
 
+        let mana = (<PlayerController>this.player.ai).mana;
+        this.manaCountLabel.text = "Mana: " + mana;
+        this.manaBar.size.x = mana/1000 * 300;
+        this.manaBar.position.x = (mana/1000 * 300)/2 + 25;
+
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
@@ -237,11 +259,19 @@ export default class GameLevel extends Scene {
                 case space_wizard_events.PLAYER_DAMAGE: {
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDamage", loop: false, holdReference: false});
                     if ((<PlayerController> this.player.ai).damage()) {
-                       this.gameover();
+                        this.player.animation.playIfNotAlready("DEATH", false, space_wizard_events.GAME_OVER);
                     }
                     else {
+                        if (!this.player.animation.isPlaying("DEATH")){
+                            this.player.animation.playIfNotAlready("DAMAGE", false);
+                        }
                         this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
                     }
+                    break;
+                }
+                case space_wizard_events.GAME_OVER:{
+                    this.sceneManager.changeToScene(MainMenu,{},{});
+                    break;
                 }
             }
         }
@@ -249,10 +279,6 @@ export default class GameLevel extends Scene {
 
     isPaused(): boolean {
         return this.paused;
-    }
-
-    gameover(): void {
-        this.sceneManager.changeToScene(MainMenu, {}, {});
     }
 
     spawnTowers(): void {
@@ -356,12 +382,19 @@ export default class GameLevel extends Scene {
 
     addUI(): void {
         this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 700), text: "Lives: " + (<PlayerController> this.player.ai).health});
-        this.healthCountLabel.textColor = Color.WHITE
+        this.healthCountLabel.textColor = Color.WHITE;
+
+        this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 650), text: "Mana: " + (<PlayerController>this.player.ai).mana});
+        this.manaCountLabel.textColor = Color.WHITE;
+
+        this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,675), size: new Vec2(300, 8)});
+        this.manaBar.color = Color.BLUE;
     }
 
     protected subscribeToEvents(){
         this.receiver.subscribe([
             space_wizard_events.PLAYER_DAMAGE,
+            space_wizard_events.GAME_OVER
         ]);
     }
 

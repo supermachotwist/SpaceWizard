@@ -8,13 +8,6 @@ export default class Comet extends SpellType {
         this.damage = 5;
         this.displayName = "Comet";
         this.cooldown = 300;
-    }
-    /**
-     * Initializes this weapon type with data
-     */
-    initialize(options: Record<string, any>): void {
-        this.damage = options.damage;
-        this.displayName = "Comet";
-        this.cooldown = options.cooldown;
+        this.cost = 200;
     }
 }

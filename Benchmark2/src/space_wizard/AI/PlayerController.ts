@@ -17,6 +17,9 @@ export default class PlayerController implements AI {
     // Player health
     health: number;
 
+    // Player mana
+    mana: number;
+
     // The actual player sprite
     owner: AnimatedSprite;
 
@@ -41,6 +44,7 @@ export default class PlayerController implements AI {
         this.direction = Vec2.ZERO;
         this.health = 5;
         this.speed = options.speed;
+        this.mana = 1000;
 
         this.inventory = options.inventory;
         this.immunityTimer = new Timer(1000);
@@ -59,6 +63,13 @@ export default class PlayerController implements AI {
         if (gamelevel.isPaused()){
             return;
         }
+
+        this.mana += 3;
+        if (this.mana > 1000) {
+            this.mana = 1000;
+        }
+
+        this.owner.animation.queue("IDLE");
 
         // Get the movement direction
         this.direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
@@ -86,7 +97,10 @@ export default class PlayerController implements AI {
 
             // If spell slot is not empty
             if (spell) {
-                spell.use(this.owner, this.lookDirection);
+                if (this.mana - spell.type.cost >= 0){
+                    this.mana = this.mana - spell.type.cost;
+                    spell.use(this.owner, this.lookDirection);
+                }
             }
         }
 

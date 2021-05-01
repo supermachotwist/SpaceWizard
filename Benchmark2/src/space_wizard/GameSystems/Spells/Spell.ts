@@ -99,7 +99,7 @@ export default class Spell {
             return false;
         }
         else if (this.type.displayName == "Comet"){
-            // Shoot fireball when off cooldown
+            // Shoot comet when off cooldown
             if (this.cooldownTimer.isStopped() || this.fork){
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
                 let comet = owner.getScene().add.animatedSprite("comet", "primary");
@@ -107,6 +107,25 @@ export default class Spell {
                 comet.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 comet.addAI(SpellController,{
                     owner: comet,
+                    speed: 400,
+                    direction: lookDirection,
+                    spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),
+                    towers: this.towers
+                });
+                this.cooldownTimer.start();
+                return true;
+            }
+            return false;
+        }
+        else if (this.type.displayName == "Laser"){
+            // Shoot laser when off cooldown
+            if (this.cooldownTimer.isStopped() || this.fork){
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
+                let laser = owner.getScene().add.animatedSprite("laser", "primary");
+                laser.position.set(owner.position.x, owner.position.y);
+                laser.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+                laser.addAI(SpellController,{
+                    owner: laser,
                     speed: 400,
                     direction: lookDirection,
                     spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),

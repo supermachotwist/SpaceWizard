@@ -8,4 +8,7 @@ export default class SpellType {
 
     /** The use cooldown of the weapon */
     cooldown: number;
+
+    /** Mana cost of weapon */
+    cost: number;
 }
