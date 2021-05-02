@@ -42,7 +42,7 @@ export default class PlayerController implements AI {
         this.owner = owner;
         this.lookDirection = Vec2.ZERO;
         this.direction = Vec2.ZERO;
-        this.health = 1000;
+        this.health = 5;
         this.speed = options.speed;
         this.mana = 1000;
 

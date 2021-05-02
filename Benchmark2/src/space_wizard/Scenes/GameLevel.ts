@@ -15,21 +15,16 @@ import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import EnemyAI from "../AI/EnemyAI";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Enemy from "../GameSystems/Enemys/Enemy";
-import ArrayUtils from "../../Wolfie2D/Utils/ArrayUtils";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
-import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Color from "../../Wolfie2D/Utils/Color";
-import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import {space_wizard_events, space_wizard_names} from "../space_wizard_events";
 import Comet from "../GameSystems/Spells/SpellTypes/Comet";
-import SpriteShaderType from "../../Wolfie2D/Rendering/WebGLRendering/ShaderTypes/SpriteShaderType";
 import Input from "../../Wolfie2D/Input/Input";
 import MainMenu from "./MainMenu";
 import enemySpaceship from "../GameSystems/Enemys/EnemyTypes/EnemySpaceship";
-import EnemyType from "../GameSystems/Enemys/EnemyType";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
@@ -40,9 +35,6 @@ import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
 export default class GameLevel extends Scene {
     // The player
     player: AnimatedSprite;
-
-    // Logo
-    private logo: Sprite;
 
     /** A list of towers in the game world */
     private towers: Array<Tower>;
@@ -60,6 +52,18 @@ export default class GameLevel extends Scene {
     protected manaCountLabel: Label;
 
     protected manaBar: Rect;
+
+    private infiniteLives: boolean;
+
+    private infiniteMana: boolean;
+
+    private allSpells: boolean;
+
+    initScene(init: Record<string, any>):void {
+        this.infiniteLives = init.infiniteLives;
+        this.infiniteMana = init.infiniteMana;
+        this.allSpells = init.allSpells;
+    }
 
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
@@ -79,8 +83,8 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("enemySpaceship", "space_wizard_assets/spritesheets/enemy_spaceship.json");
         this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
         
-        this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
         this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
+        this.load.image("space", "space_wizard_assets/images/Space.png");
 
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
         this.load.image("meteorSprite", "space_wizard_assets/sprites/meteor.png");
@@ -147,6 +151,7 @@ export default class GameLevel extends Scene {
         this.addLayer("settingMenu",100);
         this.addLayer("settingMenuBackGround",99);
         this.addLayer("primary", 50);
+        this.addLayer("cookie", 1);
         this.addLayer("background", 0);
 
         // Add a layer for UI
@@ -154,17 +159,14 @@ export default class GameLevel extends Scene {
     }
 
     createBackground(): void {
-        // The first argument is the key we specified in "this.load.image"
-        // The second argument is the name of the layer
-        this.logo = this.add.sprite("logo", "background");
+        let background = this.add.sprite("space", "background");
 
         // Now, let's make sure our logo is in a good position
         let center = this.viewport.getCenter();
-        this.logo.position.set(center.x, center.y);
-        // this.settingButton();
+        background.position.set(center.x, center.y);
 
         // Create the cookie planet background
-        let cookiePlanet = this.add.sprite("cookiePlanet", "background");
+        let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
         cookiePlanet.scale.scale(10);
         cookiePlanet.position.set(center.x, center.y + this.viewport.getHalfSize().y - 64);
     }
@@ -206,29 +208,33 @@ export default class GameLevel extends Scene {
         let startingSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
         inventory.addItem(startingSpell);
 
-        // Add Comet spell
-        inventory.changeSlot(1);
-        let cometSprite = this.add.sprite("cometSprite", "primary");
-        cometSprite.scale.scale(2.8);
-        cometSprite.rotation += Math.PI/4;
-        let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
-        inventory.addItem(secondSpell);
+        if (this.allSpells){
+            // Add Comet spell
+            inventory.changeSlot(1);
+            let cometSprite = this.add.sprite("cometSprite", "primary");
+            cometSprite.scale.scale(2.8);
+            cometSprite.rotation += Math.PI/4;
+            let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
+            inventory.addItem(secondSpell);
 
-        inventory.changeSlot(2);
-        let laserSprite = this.add.sprite("laserSprite", "primary");
-        laserSprite.scale.scale(2.8);
-        laserSprite.rotation += Math.PI/4;
-        let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
-        inventory.addItem(thirdSpell);
+            // Add Laser spell
+            inventory.changeSlot(2);
+            let laserSprite = this.add.sprite("laserSprite", "primary");
+            laserSprite.scale.scale(2.8);
+            laserSprite.rotation += Math.PI/4;
+            let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
+            inventory.addItem(thirdSpell);
 
-        inventory.changeSlot(3);
-        let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
-        blackholeSprite.scale.scale(2.8);
-        blackholeSprite.rotation += Math.PI/4;
-        let fourthSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
-        inventory.addItem(fourthSpell);
+            // Add Blackhole spell
+            inventory.changeSlot(3);
+            let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
+            blackholeSprite.scale.scale(2.8);
+            blackholeSprite.rotation += Math.PI/4;
+            let fourthSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
+            inventory.addItem(fourthSpell);
 
-        inventory.changeSlot(0);
+            inventory.changeSlot(0);
+        }
 
         // Get center of viewport
         let center = this.viewport.getCenter();
@@ -257,6 +263,9 @@ export default class GameLevel extends Scene {
             }
         }
 
+        if (this.infiniteMana){
+            (<PlayerController>this.player.ai).mana = 1000;
+        }
         let mana = (<PlayerController>this.player.ai).mana;
         this.manaCountLabel.text = "Mana: " + mana;
         this.manaBar.size.x = mana/1000 * 300;
@@ -268,6 +277,9 @@ export default class GameLevel extends Scene {
             
             switch(event.type){
                 case space_wizard_events.PLAYER_DAMAGE: {
+                    if (this.infiniteLives) {
+                        break;
+                    }
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDamage", loop: false, holdReference: false});
                     if ((<PlayerController> this.player.ai).damage()) {
                         this.player.animation.playIfNotAlready("DEATH", false, space_wizard_events.GAME_OVER);
@@ -331,33 +343,6 @@ export default class GameLevel extends Scene {
         }        
     }
 
-    createNavmesh(): void {
-        // Add a layer to display the graph
-        let gLayer = this.addLayer("graph");
-        gLayer.setHidden(true);
-
-        let navmeshData = this.load.getObject("navmesh");
-
-         // Create the graph
-        this.graph = new PositionGraph();
-
-        // Add all nodes to our graph
-        for(let node of navmeshData.nodes){
-            this.graph.addPositionedNode(new Vec2(node[0], node[1]));
-            this.add.graphic(GraphicType.POINT, "graph", {position: new Vec2(node[0], node[1])})
-        }
-
-        // Add all edges to our graph
-        for(let edge of navmeshData.edges){
-            this.graph.addEdge(edge[0], edge[1]);
-            this.add.graphic(GraphicType.LINE, "graph", {start: this.graph.getNodePosition(edge[0]), end: this.graph.getNodePosition(edge[1])})
-        }
-
-        // Set this graph as a navigable entity
-        let navmesh = new Navmesh(this.graph);
-        this.navManager.addNavigableEntity(space_wizard_names.NAVMESH, navmesh);
-    }
-
     createPauseMenu():void{
         this.paused = true;
         let center = this.viewport.getCenter();
@@ -400,6 +385,7 @@ export default class GameLevel extends Scene {
 
         this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,675), size: new Vec2(300, 8)});
         this.manaBar.color = Color.BLUE;
+        
     }
 
     protected subscribeToEvents(){
@@ -408,42 +394,5 @@ export default class GameLevel extends Scene {
             space_wizard_events.GAME_OVER
         ]);
     }
-
-    //replace button with a image at a later date
-    // settingButton(){
-    //     let midpoint = this.viewport.getCenter();
-    //     let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y+120),text:"Setting"});
-    //     playButton.backgroundColor = Color.BLACK;
-    //     playButton.borderColor = Color.BLACK;
-    //     playButton.borderRadius = 10;
-    //     playButton.setPadding(new Vec2(50, 10));
-    //     playButton.font = "PixelSimple";
-    //     playButton.onClick = () => {
-    //         this.createSettingMenu();
-    //     }
-    //     return playButton;
-    // }
-
-    //wait, how to pause game????
-    
-    // createSettingMenu(){
-    //     let center = this.viewport.getCenter();
-
-    //     let musicSliderLabel = <UIElement> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x-400,center.y),text:"muusic"});
-    //     let musicSlider = <UIElement> this.add.uiElement(UIElementType.SLIDER,"settingMenu",{position: new Vec2(center.x-100,center.y)});
-    //     musicSlider.backgroundColor = Color.GREEN; //there might be a bug with the slider, idk
-    //     musicSliderLabel.backgroundColor=Color.BLUE;
-    //     // let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenu",{position:new Vec2(center.x,center.y),size:new Vec2(1000,500)});
-    //     // settingBackground.color = Color.WHITE;
-
-    //     let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"exit"});
-    //     exitButton.onClick = () =>{
-    //         musicSlider.destroy();
-    //         exitButton.destroy();
-    //         musicSliderLabel.destroy();
-    //       //  settingBackground.destroy();
-    //         console.log("Exit Setting");
-    //     }
-    // }
     
 }

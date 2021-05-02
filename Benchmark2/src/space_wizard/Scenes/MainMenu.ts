@@ -10,6 +10,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import LevelSelection from "./Level Selection";
 import Level1 from "./Level1";
 
 
@@ -51,17 +52,15 @@ export default class MainMenu extends Scene {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mainMenuMusic", loop: true, holdReference: true});
     }
 
-    updateScene():void{
-        
+    updateScene():void{ 
     }
 
     unloadScene():void{
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "mainMenuMusic"});
     }
 
     makePlayButton():Button{
         let midpoint = this.viewport.getCenter();
-        let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y),text:"Demo Level"});
+        let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y),text:"Level Selection"});
         playButton.backgroundColor = Color.BLACK;
         playButton.borderColor = Color.BLACK;
         playButton.borderRadius = 10;
@@ -69,7 +68,7 @@ export default class MainMenu extends Scene {
         playButton.font = "PixelSimple";
         playButton.onClick = () => {
             console.log("Activated Play Button");
-            this.setting?{}:this.sceneManager.changeToScene(Level1,{},{});
+            this.setting?{}:this.sceneManager.changeToScene(LevelSelection,{},{});
         }
         return playButton;
     }

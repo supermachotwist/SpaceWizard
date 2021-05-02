@@ -3,42 +3,42 @@
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [200, 100]
+            "position": [200, -200]
         },
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [250, 50]
+            "position": [250, -250]
         },
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [150, 150]
+            "position": [150, -250]
         },
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [1050, 150]
+            "position": [1050, -150]
         },
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [950, 50]
+            "position": [950, -250]
         },
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [600, 200]
+            "position": [600, -100]
         },
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [600, 150]
+            "position": [600, -150]
         },
         {
             "type": "enemySpaceship",
             "time": 1000,
-            "position": [600, 100]
+            "position": [600, -200]
         }
     ]
 }
