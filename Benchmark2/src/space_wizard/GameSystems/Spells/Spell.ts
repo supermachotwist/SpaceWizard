@@ -83,7 +83,7 @@ export default class Spell {
             // Shoot fireball when off cooldown
             if (this.cooldownTimer.isStopped() || this.fork){
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
-                let fireball = owner.getScene().add.animatedSprite("meteor", "primary");
+                let fireball = owner.getScene().add.animatedSprite("meteor", "spell");
                 fireball.position.set(owner.position.x, owner.position.y);
                 fireball.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 fireball.addAI(SpellController,{
@@ -102,7 +102,7 @@ export default class Spell {
             // Shoot comet when off cooldown
             if (this.cooldownTimer.isStopped() || this.fork){
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
-                let comet = owner.getScene().add.animatedSprite("comet", "primary");
+                let comet = owner.getScene().add.animatedSprite("comet", "spell");
                 comet.position.set(owner.position.x, owner.position.y);
                 comet.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 comet.addAI(SpellController,{
@@ -121,7 +121,7 @@ export default class Spell {
             // Shoot laser when off cooldown
             if (this.cooldownTimer.isStopped() || this.fork){
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
-                let laser = owner.getScene().add.animatedSprite("laser", "primary");
+                let laser = owner.getScene().add.animatedSprite("laser", "spell");
                 laser.position.set(owner.position.x, owner.position.y);
                 laser.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 laser.addAI(SpellController,{
@@ -140,7 +140,7 @@ export default class Spell {
             // Shoot laser when off cooldown
             if (this.cooldownTimer.isStopped() || this.fork){
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
-                let blackhole = owner.getScene().add.animatedSprite("blackhole", "primary");
+                let blackhole = owner.getScene().add.animatedSprite("blackhole", "spell");
                 blackhole.position.set(owner.position.x, owner.position.y);
                 blackhole.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 blackhole.addAI(SpellController,{

@@ -19,6 +19,15 @@ export default class MainMenu extends Scene {
     animatedSprite: AnimatedSprite;
     setting:boolean;
 
+    // Cheats
+    private infiniteLives: boolean;
+    private infiniteMana: boolean;
+    private allSpells: boolean;
+
+    private playButton: Button;
+    private helpButton: Button;
+    private settingButton: Button;
+
     loadScene():void{
         this.load.image("mainMenuBackground","space_wizard_assets/images/Space Wizard Logo.png");
 
@@ -43,11 +52,10 @@ export default class MainMenu extends Scene {
         this.viewport.setFocus(this.viewport.getHalfSize());
 
         let midpoint = this.viewport.getHalfSize();
-        //Play Button
-        //Click on this will start the level
-        this.makePlayButton();
-        this.makeHelpButton();
-        this.makeSettingButton();
+        
+        this.playButton = this.makePlayButton();
+        this.helpButton = this.makeHelpButton();
+        this.settingButton = this.makeSettingButton();
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "mainMenuMusic", loop: true, holdReference: true});
     }
@@ -68,7 +76,11 @@ export default class MainMenu extends Scene {
         playButton.font = "PixelSimple";
         playButton.onClick = () => {
             console.log("Activated Play Button");
-            this.setting?{}:this.sceneManager.changeToScene(LevelSelection,{},{});
+            this.setting?{}:this.sceneManager.changeToScene(LevelSelection,{
+                infiniteLives: this.infiniteLives,
+                infiniteMana: this.infiniteMana,
+                allSpells: this.allSpells
+            },{});
         }
         return playButton;
     }
@@ -82,7 +94,10 @@ export default class MainMenu extends Scene {
         playButton.setPadding(new Vec2(50, 10));
         playButton.font = "PixelSimple";
         playButton.onClick = () => {
-            console.log("Activated Help Butto");
+            console.log("Activated Help Button");
+            this.playButton.destroy();
+            this.helpButton.destroy();
+            this.settingButton.destroy();
             this.createHelpMenu();
         }
         return playButton;
@@ -98,6 +113,9 @@ export default class MainMenu extends Scene {
         playButton.setPadding(new Vec2(50, 10));
         playButton.font = "PixelSimple";
         playButton.onClick = () => {
+            this.playButton.destroy();
+            this.helpButton.destroy();
+            this.settingButton.destroy();
             this.createSettingMenu();
         }
         return playButton;
@@ -107,20 +125,76 @@ export default class MainMenu extends Scene {
         this.setting = true;
         let center = this.viewport.getCenter();
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(1000,500)});
-        settingBackground.color = Color.WHITE;
+        settingBackground.color = Color.BLACK;
+        settingBackground.borderColor = new Color(53, 53, 53);
+        settingBackground.setBorderWidth(24);
 
-        let musicSliderLabel = <UIElement> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x-400,center.y),text:"muusic"});
-        let musicSlider = <UIElement> this.add.uiElement(UIElementType.SLIDER,"settingMenu",{position: new Vec2(center.x-100,center.y)});
-        musicSlider.backgroundColor = Color.GREEN; //there might be a bug with the slider, idk
-        musicSliderLabel.backgroundColor=Color.BLUE;
+        // Create cheat buttons
+        let midpoint = this.viewport.getCenter();
+        let infiniteLives = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + - 75),text:"Infinite Lives"});
+        infiniteLives.backgroundColor = Color.BLACK;
+        infiniteLives.borderColor = Color.BLACK;
+        infiniteLives.borderRadius = 10;
+        infiniteLives.setPadding(new Vec2(50, 10));
+        infiniteLives.font = "PixelSimple";
+        infiniteLives.onClick = () => {
+            console.log("Activated infiniteLives Button");
+            this.infiniteLives = !this.infiniteLives;
+            if (this.infiniteLives){
+                infiniteLives.backgroundColor = new Color(53, 53, 53);
+            } else {
+                infiniteLives.backgroundColor = Color.BLACK;
+            }
+        }
 
-        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"exit"});
+        let infiniteMana = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y),text:"Infinite Mana"});
+        infiniteMana.backgroundColor = Color.BLACK;
+        infiniteMana.borderColor = Color.BLACK;
+        infiniteMana.borderRadius = 10;
+        infiniteMana.setPadding(new Vec2(50, 10));
+        infiniteMana.font = "PixelSimple";
+        infiniteMana.onClick = () => {
+            console.log("Activated infiniteMana Button");
+            this.infiniteMana = !this.infiniteMana;
+            if (this.infiniteMana){
+                infiniteMana.backgroundColor = new Color(53, 53, 53);
+            } else {
+                infiniteMana.backgroundColor = Color.BLACK;
+            }
+        }
+
+        let allSpells = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + 75),text:"All Spells Unlocked"});
+        allSpells.backgroundColor = Color.BLACK;
+        allSpells.borderColor = Color.BLACK;
+        allSpells.borderRadius = 10;
+        allSpells.setPadding(new Vec2(50, 10));
+        allSpells.font = "PixelSimple";
+        allSpells.onClick = () => {
+            console.log("Activated allSpells Button");
+            this.allSpells = !this.allSpells;
+            if (this.allSpells){
+                allSpells.backgroundColor = new Color(53, 53, 53);
+            } else {
+                allSpells.backgroundColor = Color.BLACK;
+            }
+        }
+
+        let exitButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"EXIT"});
+        exitButton.backgroundColor = Color.BLACK;
+        exitButton.borderColor = Color.BLACK;
+        exitButton.borderRadius = 10;
+        exitButton.setPadding(new Vec2(50, 10));
+        exitButton.font = "PixelSimple";
         exitButton.onClick = () =>{
             this.setting=false;
-            musicSlider.destroy();
+            infiniteLives.destroy();
+            infiniteMana.destroy();
+            allSpells.destroy();
             exitButton.destroy();
-            musicSliderLabel.destroy();
             settingBackground.destroy();
+            this.playButton = this.makePlayButton();
+            this.helpButton = this.makeHelpButton();
+            this.settingButton = this.makeSettingButton();
             console.log("Exit Setting");
         }
 
@@ -196,6 +270,9 @@ export default class MainMenu extends Scene {
             forkTower.destroy();
             explosionTower.destroy();
             settingBackground.destroy();
+            this.playButton = this.makePlayButton();
+            this.helpButton = this.makeHelpButton();
+            this.settingButton = this.makeSettingButton();
             console.log("Exit Setting");
         }
     }

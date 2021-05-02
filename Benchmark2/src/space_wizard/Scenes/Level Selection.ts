@@ -19,6 +19,12 @@ export default class LevelSelection extends Scene {
     private infiniteMana: boolean;
     private allSpells: boolean;
 
+    initScene(init: Record<string, any>):void {
+        this.infiniteLives = init.infiniteLives;
+        this.infiniteMana = init.infiniteMana;
+        this.allSpells = init.allSpells;
+    }
+
     loadScene():void{
     }
 
@@ -28,9 +34,6 @@ export default class LevelSelection extends Scene {
         
         // Create level selection buttons
         this.createLevelSelection();
-
-        // Create cheat buttons
-        this.createCheatButtons();
 
         // Create return button
         this.createReturnButton();
@@ -135,66 +138,16 @@ export default class LevelSelection extends Scene {
 
     createReturnButton():void{
         let midpoint = this.viewport.getCenter();
-        let level1 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 125),text:"Return to Main Menu"});
-        level1.backgroundColor = Color.BLACK;
-        level1.borderColor = Color.BLACK;
-        level1.borderRadius = 10;
-        level1.setPadding(new Vec2(50, 10));
-        level1.font = "PixelSimple";
-        level1.onClick = () => {
+        let returnButton = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 75),text:"Return to Main Menu"});
+        returnButton.backgroundColor = Color.BLACK;
+        returnButton.borderColor = Color.BLACK;
+        returnButton.borderRadius = 10;
+        returnButton.setPadding(new Vec2(50, 10));
+        returnButton.font = "PixelSimple";
+        returnButton.onClick = () => {
             console.log("Activated Return Button");
             this.sceneManager.changeToScene(MainMenu,{},{});
         }
     }
 
-    createCheatButtons():void{
-        let midpoint = this.viewport.getCenter();
-        let infiniteLives = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 300,midpoint.y + 75),text:"Infinite Lives"});
-        infiniteLives.backgroundColor = Color.BLACK;
-        infiniteLives.borderColor = Color.BLACK;
-        infiniteLives.borderRadius = 10;
-        infiniteLives.setPadding(new Vec2(50, 10));
-        infiniteLives.font = "PixelSimple";
-        infiniteLives.onClick = () => {
-            console.log("Activated infiniteLives Button");
-            this.infiniteLives = !this.infiniteLives;
-            if (this.infiniteLives){
-                infiniteLives.backgroundColor = Color.GREEN;
-            } else {
-                infiniteLives.backgroundColor = Color.BLACK;
-            }
-        }
-
-        let infiniteMana = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 300,midpoint.y + 75),text:"Infinite Mana"});
-        infiniteMana.backgroundColor = Color.BLACK;
-        infiniteMana.borderColor = Color.BLACK;
-        infiniteMana.borderRadius = 10;
-        infiniteMana.setPadding(new Vec2(50, 10));
-        infiniteMana.font = "PixelSimple";
-        infiniteMana.onClick = () => {
-            console.log("Activated infiniteMana Button");
-            this.infiniteMana = !this.infiniteMana;
-            if (this.infiniteMana){
-                infiniteMana.backgroundColor = Color.GREEN;
-            } else {
-                infiniteMana.backgroundColor = Color.BLACK;
-            }
-        }
-
-        let allSpells = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 75),text:"All Spells Unlocked"});
-        allSpells.backgroundColor = Color.BLACK;
-        allSpells.borderColor = Color.BLACK;
-        allSpells.borderRadius = 10;
-        allSpells.setPadding(new Vec2(50, 10));
-        allSpells.font = "PixelSimple";
-        allSpells.onClick = () => {
-            console.log("Activated allSpells Button");
-            this.allSpells = !this.allSpells;
-            if (this.allSpells){
-                allSpells.backgroundColor = Color.GREEN;
-            } else {
-                allSpells.backgroundColor = Color.BLACK;
-            }
-        }
-    }
 }

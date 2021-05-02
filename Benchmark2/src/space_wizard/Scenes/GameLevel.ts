@@ -29,6 +29,7 @@ import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 
 
 
@@ -150,6 +151,7 @@ export default class GameLevel extends Scene {
     initLayers(): void {
         this.addLayer("settingMenu",100);
         this.addLayer("settingMenuBackGround",99);
+        this.addLayer("spell", 51);
         this.addLayer("primary", 50);
         this.addLayer("cookie", 1);
         this.addLayer("background", 0);
@@ -351,8 +353,22 @@ export default class GameLevel extends Scene {
         settingBackground.borderColor = new Color(53, 53, 53, 0.5);
         settingBackground.setBorderWidth(24);
 
+        // Mute button
+        let muteButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y),text:"MUTE"});
+        muteButton.setBackgroundColor(new Color(53, 53, 53));
+        muteButton.setPadding(new Vec2(50, 10));
+        muteButton.onClick = () =>{
+            if (muteButton.text == "MUTE") {
+                muteButton.text = "UNMUTE";
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "levelMusic"});
+            } else {
+                muteButton.text = "MUTE";
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
+            }
+        }
+
         // Exit button
-        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 50),text:"EXIT"});
+        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 100),text:"EXIT"});
         exitButton.setBackgroundColor(new Color(53, 53, 53));
         exitButton.setPadding(new Vec2(50, 10));
         exitButton.onClick = () =>{
@@ -364,13 +380,14 @@ export default class GameLevel extends Scene {
         }
 
         // Resume button
-        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y - 50),text:"RESUME"});
+        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y - 100),text:"RESUME"});
         resumeButton.setBackgroundColor(new Color(53, 53, 53));
         resumeButton.setPadding(new Vec2(50, 10));
         resumeButton.onClick = () =>{
             settingBackground.destroy();
             resumeButton.destroy();
             exitButton.destroy();
+            muteButton.destroy();
             this.paused = false;
             console.log("Resume Game");
         }
