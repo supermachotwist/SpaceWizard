@@ -80,9 +80,7 @@ export default class Enemy {
         {
             this.owner.animation.stop();
             this.owner.animation.queue("DYING", false);
-            if (this.type.displayName == "enemySpaceship"){
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bubbles", loop: false});
-            }
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bubbles", loop: false});
             this.dead = true;
             return true;
         }

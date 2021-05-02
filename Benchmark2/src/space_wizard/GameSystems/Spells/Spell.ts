@@ -126,7 +126,7 @@ export default class Spell {
                 laser.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
                 laser.addAI(SpellController,{
                     owner: laser,
-                    speed: 400,
+                    speed: 600,
                     direction: lookDirection,
                     spell: new Spell(this.sprite, this.type, this.towers, this.enemies, this.explosion, this.fork, this.pierce),
                     towers: this.towers

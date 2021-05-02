@@ -92,7 +92,10 @@ export default class PlayerController implements AI {
         }
 
         if(Input.isMouseJustPressed()){
-            this.owner.animation.play("FIRING");
+            if (!this.owner.animation.isPlaying("DEATH")) {
+                this.owner.animation.play("FIRING");
+            }
+            
             let spell = this.inventory.getItem();
 
             // If spell slot is not empty

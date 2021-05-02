@@ -57,9 +57,6 @@ export default class EnemyAI extends ControllerAI
         if (!this.enemy.dead){
             if(!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")){
                 this.owner.animation.playIfNotAlready("IDLE", true);
-            
-            //this.route = this.owner.getScene().getNavigationManager().getPath(space_wizard_names.NAVMESH, this.owner.position, /*Insert_end_pos_here*/);    
-            //this.owner.moveOnPath(this.enemy.speed * deltaT, this.route);
             }
 
             if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
@@ -73,38 +70,89 @@ export default class EnemyAI extends ControllerAI
                 let lookDirection = this.owner.position.dirTo(this.player.position);
                 this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
 
-                // Move the enemy in direction of movement
+                // Move the enemy in direction of player
                 this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
 
                 // Enemy will occasionally shoot on cooldown
-                if (this.enemy.cooldownTimer.isStopped){
+                if (this.enemy.cooldownTimer.isStopped()){
                     if (Math.random() < 0.01){
                         this.enemy.shoot(lookDirection);
                         this.enemy.cooldownTimer.start();
                     }
                 }
+            } 
+            // Flies around randombly and shoots rapidly in 8 directions
+            else if (this.enemy.type.displayName == "enemyUFO") {
+                let viewport = this.enemy.owner.getScene().getViewport()
+                let owner = this.enemy.owner;
+                let xprob = 1200 - owner.position.x;
+                let yprob = 800 - owner.position.y;
+                xprob = (xprob/1200);
+                yprob = (yprob/800);
 
-                for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
-                    if (this.enemy == enemy){
-                        continue;
-                    }
-                    // Push enemies out of each other if they overlap
-                    if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
-                        if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
-                            this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
+                // Enemy will occasionally shoot on cooldown
+                if (this.enemy.cooldownTimer.isStopped()){
+                    let rand = Math.random();
+
+                    if (rand < 0.01){
+                        rand = Math.random();
+                        if (rand >= xprob && rand >= yprob){
+                            this.moveDirection = new Vec2(-1, -1);
                         }
-                        if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
-                            this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
+                        else if (rand >= xprob && rand < yprob){
+                            this.moveDirection = new Vec2(-1, 1);
                         }
-                        if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
-                            this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
+                        else if (rand < xprob && rand < yprob){
+                            this.moveDirection = new Vec2(1, 1);
                         }
-                        if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
-                            this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
+                        else if (rand < xprob && rand >= yprob){
+                            this.moveDirection = new Vec2(1, -1);
                         }
+                        this.enemy.shoot(Vec2.UP);
+                        this.enemy.shoot(Vec2.RIGHT);
+                        this.enemy.shoot(Vec2.DOWN);
+                        this.enemy.shoot(Vec2.LEFT);
+                        this.enemy.cooldownTimer.start();
                     }
                 }
-            }   
+                // Wrap the enemy around the stage
+                if (this.owner.position.x > 1264) {
+                    this.owner.position.x = -64;
+                }
+                if (this.owner.position.x < -64) {
+                    this.owner.position.x = 1264;
+                }
+                if (this.owner.position.y > 864) {
+                    this.owner.position.y = -64;
+                }
+                if (this.owner.position.y < -64) {
+                    this.owner.position.y = 864;
+                }
+
+                // Move the enemy in direction of movement
+                this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
+            }
+            
+            for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
+                if (this.enemy == enemy){
+                    continue;
+                }
+                // Push enemies out of each other if they overlap
+                if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
+                    if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
+                        this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
+                    }
+                    if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
+                        this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
+                    }
+                    if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
+                        this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
+                    }
+                    if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
+                        this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
+                    }
+                }
+            }
         }
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){

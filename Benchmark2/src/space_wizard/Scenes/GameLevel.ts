@@ -30,6 +30,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import enemyUFO from "../GameSystems/Enemys/EnemyTypes/EnemyUFO";
 
 
 
@@ -60,6 +61,8 @@ export default class GameLevel extends Scene {
 
     private allSpells: boolean;
 
+    private wave: number;
+
     initScene(init: Record<string, any>):void {
         this.infiniteLives = init.infiniteLives;
         this.infiniteMana = init.infiniteMana;
@@ -81,6 +84,7 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("pierceTower", "space_wizard_assets/spritesheets/PierceTower.json");
 
         // Enemy Spritesheets
+        this.load.spritesheet("enemyUFO", "space_wizard_assets/spritesheets/UFO.json");
         this.load.spritesheet("enemySpaceship", "space_wizard_assets/spritesheets/enemy_spaceship.json");
         this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
         
@@ -94,7 +98,8 @@ export default class GameLevel extends Scene {
         this.load.image("blackholeSprite", "space_wizard_assets/sprites/blackhole.png");
 
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
-        this.load.object("enemyData", "space_wizard_assets/data/enemies.json");
+        this.load.object("wave1", "space_wizard_assets/data/lvl1_wave1.json");
+        this.load.object("wave2", "space_wizard_assets/data/lvl1_wave2.json");
 
         // Navmesh for Enemies
         this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
@@ -115,6 +120,9 @@ export default class GameLevel extends Scene {
     // or where you should initialize any other things you will need in your scene
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
+        // Initialize wave number
+        this.wave = 2;
+
         // Initialize array of towers
         this.towers = new Array();
 
@@ -174,22 +182,37 @@ export default class GameLevel extends Scene {
     }
 
     spawnEnemies(): void {
-
+        let enemyData;
         // Get the enemy data
-        let enemyData = this.load.getObject("enemyData");
+        if (this.wave%2 == 1){
+            enemyData = this.load.getObject("wave1");
+        } else if (this.wave%2 == 0){
+            enemyData = this.load.getObject("wave2");
+        }
 
         for (let enemy of enemyData.enemies) {
             let enemySprite;
+            let enemyType;
             // Spawn appropriate enemy
-            if (enemy.type == "enemySpaceship"){
+            if (enemy.type == "enemySpaceship") {
                 enemySprite = this.add.animatedSprite("enemySpaceship", "primary");
                 enemySprite.scale.scale(0.5);
-            }
-            // Add collision to sprite
-            enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
-            enemySprite.position.set(enemy.position[0], enemy.position[1]);
+                // Add collision to sprite
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
 
-            let enemyType = new enemySpaceship();
+                enemyType = new enemySpaceship();
+            }
+            else if (enemy.type == "enemyUFO") {
+                enemySprite = this.add.animatedSprite("enemyUFO", "primary");
+                // Add collision to sprite
+                enemySprite.scale.scale(2);
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
+                enemyType = new enemyUFO();
+            }
+            
             let enemyClass = new Enemy(enemySprite, enemyType);
             enemySprite.addAI(EnemyAI, {
                 player: this.player,
@@ -245,7 +268,7 @@ export default class GameLevel extends Scene {
         this.player = this.add.animatedSprite("player", "primary");
         this.player.scale.scale(0.5);
         this.player.position.set(center.x, center.y + 300);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
         this.player.addAI(PlayerController,{
             inventory: inventory,
             speed:300
@@ -257,6 +280,7 @@ export default class GameLevel extends Scene {
 
     updateScene(deltaT: number) {
         if (this.enemies.length == 0){
+            this.wave += 1;
             this.spawnEnemies();
         }
         if (Input.isPressed("pause")){
