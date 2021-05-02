@@ -1,0 +1,60 @@
+{
+    "name": "blackhole",
+    "spriteSheetImage": "blackhole.png",
+    "spriteWidth": 32,
+    "spriteHeight": 32,
+    "columns": 3,
+    "rows": 24,
+    "animations": [
+        {
+            "name": "MOVING",
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 3
+                },
+                {
+                    "index": 1,
+                    "duration": 3
+                }
+            ]
+        },
+        {
+            "name": "EXPLOSION",
+            "frames": [
+                {
+                    "index": 4,
+                    "duration": 5
+                },
+                {
+                    "index": 5,
+                    "duration": 5
+                },
+                {
+                    "index": 6,
+                    "duration": 5
+                },
+                {
+                    "index": 7,
+                    "duration": 5
+                },
+                {
+                    "index": 8,
+                    "duration": 5
+                },
+                {
+                    "index": 9,
+                    "duration": 5
+                },
+                {
+                    "index": 10,
+                    "duration": 5
+                },
+                {
+                    "index": 11,
+                    "duration": 5
+                }
+            ]
+        }
+    ]
+}
