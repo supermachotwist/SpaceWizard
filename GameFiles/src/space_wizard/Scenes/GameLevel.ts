@@ -45,9 +45,9 @@ export default class GameLevel extends Scene {
     enemies: Array<Enemy>;
 
     // The position graph for navmesh
-    private graph: PositionGraph;
+    graph: PositionGraph;
 
-    private paused: boolean;
+    paused: boolean;
 
     // UI Components
     protected healthCountLabel: Label;

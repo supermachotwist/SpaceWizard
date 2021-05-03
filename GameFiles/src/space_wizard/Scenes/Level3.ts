@@ -30,39 +30,11 @@ import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import spikeEnemy from "../GameSystems/Enemys/EnemyTypes/SpikeEnemy";
 import disruptor from "../GameSystems/Enemys/EnemyTypes/Disruptor";
+import GameLevel from "./Gamelevel";
 
 
 
-export default class Level3 extends Scene {
-    // The player
-    player: AnimatedSprite;
-
-    /** A list of towers in the game world */
-    private towers: Array<Tower>;
-
-    /** A list of enemies in the game world */
-    private enemies: Array<Enemy>;
-
-    // The position graph for navmesh
-    private graph: PositionGraph;
-
-    private paused: boolean;
-
-    protected healthCountLabel: Label;
-
-    protected manaCountLabel: Label;
-
-    protected manaBar: Rect;
-
-    private infiniteLives: boolean;
-
-    private infiniteMana: boolean;
-
-    private allSpells: boolean;
-
-    private wave: number;
-
-    private spells: Array<Spell>;
+export default class Level3 extends GameLevel {
 
     initScene(init: Record<string, any>):void {
         this.infiniteLives = init.infiniteLives;
@@ -131,6 +103,9 @@ export default class Level3 extends Scene {
 
         // Initialize array of enemies
         this.enemies = new Array();
+
+        // Initialize array of item drops
+        this.items = new Array();
 
         this.paused = false;
 
@@ -219,7 +194,7 @@ export default class Level3 extends Scene {
                 enemyType = new disruptor();
             }
             
-            let enemyClass = new Enemy(enemySprite, enemyType);
+            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
             enemySprite.addAI(EnemyAI, {
                 player: this.player,
                 enemy: enemyClass,

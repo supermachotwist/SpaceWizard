@@ -2,47 +2,47 @@
     "enemies": [
         {
             "type": "spikeEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [100, 200]
         },
         {
             "type": "spikeEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [100, 300]
         },
         {
             "type": "spikeEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [100, 400]
         },
         {
             "type": "spikeEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [100, 600]
         },
         {
             "type": "spikeEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [100, 700]
         },
         {
             "type": "spikeEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [100, 500]
         },        
         {
             "type": "disruptor",
-            "time": 1000,
+            "loot": "NULL",
             "position": [350, 425]
         },
         {
             "type": "disruptor",
-            "time": 1000,
+            "loot": "NULL",
             "position": [650, 425]
         },
         {
             "type": "disruptor",
-            "time": 1000,
+            "loot": "NULL",
             "position": [950, 425]
         }
    
