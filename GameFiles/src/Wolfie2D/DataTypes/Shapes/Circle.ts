@@ -75,7 +75,7 @@ export default class Circle extends Shape {
 			}
 			return false;
 		}
-		throw new Error("Method not implemented.");
+		return false;
 	}
 
 	// @override

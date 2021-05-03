@@ -1,0 +1,19 @@
+{
+    "enemies": [
+        {
+            "type": "shieldEnemy",
+            "time": 1000,
+            "position": [600, 400]
+        },
+        {
+            "type": "shieldEnemy",
+            "time": 1000,
+            "position": [800, 400]
+        },
+        {
+            "type": "shieldEnemy",
+            "time": 1000,
+            "position": [400, 400]
+        }
+    ]
+}

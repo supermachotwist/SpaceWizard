@@ -2,7 +2,6 @@ import PlayerController from "../AI/PlayerController";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import SpellManager from "../GameSystems/Spells/SpellManager";
 import Spell from "../GameSystems/Spells/Spell";
 import Meteor from "../GameSystems/Spells/SpellTypes/Meteor";
@@ -31,6 +30,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import enemyUFO from "../GameSystems/Enemys/EnemyTypes/EnemyUFO";
+import shieldEnemy from "../GameSystems/Enemys/EnemyTypes/ShieldEnemy";
 
 
 
@@ -86,6 +86,7 @@ export default class GameLevel extends Scene {
         // Enemy Spritesheets
         this.load.spritesheet("enemyUFO", "space_wizard_assets/spritesheets/UFO.json");
         this.load.spritesheet("enemySpaceship", "space_wizard_assets/spritesheets/enemy_spaceship.json");
+        this.load.spritesheet("shieldEnemy", "space_wizard_assets/spritesheets/shield_enemy.json");
         this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
         
         this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
@@ -100,6 +101,7 @@ export default class GameLevel extends Scene {
         this.load.object("towerData", "space_wizard_assets/data/towers.json");
         this.load.object("wave1", "space_wizard_assets/data/lvl1_wave1.json");
         this.load.object("wave2", "space_wizard_assets/data/lvl1_wave2.json");
+        this.load.object("wave3", "space_wizard_assets/data/lvl1_wave3.json");
 
         // Navmesh for Enemies
         this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
@@ -121,7 +123,7 @@ export default class GameLevel extends Scene {
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
         // Initialize wave number
-        this.wave = 2;
+        this.wave = 3;
 
         // Initialize array of towers
         this.towers = new Array();
@@ -184,10 +186,12 @@ export default class GameLevel extends Scene {
     spawnEnemies(): void {
         let enemyData;
         // Get the enemy data
-        if (this.wave%2 == 1){
+        if (this.wave%3 == 1){
             enemyData = this.load.getObject("wave1");
-        } else if (this.wave%2 == 0){
+        } else if (this.wave%3 == 2){
             enemyData = this.load.getObject("wave2");
+        } else if (this.wave%3 == 0){
+            enemyData = this.load.getObject("wave3");
         }
 
         for (let enemy of enemyData.enemies) {
@@ -211,6 +215,15 @@ export default class GameLevel extends Scene {
                 enemySprite.position.set(enemy.position[0], enemy.position[1]);
 
                 enemyType = new enemyUFO();
+            }
+            else if (enemy.type == "shieldEnemy") {
+                enemySprite = this.add.animatedSprite("shieldEnemy", "primary");
+                // Add collision to sprite
+                enemySprite.scale.scale(2);
+                enemySprite.addPhysics(new Circle(Vec2.ZERO, 32));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
+                enemyType = new shieldEnemy();
             }
             
             let enemyClass = new Enemy(enemySprite, enemyType);

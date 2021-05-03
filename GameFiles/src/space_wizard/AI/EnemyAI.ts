@@ -132,6 +132,9 @@ export default class EnemyAI extends ControllerAI
                 // Move the enemy in direction of movement
                 this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
             }
+            else if (this.enemy.type.displayName == "shieldEnemy") {
+                
+            }
             
             for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
                 if (this.enemy == enemy){

@@ -135,6 +135,23 @@ export default class SpellController extends ControllerAI {
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);
+
+                // If the enemy is a shield enemy. Check if the enemy is shielded
+                if (enemy.type.displayName == "shieldEnemy"){
+                    let x = enemy.owner.animation.getIndex();
+                    if ((enemy.owner.animation.isPlaying("IDLE") || enemy.owner.animation.isPlaying("MOVING")) && enemy.owner.animation.getIndex() == 18 || enemy.owner.animation.isPlaying("DAMAGE")){
+                        enemy.shoot(Vec2.UP);
+                        enemy.shoot(new Vec2(1,1));
+                        enemy.shoot(Vec2.RIGHT);
+                        enemy.shoot(new Vec2(1, -1));
+                        enemy.shoot(Vec2.DOWN);
+                        enemy.shoot(new Vec2(-1, 1));
+                        enemy.shoot(Vec2.LEFT);
+                        enemy.shoot(new Vec2(-1, -1));
+                        this.destroySpell(this.explosionSize);
+                        continue;
+                    }
+                }
                 
                 // Handle spell special effects
                 if (this.spell.type.displayName == "Fireball"){
