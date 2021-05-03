@@ -67,17 +67,17 @@ export default class EnemyProjectileController extends ControllerAI {
             // Move the projectile in direction of movement
             this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
-            // If the projectile hits the player
-            if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
-                this.emitter.fireEvent(space_wizard_events.PLAYER_DAMAGE);
-                this.destroyProjectile();
-            }
-
             // Detonate the spell on impact with side of screen
             if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
                 this.destroyProjectile();
             } else {
                 this.owner.animation.playIfNotAlready("MOVING", true);
+            }
+
+            // If the projectile hits the player
+            if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
+                this.destroyProjectile();
+                this.emitter.fireEvent(space_wizard_events.PLAYER_DAMAGE);
             }
         }
         // Only remove animatedSprite when explosion animation is finished
@@ -88,6 +88,7 @@ export default class EnemyProjectileController extends ControllerAI {
     }
 
     destroyProjectile(scale:number=1): void {
+        this.owner.animation.playIfNotAlready("EXPLOSION");
         this.speed = 0;
         this.dead = true;
     }
