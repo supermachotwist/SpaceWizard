@@ -31,7 +31,7 @@ import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import enemyUFO from "../GameSystems/Enemys/EnemyTypes/EnemyUFO";
 import shieldEnemy from "../GameSystems/Enemys/EnemyTypes/ShieldEnemy";
-
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 
 export default class GameLevel extends Scene {
@@ -39,29 +39,34 @@ export default class GameLevel extends Scene {
     player: AnimatedSprite;
 
     /** A list of towers in the game world */
-    private towers: Array<Tower>;
+    towers: Array<Tower>;
 
     /** A list of enemies in the game world */
-    private enemies: Array<Enemy>;
+    enemies: Array<Enemy>;
 
     // The position graph for navmesh
     private graph: PositionGraph;
 
     private paused: boolean;
 
+    // UI Components
     protected healthCountLabel: Label;
-
     protected manaCountLabel: Label;
-
+    protected waveLabel: Label;
     protected manaBar: Rect;
 
-    private infiniteLives: boolean;
+    infiniteLives: boolean;
 
-    private infiniteMana: boolean;
+    infiniteMana: boolean;
 
-    private allSpells: boolean;
+    allSpells: boolean;
 
-    private wave: number;
+    wave: number;
+
+    inventory: SpellManager;
+
+    /** A list of items in the game world */
+    items: Array<Sprite>;
 
     initScene(init: Record<string, any>):void {
         this.infiniteLives = init.infiniteLives;
@@ -102,6 +107,7 @@ export default class GameLevel extends Scene {
         this.load.object("wave1", "space_wizard_assets/data/lvl1_wave1.json");
         this.load.object("wave2", "space_wizard_assets/data/lvl1_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl1_wave3.json");
+        this.load.object("wave4", "space_wizard_assets/data/lvl1_wave4.json");
 
         // Navmesh for Enemies
         this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
@@ -123,13 +129,16 @@ export default class GameLevel extends Scene {
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
         // Initialize wave number
-        this.wave = 3;
+        this.wave = 1;
 
         // Initialize array of towers
         this.towers = new Array();
 
         // Initialize array of enemies
         this.enemies = new Array();
+
+        // Initialize array of item drops
+        this.items = new Array();
 
         this.paused = false;
 
@@ -186,12 +195,14 @@ export default class GameLevel extends Scene {
     spawnEnemies(): void {
         let enemyData;
         // Get the enemy data
-        if (this.wave%3 == 1){
+        if (this.wave%4 == 1){
             enemyData = this.load.getObject("wave1");
-        } else if (this.wave%3 == 2){
+        } else if (this.wave%4 == 2){
             enemyData = this.load.getObject("wave2");
-        } else if (this.wave%3 == 0){
+        } else if (this.wave%4 == 3){
             enemyData = this.load.getObject("wave3");
+        } else if (this.wave%4 == 0){
+            enemyData = this.load.getObject("wave4");
         }
 
         for (let enemy of enemyData.enemies) {
@@ -226,7 +237,7 @@ export default class GameLevel extends Scene {
                 enemyType = new shieldEnemy();
             }
             
-            let enemyClass = new Enemy(enemySprite, enemyType);
+            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
             enemySprite.addAI(EnemyAI, {
                 player: this.player,
                 enemy: enemyClass
@@ -238,40 +249,41 @@ export default class GameLevel extends Scene {
 
     initializePlayer(): void {
         // Create the inventory
-        let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,760), 48);
+        this.inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,760), 48);
 
-        // Add Meteor spell
-        let meteorSprite = this.add.sprite("meteorSprite", "primary");
-        meteorSprite.scale.scale(2.8);
-        let startingSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
-        inventory.addItem(startingSpell);
+        // Add Laser spell
+        this.inventory.changeSlot(0);
+        let laserSprite = this.add.sprite("laserSprite", "primary");
+        laserSprite.scale.scale(2.8);
+        laserSprite.rotation += Math.PI/4;
+        let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
+        this.inventory.addItem(thirdSpell);
 
         if (this.allSpells){
             // Add Comet spell
-            inventory.changeSlot(1);
+            this.inventory.changeSlot(1);
             let cometSprite = this.add.sprite("cometSprite", "primary");
             cometSprite.scale.scale(2.8);
             cometSprite.rotation += Math.PI/4;
             let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
-            inventory.addItem(secondSpell);
+            this.inventory.addItem(secondSpell);
 
-            // Add Laser spell
-            inventory.changeSlot(2);
-            let laserSprite = this.add.sprite("laserSprite", "primary");
-            laserSprite.scale.scale(2.8);
-            laserSprite.rotation += Math.PI/4;
-            let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
-            inventory.addItem(thirdSpell);
+            // Add Meteor spell
+            this.inventory.changeSlot(2);
+            let meteorSprite = this.add.sprite("meteorSprite", "primary");
+            meteorSprite.scale.scale(2.8);
+            let startingSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
+            this.inventory.addItem(startingSpell);
 
             // Add Blackhole spell
-            inventory.changeSlot(3);
+            this.inventory.changeSlot(3);
             let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
             blackholeSprite.scale.scale(2.8);
             blackholeSprite.rotation += Math.PI/4;
             let fourthSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
-            inventory.addItem(fourthSpell);
+            this.inventory.addItem(fourthSpell);
 
-            inventory.changeSlot(0);
+            this.inventory.changeSlot(0);
         }
 
         // Get center of viewport
@@ -283,7 +295,7 @@ export default class GameLevel extends Scene {
         this.player.position.set(center.x, center.y + 300);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
         this.player.addAI(PlayerController,{
-            inventory: inventory,
+            inventory: this.inventory,
             speed:300
         });
 
@@ -292,10 +304,6 @@ export default class GameLevel extends Scene {
     }
 
     updateScene(deltaT: number) {
-        if (this.enemies.length == 0){
-            this.wave += 1;
-            this.spawnEnemies();
-        }
         if (Input.isPressed("pause")){
             if (!this.paused){
                 this.createPauseMenu();
@@ -432,13 +440,16 @@ export default class GameLevel extends Scene {
 
     addUI(): void {
         this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 700), text: "Lives: " + (<PlayerController> this.player.ai).health});
-        this.healthCountLabel.textColor = Color.WHITE;
+        this.healthCountLabel.textColor = Color.RED;
 
-        this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 650), text: "Mana: " + (<PlayerController>this.player.ai).mana});
-        this.manaCountLabel.textColor = Color.WHITE;
+        this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 640), text: "Mana: " + (<PlayerController>this.player.ai).mana});
+        this.manaCountLabel.textColor = Color.BLUE;
 
-        this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,675), size: new Vec2(300, 8)});
+        this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,665), size: new Vec2(300, 8)});
         this.manaBar.color = Color.BLUE;
+
+        this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 600), text: "Wave: " + this.wave + "/4"});
+        this.waveLabel.textColor = Color.YELLOW;
         
     }
 

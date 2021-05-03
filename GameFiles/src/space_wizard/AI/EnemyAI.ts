@@ -132,36 +132,39 @@ export default class EnemyAI extends ControllerAI
                 // Move the enemy in direction of movement
                 this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
             }
-            else if (this.enemy.type.displayName == "shieldEnemy") {
-                
-            }
-            
-            for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
-                if (this.enemy == enemy){
-                    continue;
-                }
-                // Push enemies out of each other if they overlap
-                if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
-                    if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
-                        this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
-                    }
-                    if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
-                        this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
-                    }
-                    if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
-                        this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
-                    }
-                    if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
-                        this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
-                    }
-                }
-            }
+
+            this.overlapCheckAndFix(deltaT);
+        
         }
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){
             // Only destroy dead enemy when dying animation is done
+            this.enemy.dropSpell();
             this.owner.visible = false;
             this.owner.destroy();
+        }
+    }
+
+    overlapCheckAndFix(deltaT: number):void{
+        for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
+            if (this.enemy == enemy){
+                continue;
+            }
+            // Push enemies out of each other if they overlap
+            if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
+                if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
+                    this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
+                }
+                if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
+                    this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
+                }
+                if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
+                    this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
+                }
+                if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
+                    this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
+                }
+            }
         }
     }
 

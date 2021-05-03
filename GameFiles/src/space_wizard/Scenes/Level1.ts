@@ -15,9 +15,28 @@ import Input from "../../Wolfie2D/Input/Input";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import GameLevel from "./Gamelevel";
+import Level2 from "./Level2";
 
 
 
 export default class Level1 extends GameLevel {
 
+    updateScene(deltaT: number) {
+        super.updateScene(deltaT);
+
+        if (this.enemies.length == 0){
+            this.wave += 1;
+            if (this.wave == 5){
+                this.sceneManager.changeToScene(Level2,{
+                infiniteLives: this.infiniteLives,
+                infiniteMana: this.infiniteMana,
+                allSpells: this.allSpells
+            },{});
+            }
+            else {
+                this.waveLabel.text = "Wave: " + this.wave + "/4";
+                this.spawnEnemies();
+            }
+        }
+    }
 }

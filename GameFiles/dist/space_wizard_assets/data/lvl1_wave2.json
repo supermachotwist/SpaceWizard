@@ -2,42 +2,42 @@
     "enemies": [
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "NULL",
             "position": [200, 1000]
         },
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "NULL",
             "position": [250, 1050]
         },
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "NULL",
             "position": [150, 1050]
         },
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "NULL",
             "position": [1050, 950]
         },
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "Meteor",
             "position": [950, 1050]
         },
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "NULL",
             "position": [600, 900]
         },
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "NULL",
             "position": [600, 950]
         },
         {
             "type": "enemyUFO",
-            "time": 1000,
+            "loot": "NULL",
             "position": [600, 1000]
         }
     ]

@@ -1,0 +1,49 @@
+{
+    "enemies": [
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [800, 200]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [400, 200]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [950, 1050]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [600, 900]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [600, 950]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [600, 1000]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [200, -200]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [250, -250]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [150, -250]
+        }
+    ]
+}

@@ -1,9 +1,11 @@
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import EnemyProjectileController from "../../AI/EnemyProjectileController";
 import GameLevel from "../../Scenes/Gamelevel";
@@ -35,16 +37,20 @@ export default class Enemy {
     // Cooldown timer for enemy attack
     cooldownTimer: Timer;
 
+    // Spell to drop on death
+    loot: String;
+
     // Status effects for enemies
     slowedTimer: Timer;
     burningTimer: Timer;
 
-    constructor(owner: AnimatedSprite, enemyType: EnemyType){
+    constructor(owner: AnimatedSprite, enemyType: EnemyType, loot: String){
         this.owner = owner;
         this.type = enemyType;
         this.displayName = this.type.displayName;
         this.speed = this.type.speed;
         this.health = this.type.health;
+        this.loot = loot;
         this.dead = false;
 
         this.slowedTimer = new Timer(5000);
@@ -85,6 +91,29 @@ export default class Enemy {
             return true;
         }
         return false;
+    }
+
+    dropSpell():void {
+        let spellSprite;
+        if (this.loot == "Meteor"){
+            spellSprite = this.owner.getScene().add.sprite("meteorSprite", "primary");
+        } 
+        else if(this.loot == "Comet"){
+            spellSprite = this.owner.getScene().add.sprite("cometSprite", "primary");
+        }
+        else if(this.loot == "Laser"){
+            spellSprite = this.owner.getScene().add.sprite("laserSprite", "primary");
+        }
+        else if(this.loot == "Blackhole"){
+            spellSprite = this.owner.getScene().add.sprite("blackholeSprite", "primary");
+        } else {
+            return;
+        }
+        // Add spell to list of items on screen
+        (<GameLevel>this.owner.getScene()).items.push(spellSprite);
+        spellSprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+        spellSprite.scale.scale(2);
+        spellSprite.position = this.owner.position;
     }
 
     // Shoot a projectile in a specific direction

@@ -2,17 +2,17 @@
     "enemies": [
         {
             "type": "shieldEnemy",
-            "time": 1000,
+            "loot": "Blackhole",
             "position": [600, 400]
         },
         {
             "type": "shieldEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [800, 400]
         },
         {
             "type": "shieldEnemy",
-            "time": 1000,
+            "loot": "NULL",
             "position": [400, 400]
         }
     ]

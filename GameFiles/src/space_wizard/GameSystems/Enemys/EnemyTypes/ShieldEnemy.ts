@@ -7,6 +7,6 @@ export default class shieldEnemy extends EnemyType {
         this.displayName = "shieldEnemy";
         this.cooldown = 0;
         this.speed = 0;
-        this.health = 100;
+        this.health = 30;
     }
 }

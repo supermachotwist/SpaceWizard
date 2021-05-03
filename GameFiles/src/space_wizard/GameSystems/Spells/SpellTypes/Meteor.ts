@@ -6,7 +6,7 @@ export default class Meteor extends SpellType {
         super();
         this.damage = 10;
         this.displayName = "Fireball";
-        this.cooldown = 500;
-        this.cost = 300;
+        this.cooldown = 300;
+        this.cost = 200;
     }
 }

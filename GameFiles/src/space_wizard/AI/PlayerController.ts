@@ -8,6 +8,12 @@ import SpellManager from "../GameSystems/Spells/SpellManager";
 import { space_wizard_events } from "../space_wizard_events";
 import GameLevel from "../Scenes/Gamelevel";
 import Emitter from "../../Wolfie2D/Events/Emitter";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Spell from "../GameSystems/Spells/Spell";
+import Comet from "../GameSystems/Spells/SpellTypes/Comet";
+import Meteor from "../GameSystems/Spells/SpellTypes/Meteor";
+import Laser from "../GameSystems/Spells/SpellTypes/Laser";
+import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
 
 
 export default class PlayerController implements AI {
@@ -116,6 +122,47 @@ export default class PlayerController implements AI {
             this.inventory.changeSlot(2);
         } else if(Input.isJustPressed("slot4")){
             this.inventory.changeSlot(3);
+        }
+
+        // Pickup spell if player walks over it
+        for (let item of (<GameLevel>this.owner.getScene()).items){
+            if (this.owner.collisionShape.overlaps(item.collisionShape)){
+                let scene = <GameLevel>this.owner.getScene()
+                let inventory = scene.inventory;
+                let previousSlot = inventory.getSlot();
+                if (item.imageId == "laserSprite"){
+                    inventory.changeSlot(0);
+                    let laserSprite = scene.add.sprite("laserSprite", "primary");
+                    laserSprite.scale.scale(2.8);
+                    laserSprite.rotation += Math.PI/4;
+                    let spell = new Spell(laserSprite, new Laser(), scene.towers, scene.enemies);
+                    this.inventory.addItem(spell);
+                } else if (item.imageId == "cometSprite"){
+                    inventory.changeSlot(1);
+                    let cometSprite = scene.add.sprite("cometSprite", "primary");
+                    cometSprite.scale.scale(2.8);
+                    cometSprite.rotation += Math.PI/4;
+                    let spell = new Spell(cometSprite, new Comet(), scene.towers, scene.enemies);
+                    this.inventory.addItem(spell);
+                } else if (item.imageId == "meteorSprite"){
+                    inventory.changeSlot(2);
+                    let meteorSprite = scene.add.sprite("meteorSprite", "primary");
+                    meteorSprite.scale.scale(2.8);
+                    meteorSprite.rotation += Math.PI/4;
+                    let spell = new Spell(meteorSprite, new Meteor(), scene.towers, scene.enemies);
+                    this.inventory.addItem(spell);
+                } else if (item.imageId == "blackholeSprite"){
+                    inventory.changeSlot(3);
+                    let laserSprite = scene.add.sprite("blackholeSprite", "primary");
+                    laserSprite.scale.scale(2.8);
+                    laserSprite.rotation += Math.PI/4;
+                    let spell = new Spell(laserSprite, new Blackhole(), scene.towers, scene.enemies);
+                    this.inventory.addItem(spell);
+                }
+                this.inventory.changeSlot(previousSlot);
+                item.visible = false;
+                item.destroy();
+            }
         }
 
         // Get the unit vector in the look direction
