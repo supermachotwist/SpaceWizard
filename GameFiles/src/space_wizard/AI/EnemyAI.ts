@@ -9,6 +9,7 @@ import GameLevel from "../Scenes/Gamelevel";
 import PlayerController from "./PlayerController";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import { space_wizard_events } from "../space_wizard_events";
+import Spell from "../GameSystems/Spells/Spell";
 
 
 export default class EnemyAI extends ControllerAI
@@ -30,6 +31,12 @@ export default class EnemyAI extends ControllerAI
 
     // Route for enemies to follow
     private route: NavigationPath;
+
+    towerData: Record<string, any>;
+
+    spellData: Array<Spell>;
+
+    spell: Spell
 
     activate(options: Record<string, any>): void {}
 
@@ -133,38 +140,90 @@ export default class EnemyAI extends ControllerAI
                 this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
             }
 
-            this.overlapCheckAndFix(deltaT);
-        
+            else if (this.enemy.type.displayName == "shieldEnemy") {
+                
+            }
+            
+            // Fires a slower, larger, less frequent shot (make unique projectile later)
+            // Has a random chance of deploying a disruptor on a tower on projectile collision (still needs implementing)
+            else if (this.enemy.type.displayName == "spikeEnemy")
+            {
+                // Look in the direction of the player
+                let lookDirection = this.owner.position.dirTo(this.player.position);
+                this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
+
+                // Move the enemy in direction of movement
+                this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT))
+                this.owner.animation.playIfNotAlready("MOVING", true);
+
+                // Enemy will occasionally shoot on cooldown
+                if (this.enemy.cooldownTimer.isStopped)
+                {
+                    if (Math.random() < 0.005)
+                    {
+                        this.enemy.shoot(lookDirection);
+                        this.enemy.cooldownTimer.start();
+                    }
+                }
+            }
+
+            // disruptor -> Disables tower function until it's destroyed
+            else if (this.enemy.type.displayName == "disruptor") 
+            {
+                /* for (let tower of this.towerData.towers)
+                {
+                    for (let sp of this.spellData.spells)
+                    {
+                        if(tower.type === "fork" || tower.type === "explosion"
+                        || tower.type === "pierce")
+                        {
+                            if(sp.type == "meteor"|| sp.type === "comet"
+                            || sp.type === "laser" || sp.type === "blackhole")
+                            {
+                                this.spell.fork = false;
+                                this.spell.explosion = false;
+                                this.spell.pierce = false;
+                            }
+                        }
+                    }
+                }*/
+
+                let lookDirection = this.owner.position.dirTo(Vec2.ZERO);
+                // Enemy shouldn't shoot (just enforces it)
+                if (this.enemy.cooldownTimer.isStopped()){
+                    if (Math.random() < 0){
+                        this.enemy.shoot(lookDirection);
+                        this.enemy.cooldownTimer.start();
+                    }
+                }
+                
+            }
+            for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
+                if (this.enemy == enemy){
+                    continue;
+                }
+                // Push enemies out of each other if they overlap
+                if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
+                    if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
+                        this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
+                    }
+                    if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
+                        this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
+                    }
+                    if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
+                        this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
+                    }
+                    if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
+                        this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
+                    }
+                }
+            }
         }
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){
             // Only destroy dead enemy when dying animation is done
-            this.enemy.dropSpell();
             this.owner.visible = false;
             this.owner.destroy();
-        }
-    }
-
-    overlapCheckAndFix(deltaT: number):void{
-        for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
-            if (this.enemy == enemy){
-                continue;
-            }
-            // Push enemies out of each other if they overlap
-            if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
-                if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
-                    this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
-                }
-                if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
-                    this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
-                }
-                if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
-                    this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
-                }
-                if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
-                    this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
-                }
-            }
         }
     }
 
