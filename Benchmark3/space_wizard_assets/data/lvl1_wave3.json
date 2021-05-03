@@ -1,0 +1,19 @@
+{
+    "enemies": [
+        {
+            "type": "shieldEnemy",
+            "loot": "Blackhole",
+            "position": [600, 400]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [800, 400]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [400, 400]
+        }
+    ]
+}

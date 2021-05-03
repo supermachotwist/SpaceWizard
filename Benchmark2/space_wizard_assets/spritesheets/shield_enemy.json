@@ -1,0 +1,134 @@
+{
+    "name": "shield_enemy",
+    "spriteSheetImage": "shield_enemy.png",
+    "spriteWidth": 64,
+    "spriteHeight": 64,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 3,
+    "rows": 8,
+    "animations": [
+        {
+            "name": "IDLE",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 18,
+                    "duration": 300
+                },
+                {
+                    "index": 19,
+                    "duration": 30
+                },
+                {
+                    "index": 20,
+                    "duration": 30
+                },
+                {
+                    "index": 21,
+                    "duration": 30
+                },
+                {
+                    "index": 22,
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "name": "MOVING",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 18,
+                    "duration": 300
+                },
+                {
+                    "index": 19,
+                    "duration": 30
+                },
+                {
+                    "index": 20,
+                    "duration": 30
+                },
+                {
+                    "index": 21,
+                    "duration": 30
+                },
+                {
+                    "index": 22,
+                    "duration": 30
+                }
+            ]
+        },
+        {
+            "name": "DAMAGE",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 6
+                },
+                {
+                    "index": 1,
+                    "duration": 6
+                },
+                {
+                    "index": 2,
+                    "duration": 6
+                },
+                {
+                    "index": 3,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "DYING",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 6,
+                    "duration": 3
+                },
+                {
+                    "index": 7,
+                    "duration": 3
+                },
+                {
+                    "index": 8,
+                    "duration": 3
+                },
+                {
+                    "index": 9,
+                    "duration": 3
+                },
+                {
+                    "index": 10,
+                    "duration": 3
+                },
+                {
+                    "index": 11,
+                    "duration": 3
+                },
+                {
+                    "index": 12,
+                    "duration": 3
+                },
+                {
+                    "index": 13,
+                    "duration": 3
+                },
+                {
+                    "index": 14,
+                    "duration": 3
+                },
+                {
+                    "index": 15,
+                    "duration": 3
+                }
+            ]
+        }
+    ]
+}

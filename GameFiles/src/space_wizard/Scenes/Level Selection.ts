@@ -30,7 +30,14 @@ export default class LevelSelection extends Scene {
 
     startScene():void{
 
+        this.addLayer("background", 1);
         this.addLayer("primary", 100);
+
+        // Create background image
+        let background = this.add.sprite("background", "background");
+
+        let center = this.viewport.getCenter();
+        background.position.set(center.x, center.y);
         
         // Create level selection buttons
         this.createLevelSelection();
@@ -45,7 +52,7 @@ export default class LevelSelection extends Scene {
 
     createLevelSelection():void{
         let midpoint = this.viewport.getCenter();
-        let level1 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 200,midpoint.y - 25),text:"Level 1"});
+        let level1 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 200,midpoint.y - 35),text:"Level 1"});
         level1.backgroundColor = Color.BLACK;
         level1.borderColor = Color.BLACK;
         level1.borderRadius = 10;
@@ -60,7 +67,7 @@ export default class LevelSelection extends Scene {
             },{});
         }
 
-        let level2 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y- 25),text:"Level 2"});
+        let level2 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y - 35),text:"Level 2"});
         level2.backgroundColor = Color.BLACK;
         level2.borderColor = Color.BLACK;
         level2.borderRadius = 10;
@@ -75,7 +82,7 @@ export default class LevelSelection extends Scene {
             },{});
         }
 
-        let level3 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 200,midpoint.y - 25),text:"Level 3"});
+        let level3 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 200,midpoint.y - 35),text:"Level 3"});
         level3.backgroundColor = Color.BLACK;
         level3.borderColor = Color.BLACK;
         level3.borderRadius = 10;
@@ -138,7 +145,7 @@ export default class LevelSelection extends Scene {
 
     createReturnButton():void{
         let midpoint = this.viewport.getCenter();
-        let returnButton = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 75),text:"Return to Main Menu"});
+        let returnButton = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 85),text:"Return to Main Menu"});
         returnButton.backgroundColor = Color.BLACK;
         returnButton.borderColor = Color.BLACK;
         returnButton.borderRadius = 10;

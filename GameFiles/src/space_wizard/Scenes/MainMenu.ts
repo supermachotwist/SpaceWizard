@@ -30,6 +30,7 @@ export default class MainMenu extends Scene {
 
     loadScene():void{
         this.load.image("mainMenuBackground","space_wizard_assets/images/Space Wizard Logo.png");
+        this.load.image("background","space_wizard_assets/images/Asteroid Belt.png");
 
         // Tower Spritesheets
         this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
@@ -41,15 +42,21 @@ export default class MainMenu extends Scene {
     }
 
     startScene():void{
-        this.addLayer("mainMenu",1);
-        this.addLayer("mainMenuBackground",0);
-        this.addLayer("settingMenuBackGround",2);
-        this.addLayer("settingMenu",3);
+        this.addLayer("mainMenu",2);
+        this.addLayer("mainMenuBackground",1);
+        this.addLayer("background");
+        this.addLayer("settingMenuBackGround",3);
+        this.addLayer("settingMenu",4);
+
+        // Create background image and logo
         this.background = this.add.sprite("mainMenuBackground","mainMenuBackground");
 
         let center = this.viewport.getCenter();
         this.background.position.set(center.x,center.y-200);
         this.viewport.setFocus(this.viewport.getHalfSize());
+
+        let background = this.add.sprite("background", "background");
+        background.position.set(center.x, center.y);
 
         let midpoint = this.viewport.getHalfSize();
         
@@ -64,6 +71,7 @@ export default class MainMenu extends Scene {
     }
 
     unloadScene():void{
+        this.load.keepImage("background");
     }
 
     makePlayButton():Button{
@@ -72,6 +80,7 @@ export default class MainMenu extends Scene {
         playButton.backgroundColor = Color.BLACK;
         playButton.borderColor = Color.BLACK;
         playButton.borderRadius = 10;
+        playButton.alpha = 0.5;
         playButton.setPadding(new Vec2(50, 10));
         playButton.font = "PixelSimple";
         playButton.onClick = () => {
@@ -87,10 +96,11 @@ export default class MainMenu extends Scene {
 
     makeHelpButton():Button{
         let midpoint = this.viewport.getCenter();
-        let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y+60),text:"Help"});
+        let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y+70),text:"Help"});
         playButton.backgroundColor = Color.BLACK;
         playButton.borderColor = Color.BLACK;
         playButton.borderRadius = 10;
+        playButton.alpha = 0.5;
         playButton.setPadding(new Vec2(50, 10));
         playButton.font = "PixelSimple";
         playButton.onClick = () => {
@@ -106,10 +116,11 @@ export default class MainMenu extends Scene {
 
     makeSettingButton():Button{
         let midpoint = this.viewport.getCenter();
-        let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y+120),text:"Setting"});
+        let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y+140),text:"Setting"});
         playButton.backgroundColor = Color.BLACK;
         playButton.borderColor = Color.BLACK;
         playButton.borderRadius = 10;
+        playButton.alpha = 0.5;
         playButton.setPadding(new Vec2(50, 10));
         playButton.font = "PixelSimple";
         playButton.onClick = () => {
@@ -124,10 +135,11 @@ export default class MainMenu extends Scene {
     createSettingMenu(){
         this.setting = true;
         let center = this.viewport.getCenter();
-        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(1000,500)});
+        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(1200,500)});
         settingBackground.color = Color.BLACK;
         settingBackground.borderColor = new Color(53, 53, 53);
         settingBackground.setBorderWidth(24);
+        settingBackground.alpha = 0.8;
 
         // Create cheat buttons
         let midpoint = this.viewport.getCenter();
@@ -207,6 +219,7 @@ export default class MainMenu extends Scene {
         settingBackground.color = Color.BLACK;
         settingBackground.borderColor = new Color(53, 53, 53);
         settingBackground.setBorderWidth(24);
+        settingBackground.alpha = 0.8;
 
         let helpTitle = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu", {position: new Vec2(center.x, center.y- 300), text:"Help"});
         let helptext = "Point and click at your enemies to shoot projectiles at that position.";
