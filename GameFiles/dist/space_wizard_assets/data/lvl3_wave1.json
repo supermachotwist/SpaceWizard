@@ -1,0 +1,50 @@
+{
+    "enemies": [
+        {
+            "type": "spikeEnemy",
+            "time": 1000,
+            "position": [200, 100]
+        },
+        {
+            "type": "spikeEnemy",
+            "time": 1000,
+            "position": [300, 100]
+        },
+        {
+            "type": "spikeEnemy",
+            "time": 1000,
+            "position": [400, 100]
+        },
+        {
+            "type": "spikeEnemy",
+            "time": 1000,
+            "position": [900, 100]
+        },
+        {
+            "type": "spikeEnemy",
+            "time": 1000,
+            "position": [700, 100]
+        },
+        {
+            "type": "spikeEnemy",
+            "time": 1000,
+            "position": [800, 100]
+        },        
+        {
+            "type": "disruptor",
+            "time": 1000,
+            "position": [350, 425]
+        },
+        {
+            "type": "disruptor",
+            "time": 1000,
+            "position": [650, 425]
+        },
+        {
+            "type": "disruptor",
+            "time": 1000,
+            "position": [950, 425]
+        }
+   
+    ]
+}
