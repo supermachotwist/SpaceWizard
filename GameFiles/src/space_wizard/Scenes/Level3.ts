@@ -31,6 +31,7 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import spikeEnemy from "../GameSystems/Enemys/EnemyTypes/SpikeEnemy";
 import disruptor from "../GameSystems/Enemys/EnemyTypes/Disruptor";
 import GameLevel from "./Gamelevel";
+import Level4 from "./Level4";
 
 
 
@@ -264,6 +265,13 @@ export default class Level3 extends GameLevel {
         if (this.enemies.length == 0){
             this.wave += 1;
             this.spawnEnemies();
+            if (this.wave == 5){
+                this.sceneManager.changeToScene(Level4,{
+                    infiniteLives: this.infiniteLives,
+                    infiniteMana: this.infiniteMana,
+                    allSpells: this.allSpells
+                },{});
+            }
         }
         if (Input.isPressed("pause")){
             if (!this.paused){
