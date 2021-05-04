@@ -1,0 +1,8 @@
+{
+    "enemies": [
+        {
+            "type": "bulletman",
+            "loot": "none",
+            "position": [200, -200]
+        }]
+    }

@@ -5,6 +5,7 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyProjectileController from "../AI/EnemyProjectileController";
 import GameLevel from "./Gamelevel";
 import Level1 from "./Level1";
+import MainMenu from "./MainMenu";
 
 
 
@@ -74,7 +75,7 @@ export default class Level2 extends GameLevel {
         if (this.enemies.length == 0){
             this.wave += 1;
             if (this.wave == 5){
-                this.sceneManager.changeToScene(Level1,{
+                this.sceneManager.changeToScene(MainMenu,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
                 allSpells: this.allSpells

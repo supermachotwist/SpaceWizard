@@ -96,6 +96,7 @@ export default class Enemy {
             this.owner.animation.stop();
             this.owner.animation.queue("DYING", false);
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bubbles", loop: false});
+            this.owner.disablePhysics();
             this.dead = true;
             return true;
         }

@@ -128,39 +128,6 @@ export default class level5 extends GameLevel {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
     }
 
-    unloadScene():void{
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "levelMusic"});
-    }
-
-    getEnemies(): Array<Enemy>{
-        return this.enemies;
-    }
-
-    initLayers(): void {
-        this.addLayer("settingMenu",100);
-        this.addLayer("settingMenuBackGround",99);
-        this.addLayer("spell", 51);
-        this.addLayer("primary", 50);
-        this.addLayer("cookie", 1);
-        this.addLayer("background", 0);
-
-        // Add a layer for UI
-        this.addUILayer("UI");
-    }
-
-    createBackground(): void {
-        let background = this.add.sprite("space", "background");
-
-        // Now, let's make sure our logo is in a good position
-        let center = this.viewport.getCenter();
-        background.position.set(center.x, center.y);
-
-        // Create the cookie planet background
-        let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
-        cookiePlanet.scale.scale(10);
-        cookiePlanet.position.set(center.x, center.y + this.viewport.getHalfSize().y - 64);
-    }
-
     spawnEnemies(): void {
         console.log("in spawn enemies");
         let enemyData;
@@ -202,74 +169,22 @@ export default class level5 extends GameLevel {
         }
     }
 
-    initializePlayer(): void {
-        // Create the inventory
-        let inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,760), 48);
-
-        // Add Meteor spell
-        let meteorSprite = this.add.sprite("meteorSprite", "primary");
-        meteorSprite.scale.scale(2.8);
-        let startingSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
-        inventory.addItem(startingSpell);
-
-
-        if (this.allSpells){
-            // Add Comet spell
-            inventory.changeSlot(1);
-            let cometSprite = this.add.sprite("cometSprite", "primary");
-            cometSprite.scale.scale(2.8);
-            cometSprite.rotation += Math.PI/4;
-            let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
-            inventory.addItem(secondSpell);
-
-            // Add Laser spell
-            inventory.changeSlot(2);
-            let laserSprite = this.add.sprite("laserSprite", "primary");
-            laserSprite.scale.scale(2.8);
-            laserSprite.rotation += Math.PI/4;
-            let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
-            inventory.addItem(thirdSpell);
-
-            // Add Blackhole spell
-            inventory.changeSlot(3);
-            let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
-            blackholeSprite.scale.scale(2.8);
-            blackholeSprite.rotation += Math.PI/4;
-            let fourthSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
-            inventory.addItem(fourthSpell);
-
-            inventory.changeSlot(0);
-        }
-
-        // Get center of viewport
-        let center = this.viewport.getCenter();
-
-        // Create the player
-        this.player = this.add.animatedSprite("player", "primary");
-        this.player.scale.scale(0.5);
-        this.player.position.set(center.x, center.y + 300);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
-        this.player.addAI(PlayerController,{
-            inventory: inventory,
-            speed:300
-        });
-
-        // Start player is idle animation on loop
-        this.player.animation.play("IDLE", true);
-    }
-
     updateScene(deltaT: number) {
-        if (this.enemies.length < 4){
+        if (this.enemies.length == 0){
             this.wave += 1;
-            this.spawnEnemies();
             if (this.wave == 5){
                 this.sceneManager.changeToScene(MainMenu,{
-                    infiniteLives: this.infiniteLives,
-                    infiniteMana: this.infiniteMana,
-                    allSpells: this.allSpells
-                },{});
+                infiniteLives: this.infiniteLives,
+                infiniteMana: this.infiniteMana,
+                allSpells: this.allSpells
+            },{});
+            }
+            else {
+                this.waveLabel.text = "Wave: " + this.wave + "/4";
+                this.spawnEnemies();
             }
         }
+
         if (Input.isPressed("pause")){
             if (!this.paused){
                 this.createPauseMenu();
@@ -312,115 +227,4 @@ export default class level5 extends GameLevel {
             }
         }
     }
-
-    isPaused(): boolean {
-        return this.paused;
-    }
-
-    spawnTowers(): void {
-        // Get the tower data
-        let towerData = this.load.getObject("towerData");
-
-        for(let tower of towerData.towers){
-            if(tower.type === "explosion"){
-                let explosionTowerSprite = this.add.animatedSprite("explosionTower", "primary");
-                // Add collision to sprite
-                explosionTowerSprite.addPhysics(new Circle(Vec2.ZERO, 64));
-                // ExplosionTower(sprite, radius)
-                let explosionTower = new ExplosionTower(explosionTowerSprite, 64);
-                // Add tower to scene
-                explosionTower.moveSprite(new Vec2(tower.position[0], tower.position[1]));
-                explosionTower.playAnimation();
-                this.towers.push(explosionTower);
-            } else if (tower.type === "fork"){
-                let forkTowerSprite = this.add.animatedSprite("forkTower", "primary");
-                // Add collision to sprite
-                forkTowerSprite.addPhysics(new Circle(Vec2.ZERO, 64));
-                // ForkTower(sprite, radius)
-                let forkTower = new ForkTower(forkTowerSprite, 64);
-                // Add tower to scene
-                forkTower.moveSprite(new Vec2(tower.position[0], tower.position[1]));
-                forkTower.playAnimation();
-                this.towers.push(forkTower);
-            } else if (tower.type === "pierce"){
-                let pierceTowerSprite = this.add.animatedSprite("pierceTower", "primary");
-                // Add collision to sprite
-                pierceTowerSprite.addPhysics(new Circle(Vec2.ZERO, 64));
-                // PierceTower(sprite, radius)
-                let pierceTower = new PierceTower(pierceTowerSprite, 64);
-                // Add tower to scene
-                pierceTower.moveSprite(new Vec2(tower.position[0], tower.position[1]));
-                pierceTower.playAnimation();
-                this.towers.push(pierceTower);
-            }
-        }        
-    }
-
-    createPauseMenu():void{
-        this.paused = true;
-        let center = this.viewport.getCenter();
-        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});
-        settingBackground.color = new Color(73, 73, 73, 0.5);
-        settingBackground.borderColor = new Color(53, 53, 53, 0.5);
-        settingBackground.setBorderWidth(24);
-
-        // Mute button
-        let muteButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y),text:"MUTE"});
-        muteButton.setBackgroundColor(new Color(53, 53, 53));
-        muteButton.setPadding(new Vec2(50, 10));
-        muteButton.onClick = () =>{
-            if (muteButton.text == "MUTE") {
-                muteButton.text = "UNMUTE";
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "levelMusic"});
-            } else {
-                muteButton.text = "MUTE";
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
-            }
-        }
-
-        // Exit button
-        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 100),text:"EXIT"});
-        exitButton.setBackgroundColor(new Color(53, 53, 53));
-        exitButton.setPadding(new Vec2(50, 10));
-        exitButton.onClick = () =>{
-            settingBackground.destroy();
-            resumeButton.destroy();
-            exitButton.destroy();
-            this.sceneManager.changeToScene(MainMenu, {}, {});
-            console.log("Exit to Menu");
-        }
-
-        // Resume button
-        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y - 100),text:"RESUME"});
-        resumeButton.setBackgroundColor(new Color(53, 53, 53));
-        resumeButton.setPadding(new Vec2(50, 10));
-        resumeButton.onClick = () =>{
-            settingBackground.destroy();
-            resumeButton.destroy();
-            exitButton.destroy();
-            muteButton.destroy();
-            this.paused = false;
-            console.log("Resume Game");
-        }
-    }
-
-    addUI(): void {
-        this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 700), text: "Lives: " + (<PlayerController> this.player.ai).health});
-        this.healthCountLabel.textColor = Color.WHITE;
-
-        this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 650), text: "Mana: " + (<PlayerController>this.player.ai).mana});
-        this.manaCountLabel.textColor = Color.WHITE;
-
-        this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,675), size: new Vec2(300, 8)});
-        this.manaBar.color = Color.BLUE;
-        
-    }
-
-    protected subscribeToEvents(){
-        this.receiver.subscribe([
-            space_wizard_events.PLAYER_DAMAGE,
-            space_wizard_events.GAME_OVER
-        ]);
-    }
-    
 }

@@ -1,0 +1,50 @@
+{
+    "enemies": [
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [1000, 200]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [1000, 300]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [1000, 400]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [1000, 600]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [1000, 700]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [1000, 500]
+        },        
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [350, 425]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [650, 425]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [950, 425]
+        }
+   
+    ]
+}
