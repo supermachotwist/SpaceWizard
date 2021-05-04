@@ -167,6 +167,27 @@ export default class EnemyAI extends ControllerAI
                 }
             }
 
+            else if (this.enemy.type.displayName == "bulletman"){
+                //just like a bullet in 5 minute :()
+                let lookDirection = this.owner.position.dirTo(this.player.position);
+                this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
+                this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT))
+                if (this.enemy.cooldownTimer.isStopped)
+                {
+                    if (Math.random() < 0.005)
+                    {   
+                        this.enemy.cooldownTimer.start();
+                        this.enemy.speed = this.enemy.speed*1.2;
+                        this.owner.move(lookDirection.normalized().scale(this.enemy.speed*deltaT));
+                    }
+                
+                else{
+                    this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT))
+                }
+                }
+
+            }
+
             // disruptor -> Disables tower function until it's destroyed
             else if (this.enemy.type.displayName == "disruptor") 
             {

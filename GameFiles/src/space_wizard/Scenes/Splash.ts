@@ -27,7 +27,6 @@ export default class Splash extends Scene {
     private logo: Sprite;
     animatedSprite: AnimatedSprite;
     loadScene(): void {
-        console.log("hi");
         //Splash Screen Sound?
         // use the "/"
        // this.load.audio("splashMusic", "space_wizard_assets/sounds/Splash.mp3");

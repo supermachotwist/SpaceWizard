@@ -1,0 +1,14 @@
+{
+    "enemies": [
+        {
+            "type": "zumaChain",
+            "time": 1000,
+            "position": [500, 500]
+        },
+        {
+            "type": "zuma",
+            "time": 1000,
+            "position":[250,250]
+        }
+    ]
+}

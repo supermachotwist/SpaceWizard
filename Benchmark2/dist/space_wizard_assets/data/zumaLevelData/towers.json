@@ -1,0 +1,8 @@
+{
+    "towers": [
+        {
+            "type": "pierce",
+            "position": [300, 600]
+        }
+    ]
+}

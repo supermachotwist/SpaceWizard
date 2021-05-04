@@ -43,6 +43,15 @@ export default class Enemy {
     // Loot to drop when enemy dies
     loot: String;
 
+    // enemy state 
+    aiming:boolean;
+
+    //
+    firing:boolean;
+
+    //
+    targetLocation:Vec2;
+
     constructor(owner: AnimatedSprite, enemyType: EnemyType, loot: String){
         this.owner = owner;
         this.type = enemyType;
@@ -144,4 +153,23 @@ export default class Enemy {
             })  
         }        
     }
+
+    //unit moves to the target location really fast
+    // speedTo(direction:Vec2):void{
+    //     let targetLocation = direction;
+    //     if(!this.aiming){
+    //         this.aiming = true;
+    //         this.owner.animation.queue("AIMING");
+    //     }
+    //    else if(!this.firing){
+    //         this.firing = true;
+    //         this.owner.animation.queue("FIRING");
+    //     }
+    //    else {
+    //        this.speed= this.speed *5;
+    //        this
+    //    }
+    // }
+
+    
 }

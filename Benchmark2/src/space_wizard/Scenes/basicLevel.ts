@@ -2,10 +2,10 @@ import PlayerController from "../AI/PlayerController";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import SpellManager from "../GameSystems/Spells/SpellManager";
 import Spell from "../GameSystems/Spells/Spell";
 import Meteor from "../GameSystems/Spells/SpellTypes/Meteor";
-import Laser from "../GameSystems/Spells/SpellTypes/Laser";
 import Tower from "../GameSystems/Towers/Tower";
 import ExplosionTower from "../GameSystems/Towers/ExplosionTower";
 import ForkTower from "../GameSystems/Towers/ForkTower";
@@ -14,35 +14,48 @@ import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import EnemyAI from "../AI/EnemyAI";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Enemy from "../GameSystems/Enemys/Enemy";
+import ArrayUtils from "../../Wolfie2D/Utils/ArrayUtils";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Color from "../../Wolfie2D/Utils/Color";
+import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import {space_wizard_events, space_wizard_names} from "../space_wizard_events";
 import Comet from "../GameSystems/Spells/SpellTypes/Comet";
+import SpriteShaderType from "../../Wolfie2D/Rendering/WebGLRendering/ShaderTypes/SpriteShaderType";
 import Input from "../../Wolfie2D/Input/Input";
 import MainMenu from "./MainMenu";
+import enemySpaceship from "../GameSystems/Enemys/EnemyTypes/EnemySpaceship";
+import EnemyType from "../GameSystems/Enemys/EnemyType";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
-import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import spikeEnemy from "../GameSystems/Enemys/EnemyTypes/SpikeEnemy";
-import disruptor from "../GameSystems/Enemys/EnemyTypes/Disruptor";
-import GameLevel from "./Gamelevel";
-import Level4 from "./Level4";
-import Bulletman from "../GameSystems/Enemys/EnemyTypes/Bulletman";
 
 
+//load your own enemies
+//load your tower positions
+//load your own music
+export default class GameLevel extends Scene {
+    // The player
+    player: AnimatedSprite;
 
-export default class level5 extends GameLevel {
+    // Logo
+    protected logo: Sprite;
 
-    initScene(init: Record<string, any>):void {
-        this.infiniteLives = init.infiniteLives;
-        this.infiniteMana = init.infiniteMana;
-        this.allSpells = init.allSpells;
-    }
+    /** A list of towers in the game world */
+    protected towers: Array<Tower>;
+
+    /** A list of enemies in the game world */
+    protected enemies: Array<Enemy>;
+
+    // The position graph for navmesh
+    protected graph: PositionGraph;
+
+    protected paused: boolean;
+
+    protected healthCountLabel: Label;
 
     loadScene(): void {
         this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
@@ -50,33 +63,17 @@ export default class level5 extends GameLevel {
         // Spell Spritesheets
         this.load.spritesheet("meteor", "space_wizard_assets/spritesheets/meteor.json");
         this.load.spritesheet("comet", "space_wizard_assets/spritesheets/comet.json");
-        this.load.spritesheet("laser", "space_wizard_assets/spritesheets/laser.json");
-        this.load.spritesheet("blackhole", "space_wizard_assets/spritesheets/blackhole.json");
-        console.log("loaded spells");
+
         // Tower Spritesheets
         this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
         this.load.spritesheet("forkTower", "space_wizard_assets/spritesheets/ForkTower.json");
         this.load.spritesheet("pierceTower", "space_wizard_assets/spritesheets/PierceTower.json");
-        console.log("loaded tower");
-
-        // Enemy Spritesheets
-        this.load.spritesheet("bulletman", "space_wizard_assets/spritesheets/bulletman.json");
-        this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
-
-        this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
-        this.load.image("space", "space_wizard_assets/images/Space.png");
-
+        
+        this.load.image("logo", "space_wizard_assets/images/Space Wizard Logo.png");
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
         this.load.image("meteorSprite", "space_wizard_assets/sprites/meteor.png");
         this.load.image("cometSprite", "space_wizard_assets/sprites/comet.png");
-        this.load.image("laserSprite", "space_wizard_assets/sprites/laser.png");
-        this.load.image("blackholeSprite", "space_wizard_assets/sprites/blackhole.png");
-
-        this.load.object("towerData", "space_wizard_assets/data/lvl3_towers.json");
-        this.load.object("wave1", "space_wizard_assets/data/lvl5_wave1.json");
-        this.load.object("wave2", "space_wizard_assets/data/lvl5_wave2.json");
-        this.load.object("wave3", "space_wizard_assets/data/lvl5_wave3.json");
-        this.load.object("wave4", "space_wizard_assets/data/lvl5_wave4.json");
+        this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
 
         // Navmesh for Enemies
         this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
@@ -89,25 +86,17 @@ export default class level5 extends GameLevel {
         this.load.audio("thunder", "space_wizard_assets/sound effect/thunder.wav");
         this.load.audio("playerDamage", "space_wizard_assets/sound effect/player damage.wav");
 
-        // Level music
-        this.load.audio("levelMusic", "space_wizard_assets/music/level music.wav");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
     // or where you should initialize any other things you will need in your scene
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
-        // Initialize wave number
-        this.wave = 1;
-
         // Initialize array of towers
         this.towers = new Array();
 
         // Initialize array of enemies
         this.enemies = new Array();
-
-        // Initialize array of item drops
-        this.items = new Array();
 
         this.paused = false;
 
@@ -121,11 +110,9 @@ export default class level5 extends GameLevel {
 
         this.addUI();
 
-        this.spawnEnemies();
+       // this.spawnEnemies();
 
         this.spawnTowers();
-
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
     }
 
     unloadScene():void{
@@ -139,9 +126,7 @@ export default class level5 extends GameLevel {
     initLayers(): void {
         this.addLayer("settingMenu",100);
         this.addLayer("settingMenuBackGround",99);
-        this.addLayer("spell", 51);
         this.addLayer("primary", 50);
-        this.addLayer("cookie", 1);
         this.addLayer("background", 0);
 
         // Add a layer for UI
@@ -149,57 +134,22 @@ export default class level5 extends GameLevel {
     }
 
     createBackground(): void {
-        let background = this.add.sprite("space", "background");
+        // The first argument is the key we specified in "this.load.image"
+        // The second argument is the name of the layer
+        this.logo = this.add.sprite("logo", "background");
 
         // Now, let's make sure our logo is in a good position
         let center = this.viewport.getCenter();
-        background.position.set(center.x, center.y);
+        this.logo.position.set(center.x, center.y);
+        // this.settingButton();
 
         // Create the cookie planet background
-        let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
+        let cookiePlanet = this.add.sprite("cookiePlanet", "background");
         cookiePlanet.scale.scale(10);
         cookiePlanet.position.set(center.x, center.y + this.viewport.getHalfSize().y - 64);
     }
 
     spawnEnemies(): void {
-        console.log("in spawn enemies");
-        let enemyData;
-        // Get the enemy data
-        if (this.wave%4 == 1){
-            enemyData = this.load.getObject("wave1");
-        } else if (this.wave%4 == 2){
-            enemyData = this.load.getObject("wave2");
-        } else if (this.wave%4 == 3){
-            enemyData = this.load.getObject("wave3");
-        } else if (this.wave%4 == 0){
-            enemyData = this.load.getObject("wave4");
-        }
-
-        for (let enemy of enemyData.enemies) {
-            let enemySprite;
-            let enemyType;
-            let towerData = this.load.getObject("towerData");
-            // Spawn appropriate enemy
-            if (enemy.type == "bulletman"){
-                console.log("hi");
-                enemySprite = this.add.animatedSprite("bulletman", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new Bulletman();
-
-            }
-            
-            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
-            enemySprite.addAI(EnemyAI, {
-                player: this.player,
-                enemy: enemyClass,
-                towerData: towerData
-            });
-            enemySprite.animation.play("IDLE", true);
-            this.enemies.push(enemyClass);
-        }
     }
 
     initializePlayer(): void {
@@ -212,43 +162,21 @@ export default class level5 extends GameLevel {
         let startingSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
         inventory.addItem(startingSpell);
 
-
-        if (this.allSpells){
-            // Add Comet spell
-            inventory.changeSlot(1);
-            let cometSprite = this.add.sprite("cometSprite", "primary");
-            cometSprite.scale.scale(2.8);
-            cometSprite.rotation += Math.PI/4;
-            let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
-            inventory.addItem(secondSpell);
-
-            // Add Laser spell
-            inventory.changeSlot(2);
-            let laserSprite = this.add.sprite("laserSprite", "primary");
-            laserSprite.scale.scale(2.8);
-            laserSprite.rotation += Math.PI/4;
-            let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
-            inventory.addItem(thirdSpell);
-
-            // Add Blackhole spell
-            inventory.changeSlot(3);
-            let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
-            blackholeSprite.scale.scale(2.8);
-            blackholeSprite.rotation += Math.PI/4;
-            let fourthSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
-            inventory.addItem(fourthSpell);
-
-            inventory.changeSlot(0);
-        }
+        // Add Comet spell
+        inventory.changeSlot(1);
+        let cometSprite = this.add.sprite("cometSprite", "primary");
+        cometSprite.scale.scale(2.8);
+        cometSprite.rotation += Math.PI/4;
+        let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
+        inventory.addItem(secondSpell);
 
         // Get center of viewport
         let center = this.viewport.getCenter();
 
         // Create the player
         this.player = this.add.animatedSprite("player", "primary");
-        this.player.scale.scale(0.5);
         this.player.position.set(center.x, center.y + 300);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
         this.player.addAI(PlayerController,{
             inventory: inventory,
             speed:300
@@ -259,30 +187,11 @@ export default class level5 extends GameLevel {
     }
 
     updateScene(deltaT: number) {
-        if (this.enemies.length < 4){
-            this.wave += 1;
-            this.spawnEnemies();
-            if (this.wave == 5){
-                this.sceneManager.changeToScene(MainMenu,{
-                    infiniteLives: this.infiniteLives,
-                    infiniteMana: this.infiniteMana,
-                    allSpells: this.allSpells
-                },{});
-            }
-        }
         if (Input.isPressed("pause")){
             if (!this.paused){
                 this.createPauseMenu();
             }
         }
-
-        if (this.infiniteMana){
-            (<PlayerController>this.player.ai).mana = 1000;
-        }
-        let mana = (<PlayerController>this.player.ai).mana;
-        this.manaCountLabel.text = "Mana: " + mana;
-        this.manaBar.size.x = mana/1000 * 300;
-        this.manaBar.position.x = (mana/1000 * 300)/2 + 25;
 
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
@@ -290,24 +199,13 @@ export default class level5 extends GameLevel {
             
             switch(event.type){
                 case space_wizard_events.PLAYER_DAMAGE: {
-                    if (this.infiniteLives) {
-                        break;
-                    }
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDamage", loop: false, holdReference: false});
                     if ((<PlayerController> this.player.ai).damage()) {
-                        this.player.animation.playIfNotAlready("DEATH", false, space_wizard_events.GAME_OVER);
+                       this.gameover();
                     }
                     else {
-                        if (!this.player.animation.isPlaying("DEATH")){
-                            this.player.animation.playIfNotAlready("DAMAGE", false);
-                        }
                         this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
                     }
-                    break;
-                }
-                case space_wizard_events.GAME_OVER:{
-                    this.sceneManager.changeToScene(MainMenu,{},{});
-                    break;
                 }
             }
         }
@@ -315,6 +213,10 @@ export default class level5 extends GameLevel {
 
     isPaused(): boolean {
         return this.paused;
+    }
+
+    gameover(): void {
+        this.sceneManager.changeToScene(MainMenu, {}, {});
     }
 
     spawnTowers(): void {
@@ -356,6 +258,33 @@ export default class level5 extends GameLevel {
         }        
     }
 
+    createNavmesh(): void {
+        // Add a layer to display the graph
+        let gLayer = this.addLayer("graph");
+        gLayer.setHidden(true);
+
+        let navmeshData = this.load.getObject("navmesh");
+
+         // Create the graph
+        this.graph = new PositionGraph();
+
+        // Add all nodes to our graph
+        for(let node of navmeshData.nodes){
+            this.graph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, "graph", {position: new Vec2(node[0], node[1])})
+        }
+
+        // Add all edges to our graph
+        for(let edge of navmeshData.edges){
+            this.graph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, "graph", {start: this.graph.getNodePosition(edge[0]), end: this.graph.getNodePosition(edge[1])})
+        }
+
+        // Set this graph as a navigable entity
+        let navmesh = new Navmesh(this.graph);
+        this.navManager.addNavigableEntity(space_wizard_names.NAVMESH, navmesh);
+    }
+
     createPauseMenu():void{
         this.paused = true;
         let center = this.viewport.getCenter();
@@ -364,22 +293,8 @@ export default class level5 extends GameLevel {
         settingBackground.borderColor = new Color(53, 53, 53, 0.5);
         settingBackground.setBorderWidth(24);
 
-        // Mute button
-        let muteButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y),text:"MUTE"});
-        muteButton.setBackgroundColor(new Color(53, 53, 53));
-        muteButton.setPadding(new Vec2(50, 10));
-        muteButton.onClick = () =>{
-            if (muteButton.text == "MUTE") {
-                muteButton.text = "UNMUTE";
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "levelMusic"});
-            } else {
-                muteButton.text = "MUTE";
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
-            }
-        }
-
         // Exit button
-        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 100),text:"EXIT"});
+        let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 50),text:"EXIT"});
         exitButton.setBackgroundColor(new Color(53, 53, 53));
         exitButton.setPadding(new Vec2(50, 10));
         exitButton.onClick = () =>{
@@ -391,14 +306,13 @@ export default class level5 extends GameLevel {
         }
 
         // Resume button
-        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y - 100),text:"RESUME"});
+        let resumeButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y - 50),text:"RESUME"});
         resumeButton.setBackgroundColor(new Color(53, 53, 53));
         resumeButton.setPadding(new Vec2(50, 10));
         resumeButton.onClick = () =>{
             settingBackground.destroy();
             resumeButton.destroy();
             exitButton.destroy();
-            muteButton.destroy();
             this.paused = false;
             console.log("Resume Game");
         }
@@ -406,21 +320,50 @@ export default class level5 extends GameLevel {
 
     addUI(): void {
         this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 700), text: "Lives: " + (<PlayerController> this.player.ai).health});
-        this.healthCountLabel.textColor = Color.WHITE;
-
-        this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 650), text: "Mana: " + (<PlayerController>this.player.ai).mana});
-        this.manaCountLabel.textColor = Color.WHITE;
-
-        this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,675), size: new Vec2(300, 8)});
-        this.manaBar.color = Color.BLUE;
-        
+        this.healthCountLabel.textColor = Color.WHITE
     }
 
     protected subscribeToEvents(){
         this.receiver.subscribe([
             space_wizard_events.PLAYER_DAMAGE,
-            space_wizard_events.GAME_OVER
         ]);
     }
+
+    //replace button with a image at a later date
+    // settingButton(){
+    //     let midpoint = this.viewport.getCenter();
+    //     let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y+120),text:"Setting"});
+    //     playButton.backgroundColor = Color.BLACK;
+    //     playButton.borderColor = Color.BLACK;
+    //     playButton.borderRadius = 10;
+    //     playButton.setPadding(new Vec2(50, 10));
+    //     playButton.font = "PixelSimple";
+    //     playButton.onClick = () => {
+    //         this.createSettingMenu();
+    //     }
+    //     return playButton;
+    // }
+
+    //wait, how to pause game????
+    
+    // createSettingMenu(){
+    //     let center = this.viewport.getCenter();
+
+    //     let musicSliderLabel = <UIElement> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x-400,center.y),text:"muusic"});
+    //     let musicSlider = <UIElement> this.add.uiElement(UIElementType.SLIDER,"settingMenu",{position: new Vec2(center.x-100,center.y)});
+    //     musicSlider.backgroundColor = Color.GREEN; //there might be a bug with the slider, idk
+    //     musicSliderLabel.backgroundColor=Color.BLUE;
+    //     // let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenu",{position:new Vec2(center.x,center.y),size:new Vec2(1000,500)});
+    //     // settingBackground.color = Color.WHITE;
+
+    //     let exitButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"exit"});
+    //     exitButton.onClick = () =>{
+    //         musicSlider.destroy();
+    //         exitButton.destroy();
+    //         musicSliderLabel.destroy();
+    //       //  settingBackground.destroy();
+    //         console.log("Exit Setting");
+    //     }
+    // }
     
 }
