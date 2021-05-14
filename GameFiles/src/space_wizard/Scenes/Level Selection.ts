@@ -52,12 +52,12 @@ export default class LevelSelection extends Scene {
 
     createLevelSelection():void{
         let midpoint = this.viewport.getCenter();
-        let level1 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 200,midpoint.y - 35),text:"Level 1"});
-        level1.backgroundColor = Color.BLACK;
+        let level1 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 300,midpoint.y - 35),text:"Level 1"});
+        level1.backgroundColor = Color.TRANSPARENT;
         level1.borderColor = Color.BLACK;
         level1.borderRadius = 10;
         level1.setPadding(new Vec2(50, 10));
-        level1.font = "PixelSimple";
+        level1.font = "AstroSpace";
         level1.onClick = () => {
             console.log("Activated Level1 Button");
             this.sceneManager.changeToScene(Level1,{
@@ -68,11 +68,11 @@ export default class LevelSelection extends Scene {
         }
 
         let level2 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y - 35),text:"Level 2"});
-        level2.backgroundColor = Color.BLACK;
+        level2.backgroundColor = Color.TRANSPARENT;
         level2.borderColor = Color.BLACK;
         level2.borderRadius = 10;
         level2.setPadding(new Vec2(50, 10));
-        level2.font = "PixelSimple";
+        level2.font = "AstroSpace";
         level2.onClick = () => {
             console.log("Activated Level2 Button");
             this.sceneManager.changeToScene(Level2,{
@@ -82,12 +82,12 @@ export default class LevelSelection extends Scene {
             },{});
         }
 
-        let level3 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 200,midpoint.y - 35),text:"Level 3"});
-        level3.backgroundColor = Color.BLACK;
+        let level3 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 300,midpoint.y - 35),text:"Level 3"});
+        level3.backgroundColor = Color.TRANSPARENT;
         level3.borderColor = Color.BLACK;
         level3.borderRadius = 10;
         level3.setPadding(new Vec2(50, 10));
-        level3.font = "PixelSimple";
+        level3.font = "AstroSpace";
         level3.onClick = () => {
             console.log("Activated Level3 Button");
             this.sceneManager.changeToScene(Level3,{
@@ -97,12 +97,12 @@ export default class LevelSelection extends Scene {
             },{});
         }
 
-        let level4 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 200,midpoint.y + 25),text:"Level 4"});
-        level4.backgroundColor = Color.BLACK;
+        let level4 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 300,midpoint.y + 25),text:"Level 4"});
+        level4.backgroundColor = Color.TRANSPARENT;
         level4.borderColor = Color.BLACK;
         level4.borderRadius = 10;
         level4.setPadding(new Vec2(50, 10));
-        level4.font = "PixelSimple";
+        level4.font = "AstroSpace";
         level4.onClick = () => {
             console.log("Activated Level4 Button");
             this.sceneManager.changeToScene(Level4,{
@@ -113,11 +113,11 @@ export default class LevelSelection extends Scene {
         }
 
         let level5 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 25),text:"Level 5"});
-        level5.backgroundColor = Color.BLACK;
+        level5.backgroundColor = Color.TRANSPARENT;
         level5.borderColor = Color.BLACK;
         level5.borderRadius = 10;
         level5.setPadding(new Vec2(50, 10));
-        level5.font = "PixelSimple";
+        level5.font = "AstroSpace";
         level5.onClick = () => {
             console.log("Activated Level5 Button");
             this.sceneManager.changeToScene(Level5,{
@@ -127,12 +127,12 @@ export default class LevelSelection extends Scene {
             },{});
         }
 
-        let level6 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 200,midpoint.y + 25),text:"Level 6"});
-        level6.backgroundColor = Color.BLACK;
+        let level6 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 300,midpoint.y + 25),text:"Level 6"});
+        level6.backgroundColor = Color.TRANSPARENT;
         level6.borderColor = Color.BLACK;
         level6.borderRadius = 10;
         level6.setPadding(new Vec2(50, 10));
-        level6.font = "PixelSimple";
+        level6.font = "AstroSpace";
         level6.onClick = () => {
             console.log("Activated Level6 Button");
             this.sceneManager.changeToScene(Level6,{
@@ -146,11 +146,11 @@ export default class LevelSelection extends Scene {
     createReturnButton():void{
         let midpoint = this.viewport.getCenter();
         let returnButton = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 85),text:"Return to Main Menu"});
-        returnButton.backgroundColor = Color.BLACK;
+        returnButton.backgroundColor = Color.TRANSPARENT;
         returnButton.borderColor = Color.BLACK;
         returnButton.borderRadius = 10;
         returnButton.setPadding(new Vec2(50, 10));
-        returnButton.font = "PixelSimple";
+        returnButton.font = "AstroSpace";
         returnButton.onClick = () => {
             console.log("Activated Return Button");
             this.sceneManager.changeToScene(MainMenu,{},{});
