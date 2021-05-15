@@ -198,9 +198,9 @@ export default class EnemyAI extends ControllerAI
                         this.owner.move(lookDirection.normalized().scale(this.enemy.speed*deltaT));
                     }
                 
-                else{
-                    this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT))
-                }
+                    else{
+                        this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT))
+                    }
                 }
 
             }
@@ -236,6 +236,7 @@ export default class EnemyAI extends ControllerAI
                 }
                 
             }
+            
             for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
                 if (this.enemy == enemy){
                     continue;

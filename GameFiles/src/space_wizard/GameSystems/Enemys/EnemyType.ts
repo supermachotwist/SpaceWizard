@@ -10,4 +10,7 @@ export default class EnemyType {
 
     /** Enemy Speed */
     speed: number;
+
+    /** Amount of dust to drop when enemy is killed */
+    drop: number;
 }

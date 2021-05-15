@@ -33,6 +33,7 @@ import enemyUFO from "../GameSystems/Enemys/EnemyTypes/EnemyUFO";
 import shieldEnemy from "../GameSystems/Enemys/EnemyTypes/ShieldEnemy";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import CurrencyAI from "../AI/CurrencyAI";
 
 
 export default class GameLevel extends Scene {
@@ -45,6 +46,9 @@ export default class GameLevel extends Scene {
     /** A list of enemies in the game world */
     enemies: Array<Enemy>;
 
+    /** A list of currency in the game world */
+    currency: Array<AnimatedSprite>;
+
     // The position graph for navmesh
     graph: PositionGraph;
 
@@ -55,6 +59,8 @@ export default class GameLevel extends Scene {
     protected manaCountLabel: Label;
     protected waveLabel: Label;
     protected manaBar: Rect;
+    protected currencyLabel: Label;
+    protected currencyCount: number;
 
     background: Sprite;
 
@@ -96,6 +102,9 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("enemySpaceship", "space_wizard_assets/spritesheets/enemy_spaceship.json");
         this.load.spritesheet("shieldEnemy", "space_wizard_assets/spritesheets/shield_enemy.json");
         this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
+
+        // Currency Spritesheet
+        this.load.spritesheet("stardust", "space_wizard_assets/spritesheets/Stardust.json");
         
         this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
         this.load.image("space", "space_wizard_assets/images/Space.png");
@@ -139,6 +148,11 @@ export default class GameLevel extends Scene {
 
         // Initialize array of item drops
         this.items = new Array();
+
+        // Initialize array of currency drops
+        this.currency = new Array;
+
+        this.currencyCount = 0;
 
         this.paused = false;
 
@@ -355,6 +369,12 @@ export default class GameLevel extends Scene {
                     this.sceneManager.changeToScene(MainMenu,{},{});
                     break;
                 }
+                case space_wizard_events.PICKUP_STARDUST: {
+                    this.currencyCount += 1;
+                    this.currencyLabel.text = "Stardust: " + this.currencyCount;
+                    break;
+                }
+
             }
         }
     }
@@ -465,13 +485,17 @@ export default class GameLevel extends Scene {
 
         this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 600), text: "Wave: " + this.wave + "/4"});
         this.waveLabel.textColor = Color.YELLOW;
+
+        this.currencyLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 560), text: "Stardust: " + this.currencyCount});
+        this.currencyLabel.textColor = Color.WHITE;
         
     }
 
     protected subscribeToEvents(){
         this.receiver.subscribe([
             space_wizard_events.PLAYER_DAMAGE,
-            space_wizard_events.GAME_OVER
+            space_wizard_events.GAME_OVER,
+            space_wizard_events.PICKUP_STARDUST
         ]);
     }
     
