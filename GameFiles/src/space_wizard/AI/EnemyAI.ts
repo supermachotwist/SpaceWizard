@@ -38,6 +38,8 @@ export default class EnemyAI extends ControllerAI
 
     spell: Spell
 
+    burncount: number;
+
     activate(options: Record<string, any>): void {}
 
     handleEvent(event: GameEvent): void {}
@@ -49,10 +51,25 @@ export default class EnemyAI extends ControllerAI
             return;
         }
 
+        // Damage label timer
+        for (let i = 0; i < this.enemy.damageNumber.length; i++) {
+            if (this.enemy.labelTimer[i].isStopped()){
+                this.enemy.damageNumber[i].destroy();
+                // Remove label from array of labels
+                this.enemy.damageNumber.splice(i, 1);
+                this.enemy.labelTimer.splice(i, 1);
+                i--;
+            }
+        }
+
         //If the enemy is burning
         if (!this.enemy.burningTimer.isStopped()){
+            this.burncount += deltaT;
             // Damage enemy per second
-            this.enemy.damage(deltaT * 5);
+            if (this.burncount >= 1){
+                this.enemy.damage(5);
+                this.burncount--;
+            }
         }
 
         // If the enemy is slowed
@@ -123,17 +140,17 @@ export default class EnemyAI extends ControllerAI
                     }
                 }
                 // Wrap the enemy around the stage
-                if (this.owner.position.x > 1264) {
+                if (this.owner.position.x > (<GameLevel>this.owner.getScene()).background.boundary.right + 64) {
                     this.owner.position.x = -64;
                 }
                 if (this.owner.position.x < -64) {
-                    this.owner.position.x = 1264;
+                    this.owner.position.x = (<GameLevel>this.owner.getScene()).background.boundary.right + 64;
                 }
-                if (this.owner.position.y > 864) {
+                if (this.owner.position.y > (<GameLevel>this.owner.getScene()).background.boundary.bottom + 64) {
                     this.owner.position.y = -64;
                 }
                 if (this.owner.position.y < -64) {
-                    this.owner.position.y = 864;
+                    this.owner.position.y = (<GameLevel>this.owner.getScene()).background.boundary.bottom + 64;
                 }
 
                 // Move the enemy in direction of movement
@@ -243,6 +260,12 @@ export default class EnemyAI extends ControllerAI
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){
             // Only destroy dead enemy when dying animation is done
+            for (let label of this.enemy.damageNumber){
+                if (label != null) {
+                    label.destroy();
+                    label = null;
+                }
+            }
             this.owner.visible = false;
             this.owner.destroy();
         }
@@ -257,6 +280,8 @@ export default class EnemyAI extends ControllerAI
         this.enemy = options.enemy;
 
         this.emitter = new Emitter();
+
+        this.burncount = 0;
     }
 
 }

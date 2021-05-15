@@ -32,6 +32,15 @@ export default class Splash extends Scene {
        // this.load.audio("splashMusic", "space_wizard_assets/sounds/Splash.mp3");
         this.load.image("splash", "space_wizard_assets/images/Space Wizard Logo.png");
 
+        //Load music and sound effects
+        this.load.audio("mainMenuMusic", "space_wizard_assets/music/menu music.wav");
+        this.load.audio("levelMusic", "space_wizard_assets/music/level music.wav");
+
+    }
+
+    unloadScene():void{
+        this.load.keepAudio("mainMenuMusic");
+        this.load.keepAudio("levelMusic");
     }
 
     startScene(): void {

@@ -93,7 +93,7 @@ export default class SpellController extends ControllerAI {
             this.checkEnemyCollision();
 
             // Detonate the spell on impact with side of screen
-            if (this.owner.position.x < 16 || this.owner.position.x > 1200 - 16 || this.owner.position.y < 16 || this.owner.position.y > 800 - 16) {
+            if (this.owner.position.x < 16 || this.owner.position.x > (<GameLevel>this.owner.getScene()).background.boundary.right- 16 || this.owner.position.y < 16 || this.owner.position.y > (<GameLevel>this.owner.getScene()).background.boundary.bottom - 16) {
                 this.destroySpell();
             } else {
                 if (!this.owner.animation.isPlaying("EXPLOSION")) {

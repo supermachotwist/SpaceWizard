@@ -115,7 +115,7 @@ export default class Level2 extends GameLevel {
                     resetOnComplete: false,
                     start: 0,
                     end: 6.28,
-                    ease: EaseFunctionType.IN_OUT_QUAD
+                    ease: EaseFunctionType.OUT_SINE
                 }
             ],
             reverseOnComplete: false,
@@ -124,11 +124,12 @@ export default class Level2 extends GameLevel {
     }
 
     createBackground(): void {
-        let background = this.add.sprite("space", "background");
+        this.background = this.add.sprite("space", "background");
 
         // Now, let's make sure our logo is in a good position
-        let center = this.viewport.getCenter();
-        background.position.set(center.x, center.y);
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
     }
 
 }

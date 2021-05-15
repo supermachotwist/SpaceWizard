@@ -84,8 +84,8 @@ export default class PlayerController implements AI {
         // Move the player
         this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
-        if (this.owner.position.x >= 1168){
-            this.owner.position.x = 1168;
+        if (this.owner.position.x >= (<GameLevel>this.owner.getScene()).background.boundary.right){
+            this.owner.position.x = (<GameLevel>this.owner.getScene()).background.boundary.right;
         }
         if (this.owner.position.x <= 32){
             this.owner.position.x = 32;
@@ -93,8 +93,8 @@ export default class PlayerController implements AI {
         if (this.owner.position.y <= 32){
             this.owner.position.y = 32;
         }
-        if (this.owner.position.y >= 700){
-            this.owner.position.y = 700;
+        if (this.owner.position.y >= (<GameLevel>this.owner.getScene()).background.boundary.bottom){
+            this.owner.position.y = (<GameLevel>this.owner.getScene()).background.boundary.bottom;
         }
 
         if(Input.isMouseJustPressed()){

@@ -5,7 +5,11 @@ import Emitter from "../../../Wolfie2D/Events/Emitter";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Timer from "../../../Wolfie2D/Timing/Timer";
+import Color from "../../../Wolfie2D/Utils/Color";
+import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
 import EnemyProjectileController from "../../AI/EnemyProjectileController";
 import GameLevel from "../../Scenes/Gamelevel";
 import EnemyType from "./EnemyType";
@@ -52,6 +56,9 @@ export default class Enemy {
     //
     targetLocation:Vec2;
 
+    damageNumber: Array<Label>;
+    labelTimer: Array<Timer>;
+
     constructor(owner: AnimatedSprite, enemyType: EnemyType, loot: String){
         this.owner = owner;
         this.type = enemyType;
@@ -67,6 +74,9 @@ export default class Enemy {
         this.cooldownTimer = new Timer(enemyType.cooldown);
 
         this.emitter = new Emitter();
+
+        this.labelTimer = new Array();
+        this.damageNumber = new Array();
     }
 
     moveSprite(position: Vec2, layer?: string){
@@ -89,7 +99,32 @@ export default class Enemy {
         console.log("Took damage");
         this.health -= damage;
         this.owner.animation.playIfNotAlready("DAMAGE", false);
-    
+
+        let viewTranslation = (<GameLevel>this.owner.getScene()).getViewTranslation(this.owner);
+        let damageNum = <Label>this.owner.getScene().add.uiElement(UIElementType.LABEL, "UI", {position: this.owner.position.clone().sub(viewTranslation), text: "" + damage});
+        damageNum.textColor = Color.RED;
+        damageNum.font = "AstroSpace";
+        damageNum.fontSize = 16;
+        damageNum.tweens.add("damage", {
+            startDelay: 0,
+            duration: 300,
+            effects: [{
+                property: "positionY",
+                resetOnComplete: false,
+                start: damageNum.position.y,
+                end: damageNum.position.y - 32,
+                ease: EaseFunctionType.OUT_SINE
+            }]
+        });
+
+        damageNum.tweens.play("damage");
+        this.damageNumber.push(damageNum);
+
+        // create a timer for this label
+        let timer = new Timer(400);
+        timer.start();
+        this.labelTimer.push(timer);
+
         if(this.health <= 0)
         {
             this.dropSpell();

@@ -32,6 +32,7 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import enemyUFO from "../GameSystems/Enemys/EnemyTypes/EnemyUFO";
 import shieldEnemy from "../GameSystems/Enemys/EnemyTypes/ShieldEnemy";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 
 export default class GameLevel extends Scene {
@@ -54,6 +55,8 @@ export default class GameLevel extends Scene {
     protected manaCountLabel: Label;
     protected waveLabel: Label;
     protected manaBar: Rect;
+
+    background: Sprite;
 
     infiniteLives: boolean;
 
@@ -118,10 +121,7 @@ export default class GameLevel extends Scene {
         this.load.audio("bang", "space_wizard_assets/sound effect/bang.wav");
         this.load.audio("spaceship", "space_wizard_assets/sound effect/spaceship.wav");
         this.load.audio("thunder", "space_wizard_assets/sound effect/thunder.wav");
-        this.load.audio("playerDamage", "space_wizard_assets/sound effect/player damage.wav");
-
-        // Level music
-        this.load.audio("levelMusic", "space_wizard_assets/music/level music.wav");
+        this.load.audio("playerDamage", "space_wizard_assets/sound effect/player damage.wav")
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -156,11 +156,18 @@ export default class GameLevel extends Scene {
 
         this.spawnTowers();
 
+        this.viewport.follow(this.player);
+
+        this.viewport.setBounds(0,0, this.background.boundary.right, this.background.boundary.bottom);
+
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
     }
 
     unloadScene():void{
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "levelMusic"});
+        this.viewport.follow(null);
+        this.load.keepAudio("mainMenuMusic");
+        this.load.keepAudio("levelMusic");
     }
 
     getEnemies(): Array<Enemy>{
@@ -180,16 +187,17 @@ export default class GameLevel extends Scene {
     }
 
     createBackground(): void {
-        let background = this.add.sprite("space", "background");
+        this.background = this.add.sprite("space", "background");
 
         // Now, let's make sure our logo is in a good position
-        let center = this.viewport.getCenter();
-        background.position.set(center.x, center.y);
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
 
         // Create the cookie planet background
         let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
-        cookiePlanet.scale.scale(10);
-        cookiePlanet.position.set(center.x, center.y + this.viewport.getHalfSize().y - 64);
+        cookiePlanet.scale.scale(20);
+        cookiePlanet.position.set(center.x, 2*center.y  - 64);
     }
 
     spawnEnemies(): void {
@@ -310,6 +318,10 @@ export default class GameLevel extends Scene {
             }
         }
 
+        if (this.paused){
+            return;
+        }
+
         if (this.infiniteMana){
             (<PlayerController>this.player.ai).mana = 1000;
         }
@@ -392,7 +404,9 @@ export default class GameLevel extends Scene {
 
     createPauseMenu():void{
         this.paused = true;
-        let center = this.viewport.getCenter();
+        this.viewport.follow(null);
+
+        let center = new Vec2(600, 400);
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});
         settingBackground.color = new Color(73, 73, 73, 0.5);
         settingBackground.borderColor = new Color(53, 53, 53, 0.5);
@@ -433,6 +447,7 @@ export default class GameLevel extends Scene {
             resumeButton.destroy();
             exitButton.destroy();
             muteButton.destroy();
+            this.viewport.follow(this.player);
             this.paused = false;
             console.log("Resume Game");
         }

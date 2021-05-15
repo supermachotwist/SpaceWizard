@@ -30,15 +30,13 @@ export default class MainMenu extends Scene {
 
     loadScene():void{
         this.load.image("mainMenuBackground","space_wizard_assets/images/Space Wizard Logo.png");
-        this.load.image("background","space_wizard_assets/images/Asteroid Belt.png");
 
         // Tower Spritesheets
         this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
         this.load.spritesheet("forkTower", "space_wizard_assets/spritesheets/ForkTower.json");
         this.load.spritesheet("pierceTower", "space_wizard_assets/spritesheets/PierceTower.json");
-        
-        //Load music and sound effects
-        this.load.audio("mainMenuMusic", "space_wizard_assets/music/menu music.wav");
+
+        this.load.spritesheet("background","space_wizard_assets/spritesheets/AsteroidBelt.json");
     }
 
     startScene():void{
@@ -55,8 +53,10 @@ export default class MainMenu extends Scene {
         this.background.position.set(center.x,center.y-200);
         this.viewport.setFocus(this.viewport.getHalfSize());
 
-        let background = this.add.sprite("background", "background");
+        let background = this.add.animatedSprite("background", "background");
         background.position.set(center.x, center.y);
+        background.scale.set(4,4);
+        background.animation.play("PLAY", true);
 
         let midpoint = this.viewport.getHalfSize();
         
@@ -71,13 +71,15 @@ export default class MainMenu extends Scene {
     }
 
     unloadScene():void{
-        this.load.keepImage("background");
+        this.load.keepSpritesheet("background");
+        this.load.keepAudio("mainMenuMusic");
+        this.load.keepAudio("levelMusic");
     }
 
     makePlayButton():Button{
         let midpoint = this.viewport.getCenter();
         let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y),text:"Level Selection"});
-        playButton.backgroundColor = Color.TRANSPARENT;
+        playButton.backgroundColor = new Color(73, 73, 73, 0.5);
         playButton.font = "AstroSpace";
         playButton.fontSize -= 10;
         playButton.textColor = Color.WHITE;
@@ -99,7 +101,7 @@ export default class MainMenu extends Scene {
     makeHelpButton():Button{
         let midpoint = this.viewport.getCenter();
         let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y+70),text:"Help"});
-        playButton.backgroundColor = Color.TRANSPARENT;
+        playButton.backgroundColor = new Color(73, 73, 73, 0.5);
         playButton.font = "AstroSpace";
         playButton.fontSize -= 10;
         playButton.textColor = Color.WHITE;
@@ -121,7 +123,7 @@ export default class MainMenu extends Scene {
     makeSettingButton():Button{
         let midpoint = this.viewport.getCenter();
         let playButton = <Button> this.add.uiElement(UIElementType.BUTTON,"mainMenu",{ position:new Vec2(midpoint.x,midpoint.y+140),text:"Setting"});
-        playButton.backgroundColor = Color.TRANSPARENT;
+        playButton.backgroundColor = new Color(73, 73, 73, 0.5);
         playButton.font = "AstroSpace";
         playButton.fontSize -= 10;
         playButton.textColor = Color.WHITE;
@@ -142,7 +144,7 @@ export default class MainMenu extends Scene {
         this.setting = true;
         let center = this.viewport.getCenter();
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(1200,500)});
-        settingBackground.color = Color.TRANSPARENT;
+        settingBackground.color = new Color(73, 73, 73, 0.5);
         settingBackground.borderColor = new Color(53, 53, 53);
         settingBackground.setBorderWidth(24);
         settingBackground.alpha = 0.8;
@@ -150,7 +152,7 @@ export default class MainMenu extends Scene {
         // Create cheat buttons
         let midpoint = this.viewport.getCenter();
         let infiniteLives = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + - 75),text:"Infinite Lives"});
-        infiniteLives.backgroundColor = Color.TRANSPARENT;
+        infiniteLives.backgroundColor = new Color(73, 73, 73, 0.5);
         infiniteLives.font = "AstroSpace";
         infiniteLives.fontSize -= 10;
         infiniteLives.textColor = Color.WHITE;
@@ -168,7 +170,7 @@ export default class MainMenu extends Scene {
         }
 
         let infiniteMana = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y),text:"Infinite Mana"});
-        infiniteMana.backgroundColor = Color.TRANSPARENT;
+        infiniteMana.backgroundColor = new Color(73, 73, 73, 0.5);
         infiniteMana.font = "AstroSpace";
         infiniteMana.fontSize -= 10;
         infiniteMana.textColor = Color.WHITE;
@@ -186,7 +188,7 @@ export default class MainMenu extends Scene {
         }
 
         let allSpells = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + 75),text:"All Spells Unlocked"});
-        allSpells.backgroundColor = Color.TRANSPARENT;
+        allSpells.backgroundColor = new Color(73, 73, 73, 0.5);
         allSpells.font = "AstroSpace";
         allSpells.fontSize -= 10;
         allSpells.textColor = Color.WHITE;
@@ -199,12 +201,12 @@ export default class MainMenu extends Scene {
             if (this.allSpells){
                 allSpells.backgroundColor = new Color(53, 53, 53);
             } else {
-                allSpells.backgroundColor = Color.TRANSPARENT;
+                allSpells.backgroundColor = new Color(73, 73, 73, 0.5);
             }
         }
 
         let exitButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"EXIT"});
-        exitButton.backgroundColor = Color.TRANSPARENT;
+        exitButton.backgroundColor = new Color(73, 73, 73, 0.5);
         exitButton.font = "AstroSpace";
         exitButton.fontSize -= 10;
         exitButton.textColor = Color.WHITE;
@@ -231,7 +233,7 @@ export default class MainMenu extends Scene {
         this.setting = true;
         let center = this.viewport.getCenter();
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(1200,800)});
-        settingBackground.color = Color.TRANSPARENT;
+        settingBackground.color = new Color(73, 73, 73, 0.5);
         settingBackground.borderColor = new Color(53, 53, 53);
         settingBackground.setBorderWidth(24);
         settingBackground.alpha = 0.8;

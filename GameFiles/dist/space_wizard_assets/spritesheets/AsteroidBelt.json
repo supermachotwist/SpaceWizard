@@ -1,0 +1,39 @@
+{
+    "name": "AsteroidBelt",
+    "spriteSheetImage": "AsteroidBelt.png",
+    "spriteWidth": 300,
+    "spriteHeight": 200,
+    "columns": 2,
+    "rows": 3,
+    "animations": [
+        {
+            "name": "PLAY",
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 15
+                },
+                {
+                    "index": 1,
+                    "duration": 15
+                },
+                {
+                    "index": 2,
+                    "duration": 15
+                },
+                {
+                    "index": 3,
+                    "duration": 15
+                },
+                {
+                    "index": 4,
+                    "duration": 15
+                },
+                {
+                    "index": 5,
+                    "duration": 15
+                }
+            ]
+        }
+    ]
+}

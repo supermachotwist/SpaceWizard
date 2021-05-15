@@ -34,10 +34,12 @@ export default class LevelSelection extends Scene {
         this.addLayer("primary", 100);
 
         // Create background image
-        let background = this.add.sprite("background", "background");
+        let background = this.add.animatedSprite("background", "background");
 
         let center = this.viewport.getCenter();
         background.position.set(center.x, center.y);
+        background.scale.set(4,4);
+        background.animation.play("PLAY", true);
         
         // Create level selection buttons
         this.createLevelSelection();
@@ -48,12 +50,14 @@ export default class LevelSelection extends Scene {
 
     unloadScene():void{
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "mainMenuMusic"});
+        this.load.keepAudio("mainMenuMusic");
+        this.load.keepAudio("levelMusic");
     }
 
     createLevelSelection():void{
         let midpoint = this.viewport.getCenter();
         let level1 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 300,midpoint.y - 35),text:"Level 1"});
-        level1.backgroundColor = Color.TRANSPARENT;
+        level1.backgroundColor = new Color(73, 73, 73, 0.5);
         level1.borderColor = Color.BLACK;
         level1.borderRadius = 10;
         level1.setPadding(new Vec2(50, 10));
@@ -68,7 +72,7 @@ export default class LevelSelection extends Scene {
         }
 
         let level2 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y - 35),text:"Level 2"});
-        level2.backgroundColor = Color.TRANSPARENT;
+        level2.backgroundColor = new Color(73, 73, 73, 0.5);
         level2.borderColor = Color.BLACK;
         level2.borderRadius = 10;
         level2.setPadding(new Vec2(50, 10));
@@ -83,7 +87,7 @@ export default class LevelSelection extends Scene {
         }
 
         let level3 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 300,midpoint.y - 35),text:"Level 3"});
-        level3.backgroundColor = Color.TRANSPARENT;
+        level3.backgroundColor = new Color(73, 73, 73, 0.5);
         level3.borderColor = Color.BLACK;
         level3.borderRadius = 10;
         level3.setPadding(new Vec2(50, 10));
@@ -98,7 +102,7 @@ export default class LevelSelection extends Scene {
         }
 
         let level4 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x - 300,midpoint.y + 25),text:"Level 4"});
-        level4.backgroundColor = Color.TRANSPARENT;
+        level4.backgroundColor = new Color(73, 73, 73, 0.5);
         level4.borderColor = Color.BLACK;
         level4.borderRadius = 10;
         level4.setPadding(new Vec2(50, 10));
@@ -113,7 +117,7 @@ export default class LevelSelection extends Scene {
         }
 
         let level5 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 25),text:"Level 5"});
-        level5.backgroundColor = Color.TRANSPARENT;
+        level5.backgroundColor = new Color(73, 73, 73, 0.5);
         level5.borderColor = Color.BLACK;
         level5.borderRadius = 10;
         level5.setPadding(new Vec2(50, 10));
@@ -128,7 +132,7 @@ export default class LevelSelection extends Scene {
         }
 
         let level6 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x + 300,midpoint.y + 25),text:"Level 6"});
-        level6.backgroundColor = Color.TRANSPARENT;
+        level6.backgroundColor = new Color(73, 73, 73, 0.5);
         level6.borderColor = Color.BLACK;
         level6.borderRadius = 10;
         level6.setPadding(new Vec2(50, 10));
@@ -146,7 +150,7 @@ export default class LevelSelection extends Scene {
     createReturnButton():void{
         let midpoint = this.viewport.getCenter();
         let returnButton = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y + 85),text:"Return to Main Menu"});
-        returnButton.backgroundColor = Color.TRANSPARENT;
+        returnButton.backgroundColor = new Color(73, 73, 73, 0.5);
         returnButton.borderColor = Color.BLACK;
         returnButton.borderRadius = 10;
         returnButton.setPadding(new Vec2(50, 10));
