@@ -146,10 +146,6 @@ export default class SpellController extends ControllerAI {
         let offset = 0;
         // See if the spell colldies with an enemy
         for (let enemy of this.spell.enemies){
-            if (enemy.dead){
-                // Remove enemy from list in place
-                this.spell.enemies.splice(this.spell.enemies.indexOf(enemy), 1);
-            }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && this.spell.type.displayName == "Blackhole") {
                 // Suck the enemies into the center of blackhole
                 enemy.owner.position.x = this.owner.position.x + offset;
@@ -157,7 +153,7 @@ export default class SpellController extends ControllerAI {
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);
-                this.enemiesHit = 1;
+                this.enemiesHit++;
 
                 // If the enemy is a shield enemy. Check if the enemy is shielded
                 if (enemy.type.displayName == "shieldEnemy"){
@@ -191,7 +187,7 @@ export default class SpellController extends ControllerAI {
                 if (enemy.damage(this.spell.damage)){
                     enemy.owner.animation.play("DYING", false);
                 }
-                if (!this.spell.pierce || this.enemiesHit > (<GameLevel>this.owner.getScene()).pierceLevel + 1) {
+                if (!this.spell.pierce || this.enemiesHit >= (<GameLevel>this.owner.getScene()).pierceLevel * 3) {
                     this.destroySpell(this.explosionSize);
                 }
                 offset -= 1;

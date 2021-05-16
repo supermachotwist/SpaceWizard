@@ -58,7 +58,10 @@ export default class GameLevel extends Scene {
     meteorLevel: number;
     laserLevel: number;
     cometLevel: number;
-    blackHoleLevel: number;
+    blackholeLevel: number;
+    speedLevel: number;
+    manaRegenLevel: number;
+    rangeLevel: number;
 
     // Tower levels
     forkLevel: number;
@@ -71,6 +74,7 @@ export default class GameLevel extends Scene {
     protected waveLabel: Label;
     protected currencyLabel: Label;
     protected currencyCount: number;
+    protected shopButton: Button;
 
     background: Sprite;
 
@@ -159,12 +163,17 @@ export default class GameLevel extends Scene {
         this.meteorLevel = 0;
         this.laserLevel = 0;
         this.cometLevel = 0;
-        this.blackHoleLevel = 0;
+        this.blackholeLevel = 0;
 
         // Tower Levels
         this.forkLevel = 1;
         this.pierceLevel = 1;
         this.explosionLevel = 1;
+
+        // Character levels
+        this.speedLevel = 1;
+        this.manaRegenLevel = 1;
+        this.rangeLevel = 1;
 
         // Initialize array of towers
         this.towers = new Array();
@@ -365,6 +374,13 @@ export default class GameLevel extends Scene {
             (<PlayerController>this.player.ai).mana = 1000;
         }
 
+        for (let enemy of this.enemies){
+            if (enemy.dead){
+                // Remove enemy from list in place
+                this.enemies.splice(this.enemies.indexOf(enemy), 1);
+            }
+        }
+
         let mana = (<PlayerController>this.player.ai).mana;
         this.manaCountLabel.text = "Mana: " + mana;
 
@@ -502,6 +518,18 @@ export default class GameLevel extends Scene {
         }
     }
 
+    createNextLevel(): void {
+        this.shopButton = <Button> this.add.uiElement(UIElementType.BUTTON,"UI",{position:new Vec2(1100, 675),text:"SHOP"});
+        this.shopButton.setBackgroundColor(new Color(53, 53, 53));
+        this.shopButton.setPadding(new Vec2(30, 12));
+        this.shopButton.font = "AstroSpace";
+        this.shopButton.fontSize -= 6;
+        this.shopButton.onClick = () =>{
+            this.createShop();
+            this.shopButton.destroy();
+        }    
+    }
+
     createShop(): void {
         this.paused = true;
         this.viewport.follow(null);
@@ -518,12 +546,19 @@ export default class GameLevel extends Scene {
 
         let laserButton:Button;
         let meteorButton:Button;
+        let cometButton:Button;
+        let blackholeButton:Button;
+
+        let prevSpell = this.inventory.getSlot();
+        let curSpell:Spell;
 
         // Create laser upgrade button
         if (this.laserLevel == 0){
             laserButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 200),text:"Buy Laser: 30"});
             laserButton.setBackgroundColor(new Color(53, 53, 53));
             laserButton.setPadding(new Vec2(50, 30));
+            laserButton.font = "AstroSpace";
+            laserButton.fontSize -= 6;
             laserButton.onClick = () =>{
                 if (this.laserLevel == 0){
                     if (this.currencyCount >= 30){
@@ -544,6 +579,9 @@ export default class GameLevel extends Scene {
                 }
                 else {
                     if (this.currencyCount >= this.laserLevel * 20){
+                        this.inventory.changeSlot(0);
+                        curSpell = this.inventory.getItem();
+                        curSpell.incDamage(1);
                         this.currencyCount -= this.laserLevel * 20;
                         this.laserLevel++;
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -559,9 +597,13 @@ export default class GameLevel extends Scene {
             laserButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 200),text:"Laser lvl" + this.laserLevel + ": " + this.laserLevel * 20});
             laserButton.setBackgroundColor(new Color(53, 53, 53));
             laserButton.setPadding(new Vec2(50, 30));
+            laserButton.font = "AstroSpace";
+            laserButton.fontSize -= 6;
             laserButton.onClick = () =>{
                 if (this.currencyCount >= this.laserLevel * 20){
-                    // Add Laser spell
+                    this.inventory.changeSlot(0);
+                    curSpell = this.inventory.getItem();
+                    curSpell.incDamage(1);
                     this.currencyCount -= this.laserLevel * 20;
                     this.laserLevel++;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -575,9 +617,11 @@ export default class GameLevel extends Scene {
 
         // Create meteor upgrade button
         if (this.meteorLevel == 0){
-            meteorButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 300),text:"Buy Meteor: 30"});
+            meteorButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 400),text:"Buy Meteor: 30"});
             meteorButton.setBackgroundColor(new Color(53, 53, 53));
             meteorButton.setPadding(new Vec2(50, 30));
+            meteorButton.font = "AstroSpace";
+            meteorButton.fontSize -= 6;
             meteorButton.onClick = () =>{
                 if (this.meteorLevel == 0){
                     if (this.currencyCount >= 30){
@@ -598,6 +642,9 @@ export default class GameLevel extends Scene {
                 }
                 else {
                     if (this.currencyCount >= this.meteorLevel * 20){
+                        this.inventory.changeSlot(2);
+                        curSpell = this.inventory.getItem();
+                        curSpell.incDamage(1);
                         this.currencyCount -= this.meteorLevel * 20;
                         this.meteorLevel++;
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -610,12 +657,16 @@ export default class GameLevel extends Scene {
             }
         }
         else {
-            meteorButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 300),text:"Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20});
+            meteorButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 400),text:"Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20});
             meteorButton.setBackgroundColor(new Color(53, 53, 53));
             meteorButton.setPadding(new Vec2(50, 30));
+            meteorButton.font = "AstroSpace";
+            meteorButton.fontSize -= 6;
             meteorButton.onClick = () =>{
                 if (this.currencyCount >= this.meteorLevel * 20){
-                    // Add meteor spell
+                    this.inventory.changeSlot(2);
+                    curSpell = this.inventory.getItem();
+                    curSpell.incDamage(2);
                     this.currencyCount -= this.meteorLevel * 20;
                     this.meteorLevel++;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -627,14 +678,278 @@ export default class GameLevel extends Scene {
             }
         }
 
-        let nextWaveButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 200),text:"NEXT WAVE"});
-        nextWaveButton.setBackgroundColor(new Color(53, 53, 53));
-        nextWaveButton.setPadding(new Vec2(50, 10));
-        nextWaveButton.onClick = () =>{
+        // Create comet upgrade button
+        if (this.cometLevel == 0){
+            cometButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 300),text:"Buy Comet: 30"});
+            cometButton.setBackgroundColor(new Color(53, 53, 53));
+            cometButton.setPadding(new Vec2(50, 30));
+            cometButton.font = "AstroSpace";
+            cometButton.fontSize -= 6;
+            cometButton.onClick = () =>{
+                if (this.cometLevel == 0){
+                    if (this.currencyCount >= 30){
+                        // Add comet spell
+                        this.currencyCount -= 30;
+                        this.cometLevel++;
+                        this.inventory.changeSlot(1);
+                        let cometSprite = this.add.sprite("cometSprite", "primary");
+                        cometSprite.scale.scale(2.8);
+                        cometSprite.rotation += Math.PI/4;
+                        let thirdSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
+                        this.inventory.addItem(thirdSpell);
+                        cometButton.text = "Comet lvl" + this.cometLevel + ": " + this.cometLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+                else {
+                    if (this.currencyCount >= this.cometLevel * 20){
+                        this.inventory.changeSlot(1);
+                        curSpell = this.inventory.getItem();
+                        curSpell.incDamage(5);
+                        this.currencyCount -= this.cometLevel * 20;
+                        this.cometLevel++;
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                        cometButton.text = "Comet lvl" + this.cometLevel + ": " + this.cometLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+            }
+        }
+        else {
+            cometButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 300),text:"Comet lvl" + this.cometLevel + ": " + this.cometLevel * 20});
+            cometButton.setBackgroundColor(new Color(53, 53, 53));
+            cometButton.setPadding(new Vec2(50, 30));
+            cometButton.font = "AstroSpace";
+            cometButton.fontSize -= 6;
+            cometButton.onClick = () =>{
+                if (this.currencyCount >= this.cometLevel * 20){
+                    this.inventory.changeSlot(1);
+                    curSpell = this.inventory.getItem();
+                    curSpell.incDamage(5);
+                    this.currencyCount -= this.cometLevel * 20;
+                    this.cometLevel++;
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                    cometButton.text = "Comet lvl" + this.cometLevel + ": " + this.cometLevel * 20;
+                }
+                else {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                }
+            }
+        }
+
+        // Create blackhole upgrade button
+        if (this.blackholeLevel == 0){
+            blackholeButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 500),text:"Buy Blackhole: 30"});
+            blackholeButton.setBackgroundColor(new Color(53, 53, 53));
+            blackholeButton.setPadding(new Vec2(50, 30));
+            blackholeButton.font = "AstroSpace";
+            blackholeButton.fontSize -= 6;
+            blackholeButton.onClick = () =>{
+                if (this.blackholeLevel == 0){
+                    if (this.currencyCount >= 30){
+                        // Add blackhole spell
+                        this.currencyCount -= 30;
+                        this.blackholeLevel++;
+                        this.inventory.changeSlot(3);
+                        let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
+                        blackholeSprite.scale.scale(2.8);
+                        blackholeSprite.rotation += Math.PI/4;
+                        let thirdSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
+                        this.inventory.addItem(thirdSpell);
+                        blackholeButton.text = "Blackhole lvl" + this.blackholeLevel + ": " + this.blackholeLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+                else {
+                    if (this.currencyCount >= this.blackholeLevel * 20){
+                        this.inventory.changeSlot(3);
+                        curSpell = this.inventory.getItem();
+                        curSpell.incDamage(5);
+                        this.currencyCount -= this.blackholeLevel * 20;
+                        this.blackholeLevel++;
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                        blackholeButton.text = "Blackhole lvl" + this.blackholeLevel + ": " + this.blackholeLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+            }
+        }
+        else {
+            blackholeButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 500),text:"Blackhole lvl" + this.blackholeLevel + ": " + this.blackholeLevel * 20});
+            blackholeButton.setBackgroundColor(new Color(53, 53, 53));
+            blackholeButton.setPadding(new Vec2(50, 30));
+            blackholeButton.font = "AstroSpace";
+            blackholeButton.fontSize -= 6;
+            blackholeButton.onClick = () =>{
+                if (this.currencyCount >= this.blackholeLevel * 20){
+                    this.inventory.changeSlot(3);
+                    curSpell = this.inventory.getItem();
+                    curSpell.incDamage(5);
+                    this.currencyCount -= this.blackholeLevel * 20;
+                    this.blackholeLevel++;
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                    blackholeButton.text = "Blackhole lvl" + this.blackholeLevel + ": " + this.blackholeLevel * 20;
+                }
+                else {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                }
+            }
+        }
+        this.inventory.changeSlot(prevSpell);
+
+        let forkButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x, 200),text:"Fork Tower lvl" + this.forkLevel + ": " + this.forkLevel * 30});
+        forkButton.setBackgroundColor(new Color(53, 53, 53));
+        forkButton.setPadding(new Vec2(50, 30));
+        forkButton.font = "AstroSpace";
+        forkButton.fontSize -= 6;
+        forkButton.onClick = () =>{
+            if (this.currencyCount >= this.forkLevel * 30){
+                this.currencyCount -= this.forkLevel * 30
+                this.forkLevel++;
+                forkButton.text = "Fork Tower lvl" + this.forkLevel + ": " + this.forkLevel * 50;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+            }
+            else {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+            }
+        }
+
+        let pierceButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x, 300),text:"Pierce Tower lvl" + this.pierceLevel + ": " + this.pierceLevel * 30});
+        pierceButton.setBackgroundColor(new Color(53, 53, 53));
+        pierceButton.setPadding(new Vec2(50, 30));
+        pierceButton.font = "AstroSpace";
+        pierceButton.fontSize -= 6;
+        pierceButton.onClick = () =>{
+            if (this.currencyCount >= this.pierceLevel * 30){
+                this.currencyCount -= this.pierceLevel * 30
+                this.pierceLevel++;
+                pierceButton.text = "Pierce Tower lvl" + this.pierceLevel + ": " + this.pierceLevel * 50;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+            }
+            else {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+            }
+        }
+
+        let explosionButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x, 400),text:"Explosion Tower lvl" + this.explosionLevel + ": " + this.explosionLevel * 30});
+        explosionButton.setBackgroundColor(new Color(53, 53, 53));
+        explosionButton.setPadding(new Vec2(50, 30));
+        explosionButton.font = "AstroSpace";
+        explosionButton.fontSize -= 6;
+        explosionButton.onClick = () =>{
+            if (this.currencyCount >= this.explosionLevel * 30){
+                this.currencyCount -= this.explosionLevel * 30
+                this.explosionLevel++;
+                explosionButton.text = "Explosion Tower lvl" + this.explosionLevel + ": " + this.explosionLevel * 50;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+            }
+            else {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+            }
+        }
+
+        let healthButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x, 500),text:"First Aid Kit: " + 5});
+        healthButton.setBackgroundColor(new Color(53, 53, 53));
+        healthButton.setPadding(new Vec2(50, 30));
+        healthButton.font = "AstroSpace";
+        healthButton.fontSize -= 6;
+        healthButton.onClick = () =>{
+            if (this.currencyCount >= 5){
+                this.currencyCount -= 5;
+                (<PlayerController>this.player.ai).health++;
+                this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+            }
+            else {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+            }
+        }
+
+        let speedButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x + 400, 200),text:"Speed lvl" + this.speedLevel + ": " + this.speedLevel * 20});
+        speedButton.setBackgroundColor(new Color(53, 53, 53));
+        speedButton.setPadding(new Vec2(50, 30));
+        speedButton.font = "AstroSpace";
+        speedButton.fontSize -= 6;
+        speedButton.onClick = () =>{
+            if (this.currencyCount >= this.speedLevel * 20){
+                this.currencyCount -= this.speedLevel * 20; 
+                (<PlayerController> this.player.ai).incSpeed(50);
+                this.speedLevel++;
+                speedButton.text = "Speed lvl" + this.speedLevel + ": " + this.speedLevel * 20;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+            }
+            else {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+            }
+        }
+
+        let manaRegenButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x + 400, 300),text:"Mana Regen lvl" + this.manaRegenLevel + ": " + this.manaRegenLevel * 20});
+        manaRegenButton.setBackgroundColor(new Color(53, 53, 53));
+        manaRegenButton.setPadding(new Vec2(50, 30));
+        manaRegenButton.font = "AstroSpace";
+        manaRegenButton.fontSize -= 6;
+        manaRegenButton.onClick = () =>{
+            if (this.currencyCount >= this.manaRegenLevel * 20){
+                this.currencyCount -= this.manaRegenLevel * 20; 
+                (<PlayerController> this.player.ai).incManaRegenRate();
+                this.manaRegenLevel++;
+                manaRegenButton.text = "Mana Regen lvl" + this.manaRegenLevel + ": " + this.manaRegenLevel * 20;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+            }
+            else {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+            }
+        }
+
+        let rangeButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x + 400, 400),text:"Range lvl" + this.rangeLevel + ": " + this.rangeLevel * 20});
+        rangeButton.setBackgroundColor(new Color(53, 53, 53));
+        rangeButton.setPadding(new Vec2(50, 30));
+        rangeButton.font = "AstroSpace";
+        rangeButton.fontSize -= 6;
+        rangeButton.onClick = () =>{
+            if (this.currencyCount >= this.rangeLevel * 20){
+                this.currencyCount -= this.rangeLevel * 20; 
+                this.rangeLevel++;
+                rangeButton.text = "Range lvl" + this.rangeLevel + ": " + this.rangeLevel * 20;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+            }
+            else {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+            }
+        }
+
+        let resumeButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 200),text:"RESUME"});
+        resumeButton.setBackgroundColor(new Color(53, 53, 53));
+        resumeButton.setPadding(new Vec2(50, 10));
+        resumeButton.font = "AstroSpace";
+        resumeButton.fontSize -= 6;
+        resumeButton.onClick = () =>{
             settingBackground.destroy();
-            nextWaveButton.destroy();
+            shopLabel.destroy();
+            resumeButton.destroy();
             laserButton.destroy();
             meteorButton.destroy();
+            cometButton.destroy();
+            blackholeButton.destroy();
+            forkButton.destroy();
+            pierceButton.destroy();
+            explosionButton.destroy();
+            healthButton.destroy();
+            speedButton.destroy();
+            manaRegenButton.destroy();
+            rangeButton.destroy();
+
+            this.createNextLevel();
+
+            (<PlayerController>this.player.ai).immunityTimer.start();
             this.viewport.follow(this.player);
             this.paused = false;
             console.log("Next Wave Game");
@@ -644,6 +959,8 @@ export default class GameLevel extends Scene {
     createGameOverScreen():void{
         this.paused = true;
         this.viewport.follow(null);
+
+        this.shopButton.destroy();
 
         let center = new Vec2(600, 400);
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});
@@ -680,6 +997,8 @@ export default class GameLevel extends Scene {
         this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1064, 760), text: "Wave: " + this.wave + "/4"});
         this.waveLabel.textColor = new Color(91,91,91,1);
         this.waveLabel.font = "AstroSpace";
+
+        this.createNextLevel();
     }
 
     protected subscribeToEvents(){

@@ -6,6 +6,7 @@ import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import SpellController from "../../AI/SpellController";
+import GameLevel from "../../Scenes/Gamelevel";
 import Enemy from "../Enemys/Enemy";
 import Tower from "../Towers/Tower";
 import SpellType from "./SpellType";
@@ -53,13 +54,13 @@ export default class Spell {
 
         // Limit the distance a spells can travel
         if (this.type.displayName == "Fireball" || this.type.displayName == "Comet"){
-            this.distance = 500 * 1.5;
+            this.distance = 500 * 1.5 + ((<GameLevel>this.sprite.getScene()).rangeLevel * 300);
         }
         else if (this.type.displayName == "Blackhole"){
-            this.distance = 500 * 3;
+            this.distance = 500 * 3 + ((<GameLevel>this.sprite.getScene()).rangeLevel * 600);
         }
         else if (this.type.displayName == "Laser") {
-            this.distance = 500;
+            this.distance = 500 + ((<GameLevel>this.sprite.getScene()).rangeLevel * 200);
         }
         this.distanceTimer = new Timer(this.distance);
 
@@ -81,19 +82,7 @@ export default class Spell {
     }
 
     incDamage(inc: number): void {
-        this.damage += inc;
-    }
-
-    incDistance(): void {
-        if (this.type.displayName == "Fireball" || this.type.displayName == "Comet"){
-            this.distance += 200 * 1.5;
-        }
-        else if (this.type.displayName == "Blackhole"){
-            this.distance += 200 * 3;
-        }
-        else if (this.type.displayName == "Laser") {
-            this.distance += 200;
-        }
+        this.type.damage += inc;
     }
 
     moveSprite(position: Vec2, layer?: string){

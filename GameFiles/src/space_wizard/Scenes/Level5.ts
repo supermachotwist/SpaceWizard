@@ -109,7 +109,7 @@ export default class level5 extends GameLevel {
         super.updateScene(deltaT);
 
         if (this.enemies.length == 0){
-            this.createShop();
+            (<PlayerController>this.player.ai).mana = 1000;
             this.wave += 1;
             if (this.wave == 5){
                 this.sceneManager.changeToScene(MainMenu,{

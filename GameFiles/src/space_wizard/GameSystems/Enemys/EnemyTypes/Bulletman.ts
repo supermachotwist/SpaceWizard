@@ -8,6 +8,6 @@ export default class Bulletman extends EnemyType {
         this.cooldown = 0;
         this.speed = 100;
         this.health = 15;
-        this.drop = 1;
+        this.drop = 3;
     }
 }

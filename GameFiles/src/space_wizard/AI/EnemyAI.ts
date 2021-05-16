@@ -67,7 +67,7 @@ export default class EnemyAI extends ControllerAI
             this.burncount += deltaT;
             // Damage enemy per second
             if (this.burncount >= 1){
-                this.enemy.damage(5);
+                this.enemy.damage(5 + (<GameLevel>this.enemy.owner.getScene()).meteorLevel * 2);
                 this.burncount--;
             }
         }

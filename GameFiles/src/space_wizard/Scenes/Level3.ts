@@ -284,8 +284,6 @@ export default class Level3 extends GameLevel {
         }
         let mana = (<PlayerController>this.player.ai).mana;
         this.manaCountLabel.text = "Mana: " + mana;
-        this.manaBar.size.x = mana/1000 * 300;
-        this.manaBar.position.x = (mana/1000 * 300)/2 + 25;
 
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
@@ -413,10 +411,6 @@ export default class Level3 extends GameLevel {
 
         this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 650), text: "Mana: " + (<PlayerController>this.player.ai).mana});
         this.manaCountLabel.textColor = Color.WHITE;
-
-        this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,675), size: new Vec2(300, 8)});
-        this.manaBar.color = Color.BLUE;
-        
     }
 
     protected subscribeToEvents(){

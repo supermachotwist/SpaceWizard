@@ -8,6 +8,6 @@ export default class enemySpaceship extends EnemyType {
         this.cooldown = 300;
         this.speed = 100;
         this.health = 50;
-        this.drop = 3;
+        this.drop = 5;
     }
 }

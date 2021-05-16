@@ -11,4 +11,5 @@ export default class SpellType {
 
     /** Mana cost of weapon */
     cost: number;
+
 }

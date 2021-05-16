@@ -8,6 +8,6 @@ export default class enemyUFO extends EnemyType {
         this.cooldown = 120;
         this.speed = 200;
         this.health = 30;
-        this.drop = 2;
+        this.drop = 4;
     }
 }
