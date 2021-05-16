@@ -26,6 +26,7 @@ export default class Level1 extends GameLevel {
         super.updateScene(deltaT);
 
         if (this.enemies.length == 0){
+            this.createShop();
             this.wave += 1;
             if (this.wave == 5){
                 this.sceneManager.changeToScene(MainMenu,{

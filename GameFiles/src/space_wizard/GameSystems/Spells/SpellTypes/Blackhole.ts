@@ -8,6 +8,6 @@ export default class Blackhole extends SpellType {
         this.damage = 10;
         this.displayName = "Blackhole";
         this.cooldown = 500;
-        this.cost = 300;
+        this.cost = 200;
     }
 }

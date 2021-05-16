@@ -14,6 +14,7 @@ import Comet from "../GameSystems/Spells/SpellTypes/Comet";
 import Meteor from "../GameSystems/Spells/SpellTypes/Meteor";
 import Laser from "../GameSystems/Spells/SpellTypes/Laser";
 import Blackhole from "../GameSystems/Spells/SpellTypes/Blackhole";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 
 export default class PlayerController implements AI {
@@ -43,6 +44,11 @@ export default class PlayerController implements AI {
 
     immunityTimer: Timer;
 
+    manaRegenRate: number;
+
+    incSpeed(inc: number): void {
+        this.speed += inc;
+    }
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -51,10 +57,15 @@ export default class PlayerController implements AI {
         this.health = 5;
         this.speed = options.speed;
         this.mana = 1000;
+        this.manaRegenRate = 1;
 
         this.inventory = options.inventory;
         this.immunityTimer = new Timer(1000);
         this.emitter = new Emitter();
+    }
+
+    incManaRegenRate(): void {
+        this.manaRegenRate += 1;
     }
 
     activate(options: Record<string, any>): void {}
@@ -70,7 +81,7 @@ export default class PlayerController implements AI {
             return;
         }
 
-        this.mana += 3;
+        this.mana += this.manaRegenRate;
         if (this.mana > 1000) {
             this.mana = 1000;
         }
@@ -139,6 +150,7 @@ export default class PlayerController implements AI {
 
     damage() {
         if (this.immunityTimer.isStopped()) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDamage", loop: false, holdReference: false});
             this.health -= 1;
             this.immunityTimer.start();
         }

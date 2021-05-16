@@ -34,7 +34,7 @@ export default class SpellManager {
         // Create the inventory slots
         for(let i = 0; i < size; i++){
             this.inventorySlots[i] = scene.add.sprite(inventorySlot, this.slotLayer);
-            this.inventorySlots[i].scale.scale(4);
+            this.inventorySlots[i].scale.scale(2);
         }
 
         this.slotSize = this.inventorySlots[0].size.clone();
@@ -45,7 +45,7 @@ export default class SpellManager {
         }
 
         // Add a rect for the selected slot
-        this.selectedSlot = <Rect>scene.add.graphic(GraphicType.RECT, "slots", {position: this.position.clone(), size: this.slotSize.scaled(3.5)});
+        this.selectedSlot = <Rect>scene.add.graphic(GraphicType.RECT, "slots", {position: this.position.clone(), size: this.slotSize.scaled(1.8)});
         this.selectedSlot.color = Color.WHITE;
         this.selectedSlot.color.a = 0.2;
     }

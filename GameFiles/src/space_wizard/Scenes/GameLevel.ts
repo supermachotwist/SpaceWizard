@@ -54,11 +54,21 @@ export default class GameLevel extends Scene {
 
     paused: boolean;
 
+    // Levels for all the spells
+    meteorLevel: number;
+    laserLevel: number;
+    cometLevel: number;
+    blackHoleLevel: number;
+
+    // Tower levels
+    forkLevel: number;
+    explosionLevel: number;
+    pierceLevel: number;
+
     // UI Components
     protected healthCountLabel: Label;
     protected manaCountLabel: Label;
     protected waveLabel: Label;
-    protected manaBar: Rect;
     protected currencyLabel: Label;
     protected currencyCount: number;
 
@@ -108,6 +118,7 @@ export default class GameLevel extends Scene {
         
         this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
         this.load.image("space", "space_wizard_assets/images/Space.png");
+        this.load.image("spaceUI", "space_wizard_assets/images/SpaceUI.png");
 
         this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
         this.load.image("meteorSprite", "space_wizard_assets/sprites/meteor.png");
@@ -130,7 +141,11 @@ export default class GameLevel extends Scene {
         this.load.audio("bang", "space_wizard_assets/sound effect/bang.wav");
         this.load.audio("spaceship", "space_wizard_assets/sound effect/spaceship.wav");
         this.load.audio("thunder", "space_wizard_assets/sound effect/thunder.wav");
-        this.load.audio("playerDamage", "space_wizard_assets/sound effect/player damage.wav")
+        this.load.audio("playerDamage", "space_wizard_assets/sound effect/player damage.wav");
+        this.load.audio("pickupStardust", "space_wizard_assets/sound effect/pickupStardust.wav");
+        this.load.audio("death", "space_wizard_assets/sound effect/deathSound.wav");
+        this.load.audio("purchase", "space_wizard_assets/sound effect/cash_register.mp3");
+        this.load.audio("decline", "space_wizard_assets/sound effect/decline.wav");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -139,6 +154,17 @@ export default class GameLevel extends Scene {
     startScene(): void {
         // Initialize wave number
         this.wave = 1;
+
+        // Initialize spells levels
+        this.meteorLevel = 0;
+        this.laserLevel = 0;
+        this.cometLevel = 0;
+        this.blackHoleLevel = 0;
+
+        // Tower Levels
+        this.forkLevel = 1;
+        this.pierceLevel = 1;
+        this.explosionLevel = 1;
 
         // Initialize array of towers
         this.towers = new Array();
@@ -182,6 +208,8 @@ export default class GameLevel extends Scene {
         this.viewport.follow(null);
         this.load.keepAudio("mainMenuMusic");
         this.load.keepAudio("levelMusic");
+
+        this.load.keepSpritesheet("stardust");
     }
 
     getEnemies(): Array<Enemy>{
@@ -271,9 +299,10 @@ export default class GameLevel extends Scene {
 
     initializePlayer(): void {
         // Create the inventory
-        this.inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,760), 48);
+        this.inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,755.2), 48);
 
         // Add Laser spell
+        this.laserLevel++;
         this.inventory.changeSlot(0);
         let laserSprite = this.add.sprite("laserSprite", "primary");
         laserSprite.scale.scale(2.8);
@@ -332,17 +361,14 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if (this.paused){
-            return;
-        }
-
         if (this.infiniteMana){
             (<PlayerController>this.player.ai).mana = 1000;
         }
+
         let mana = (<PlayerController>this.player.ai).mana;
         this.manaCountLabel.text = "Mana: " + mana;
-        this.manaBar.size.x = mana/1000 * 300;
-        this.manaBar.position.x = (mana/1000 * 300)/2 + 25;
+
+        this.currencyLabel.text = "Stardust: " + this.currencyCount;
 
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
@@ -353,8 +379,8 @@ export default class GameLevel extends Scene {
                     if (this.infiniteLives) {
                         break;
                     }
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDamage", loop: false, holdReference: false});
                     if ((<PlayerController> this.player.ai).damage()) {
+                        this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
                         this.player.animation.playIfNotAlready("DEATH", false, space_wizard_events.GAME_OVER);
                     }
                     else {
@@ -366,10 +392,12 @@ export default class GameLevel extends Scene {
                     break;
                 }
                 case space_wizard_events.GAME_OVER:{
-                    this.sceneManager.changeToScene(MainMenu,{},{});
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "death", loop: false, holdReference: false});
+                    this.createGameOverScreen();
                     break;
                 }
                 case space_wizard_events.PICKUP_STARDUST: {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "pickupStardust", loop: false, holdReference: false});
                     this.currencyCount += 1;
                     this.currencyLabel.text = "Stardust: " + this.currencyCount;
                     break;
@@ -378,6 +406,7 @@ export default class GameLevel extends Scene {
             }
         }
     }
+
 
     isPaused(): boolean {
         return this.paused;
@@ -473,22 +502,184 @@ export default class GameLevel extends Scene {
         }
     }
 
+    createShop(): void {
+        this.paused = true;
+        this.viewport.follow(null);
+
+        let center = new Vec2(600, 400);
+        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y - 64),size:new Vec2(1200, 736)});
+        settingBackground.color = new Color(73, 73, 73, 0.5);
+        settingBackground.borderColor = new Color(53, 53, 53, 0.5);
+        settingBackground.setBorderWidth(24);
+
+        let shopLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(center.x, 100), text: "Shop"});
+        shopLabel.textColor = Color.WHITE;
+        shopLabel.font = "AstroSpace";
+
+        let laserButton:Button;
+        let meteorButton:Button;
+
+        // Create laser upgrade button
+        if (this.laserLevel == 0){
+            laserButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 200),text:"Buy Laser: 30"});
+            laserButton.setBackgroundColor(new Color(53, 53, 53));
+            laserButton.setPadding(new Vec2(50, 30));
+            laserButton.onClick = () =>{
+                if (this.laserLevel == 0){
+                    if (this.currencyCount >= 30){
+                        // Add Laser spell
+                        this.currencyCount -= 30;
+                        this.laserLevel++;
+                        this.inventory.changeSlot(0);
+                        let laserSprite = this.add.sprite("laserSprite", "primary");
+                        laserSprite.scale.scale(2.8);
+                        laserSprite.rotation += Math.PI/4;
+                        let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
+                        this.inventory.addItem(thirdSpell);
+                        laserButton.text = "Laser lvl" + this.laserLevel + ": " + this.laserLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+                else {
+                    if (this.currencyCount >= this.laserLevel * 20){
+                        this.currencyCount -= this.laserLevel * 20;
+                        this.laserLevel++;
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                        laserButton.text = "Laser lvl" + this.laserLevel + ": " + this.laserLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+            }
+        }
+        else {
+            laserButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 200),text:"Laser lvl" + this.laserLevel + ": " + this.laserLevel * 20});
+            laserButton.setBackgroundColor(new Color(53, 53, 53));
+            laserButton.setPadding(new Vec2(50, 30));
+            laserButton.onClick = () =>{
+                if (this.currencyCount >= this.laserLevel * 20){
+                    // Add Laser spell
+                    this.currencyCount -= this.laserLevel * 20;
+                    this.laserLevel++;
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                    laserButton.text = "Laser lvl" + this.laserLevel + ": " + this.laserLevel * 20;
+                }
+                else {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                }
+            }
+        }
+
+        // Create meteor upgrade button
+        if (this.meteorLevel == 0){
+            meteorButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 300),text:"Buy Meteor: 30"});
+            meteorButton.setBackgroundColor(new Color(53, 53, 53));
+            meteorButton.setPadding(new Vec2(50, 30));
+            meteorButton.onClick = () =>{
+                if (this.meteorLevel == 0){
+                    if (this.currencyCount >= 30){
+                        // Add meteor spell
+                        this.currencyCount -= 30;
+                        this.meteorLevel++;
+                        this.inventory.changeSlot(2);
+                        let meteorSprite = this.add.sprite("meteorSprite", "primary");
+                        meteorSprite.scale.scale(2.8);
+                        meteorSprite.rotation += Math.PI/4;
+                        let thirdSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
+                        this.inventory.addItem(thirdSpell);
+                        meteorButton.text = "Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+                else {
+                    if (this.currencyCount >= this.meteorLevel * 20){
+                        this.currencyCount -= this.meteorLevel * 20;
+                        this.meteorLevel++;
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                        meteorButton.text = "Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20;
+                    }
+                    else {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                    }
+                }
+            }
+        }
+        else {
+            meteorButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x - 400, 300),text:"Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20});
+            meteorButton.setBackgroundColor(new Color(53, 53, 53));
+            meteorButton.setPadding(new Vec2(50, 30));
+            meteorButton.onClick = () =>{
+                if (this.currencyCount >= this.meteorLevel * 20){
+                    // Add meteor spell
+                    this.currencyCount -= this.meteorLevel * 20;
+                    this.meteorLevel++;
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
+                    meteorButton.text = "Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20;
+                }
+                else {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "decline", loop: false, holdReference: false});
+                }
+            }
+        }
+
+        let nextWaveButton = <UIElement> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y + 200),text:"NEXT WAVE"});
+        nextWaveButton.setBackgroundColor(new Color(53, 53, 53));
+        nextWaveButton.setPadding(new Vec2(50, 10));
+        nextWaveButton.onClick = () =>{
+            settingBackground.destroy();
+            nextWaveButton.destroy();
+            laserButton.destroy();
+            meteorButton.destroy();
+            this.viewport.follow(this.player);
+            this.paused = false;
+            console.log("Next Wave Game");
+        }
+    }
+
+    createGameOverScreen():void{
+        this.paused = true;
+        this.viewport.follow(null);
+
+        let center = new Vec2(600, 400);
+        let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});
+        settingBackground.color = new Color(73, 73, 73, 0.5);
+        settingBackground.borderColor = new Color(53, 53, 53, 0.5);
+        settingBackground.setBorderWidth(24);
+
+        // Go back to menu button
+        let muteButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y),text:"Go Back to Menu"});
+        muteButton.setBackgroundColor(new Color(53, 53, 53));
+        muteButton.setPadding(new Vec2(50, 10));
+        muteButton.onClick = () =>{
+            this.sceneManager.changeToScene(MainMenu,{},{});
+        }
+    }
+
     addUI(): void {
-        this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 700), text: "Lives: " + (<PlayerController> this.player.ai).health});
+        let spaceUI = this.add.sprite("spaceUI", "UI");
+        spaceUI.position.set(600, 755.2);
+        spaceUI.scale.set(4, 1.4);
+
+        this.healthCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(432, 760), text: "Health: " + (<PlayerController> this.player.ai).health});
         this.healthCountLabel.textColor = Color.RED;
+        this.healthCountLabel.font = "AstroSpace";
 
-        this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 640), text: "Mana: " + (<PlayerController>this.player.ai).mana});
+        this.manaCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(616, 760), text: "Mana: " + (<PlayerController>this.player.ai).mana});
         this.manaCountLabel.textColor = Color.BLUE;
+        this.manaCountLabel.font = "AstroSpace";
 
-        this.manaBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(175,665), size: new Vec2(300, 8)});
-        this.manaBar.color = Color.BLUE;
-
-        this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 600), text: "Wave: " + this.wave + "/4"});
-        this.waveLabel.textColor = Color.YELLOW;
-
-        this.currencyLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(100, 560), text: "Stardust: " + this.currencyCount});
+        this.currencyLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(832, 760), text: "Stardust: " + this.currencyCount});
         this.currencyLabel.textColor = Color.WHITE;
-        
+        this.currencyLabel.font = "AstroSpace";
+
+        this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1064, 760), text: "Wave: " + this.wave + "/4"});
+        this.waveLabel.textColor = new Color(91,91,91,1);
+        this.waveLabel.font = "AstroSpace";
     }
 
     protected subscribeToEvents(){

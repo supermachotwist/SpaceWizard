@@ -24,6 +24,10 @@ export default class Spell {
     /** The cooldown timer for this weapon's use */
     cooldownTimer: Timer;
 
+    /** Limit the distance the spell can travel */
+    distanceTimer: Timer;
+    distance: number;
+
     towers: Array<Tower>;
 
     enemies: Array<Enemy>
@@ -47,6 +51,18 @@ export default class Spell {
         // Create the cooldown timer
         this.cooldownTimer = new Timer(type.cooldown);
 
+        // Limit the distance a spells can travel
+        if (this.type.displayName == "Fireball" || this.type.displayName == "Comet"){
+            this.distance = 500 * 1.5;
+        }
+        else if (this.type.displayName == "Blackhole"){
+            this.distance = 500 * 3;
+        }
+        else if (this.type.displayName == "Laser") {
+            this.distance = 500;
+        }
+        this.distanceTimer = new Timer(this.distance);
+
         // All the towers on the map
         this.towers = towers;
 
@@ -62,6 +78,22 @@ export default class Spell {
         this.pierce = pierce;
 
         this.emitter = new Emitter();
+    }
+
+    incDamage(inc: number): void {
+        this.damage += inc;
+    }
+
+    incDistance(): void {
+        if (this.type.displayName == "Fireball" || this.type.displayName == "Comet"){
+            this.distance += 200 * 1.5;
+        }
+        else if (this.type.displayName == "Blackhole"){
+            this.distance += 200 * 3;
+        }
+        else if (this.type.displayName == "Laser") {
+            this.distance += 200;
+        }
     }
 
     moveSprite(position: Vec2, layer?: string){

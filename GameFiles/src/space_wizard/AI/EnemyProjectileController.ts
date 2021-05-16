@@ -6,6 +6,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Timer from "../../Wolfie2D/Timing/Timer";
 import Enemy from "../GameSystems/Enemys/Enemy";
 import Spell from "../GameSystems/Spells/Spell";
 import Tower from "../GameSystems/Towers/Tower";
@@ -36,6 +37,9 @@ export default class EnemyProjectileController extends ControllerAI {
     // Enemy that the projectile came from
     enemy: Enemy;
 
+    // Invulnerability period
+    invulTimer: Timer;
+
     /** A list of enemies the tower has collided with */
     /** This is to prevent the projectile from hitting the same tower twice */
 
@@ -50,6 +54,9 @@ export default class EnemyProjectileController extends ControllerAI {
 
         // Initialize Emitter
         this.emitter = new Emitter();
+
+        this.invulTimer = new Timer(1000);
+        this.invulTimer.start();
     }
 
     activate(options: Record<string, any>): void {}
@@ -63,7 +70,7 @@ export default class EnemyProjectileController extends ControllerAI {
             return;
         }
 
-        if (!this.dead){
+        if (!this.dead && this.invulTimer.isStopped()){
             // Move the projectile in direction of movement
             this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 

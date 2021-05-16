@@ -281,7 +281,7 @@ export default class MainMenu extends Scene {
         helpBody6.setTextColor(Color.WHITE);
         helpBody6.font = "AstroSpace";
         helpBody6.fontSize -= 10;
-        helptext = "Move over powerups to gain new spells.";
+        helptext = "Use stardust to upgrade your spells";
         let helpBody7 = <Label> this.add.uiElement(UIElementType.LABEL,"settingMenu",{position: new Vec2(center.x,center.y + 100),text:helptext});
         helpBody7.setTextColor(Color.WHITE);
         helpBody7.font = "AstroSpace";

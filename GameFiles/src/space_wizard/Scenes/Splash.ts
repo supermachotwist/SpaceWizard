@@ -54,6 +54,7 @@ export default class Splash extends Scene {
 
         let clickToContinue = <Label> this.add.uiElement(UIElementType.LABEL,"splashScreen",{position: new Vec2(center.x,center.y+200),text:"Click To Start"});
         clickToContinue.textColor = Color.WHITE;
+        clickToContinue.font = "AstroSpace";
     }
 
     updateScene(): void {

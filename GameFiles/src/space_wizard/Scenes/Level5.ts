@@ -45,87 +45,23 @@ export default class level5 extends GameLevel {
     }
 
     loadScene(): void {
-        this.load.spritesheet("player", "space_wizard_assets/spritesheets/WizardPlayer.json");
-
-        // Spell Spritesheets
-        this.load.spritesheet("meteor", "space_wizard_assets/spritesheets/meteor.json");
-        this.load.spritesheet("comet", "space_wizard_assets/spritesheets/comet.json");
-        this.load.spritesheet("laser", "space_wizard_assets/spritesheets/laser.json");
-        this.load.spritesheet("blackhole", "space_wizard_assets/spritesheets/blackhole.json");
-        console.log("loaded spells");
-        // Tower Spritesheets
-        this.load.spritesheet("explosionTower", "space_wizard_assets/spritesheets/ExplosionTower.json");
-        this.load.spritesheet("forkTower", "space_wizard_assets/spritesheets/ForkTower.json");
-        this.load.spritesheet("pierceTower", "space_wizard_assets/spritesheets/PierceTower.json");
-        console.log("loaded tower");
+        super.loadScene();
 
         // Enemy Spritesheets
         this.load.spritesheet("bulletman", "space_wizard_assets/spritesheets/bulletman.json");
-        this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
-
-        this.load.image("cookiePlanet", "space_wizard_assets/images/Cookie Planet.png");
-        this.load.image("space", "space_wizard_assets/images/Space.png");
-
-        this.load.image("inventorySlot", "space_wizard_assets/sprites/inventory.png");
-        this.load.image("meteorSprite", "space_wizard_assets/sprites/meteor.png");
-        this.load.image("cometSprite", "space_wizard_assets/sprites/comet.png");
-        this.load.image("laserSprite", "space_wizard_assets/sprites/laser.png");
-        this.load.image("blackholeSprite", "space_wizard_assets/sprites/blackhole.png");
 
         this.load.object("towerData", "space_wizard_assets/data/lvl3_towers.json");
         this.load.object("wave1", "space_wizard_assets/data/lvl5_wave1.json");
         this.load.object("wave2", "space_wizard_assets/data/lvl5_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl5_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl5_wave4.json");
-
-        // Navmesh for Enemies
-        this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
-
-        // Sound Effects
-        this.load.audio("laser", "space_wizard_assets/sound effect/laser.wav");
-        this.load.audio("bubbles", "space_wizard_assets/sound effect/bubbles.wav");
-        this.load.audio("bang", "space_wizard_assets/sound effect/bang.wav");
-        this.load.audio("spaceship", "space_wizard_assets/sound effect/spaceship.wav");
-        this.load.audio("thunder", "space_wizard_assets/sound effect/thunder.wav");
-        this.load.audio("playerDamage", "space_wizard_assets/sound effect/player damage.wav");
-
-        // Level music
-        this.load.audio("levelMusic", "space_wizard_assets/music/level music.wav");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
     // or where you should initialize any other things you will need in your scene
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
-        // Initialize wave number
-        this.wave = 1;
-
-        // Initialize array of towers
-        this.towers = new Array();
-
-        // Initialize array of enemies
-        this.enemies = new Array();
-
-        // Initialize array of item drops
-        this.items = new Array();
-
-        this.paused = false;
-
-        this.subscribeToEvents();
-
-        this.initLayers();
-
-        this.createBackground();
-
-        this.initializePlayer();
-
-        this.addUI();
-
-        this.spawnEnemies();
-
-        this.spawnTowers();
-
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelMusic", loop: true, holdReference: true});
+        super.startScene();
     }
 
     spawnEnemies(): void {
@@ -170,7 +106,10 @@ export default class level5 extends GameLevel {
     }
 
     updateScene(deltaT: number) {
+        super.updateScene(deltaT);
+
         if (this.enemies.length == 0){
+            this.createShop();
             this.wave += 1;
             if (this.wave == 5){
                 this.sceneManager.changeToScene(MainMenu,{
@@ -182,48 +121,6 @@ export default class level5 extends GameLevel {
             else {
                 this.waveLabel.text = "Wave: " + this.wave + "/4";
                 this.spawnEnemies();
-            }
-        }
-
-        if (Input.isPressed("pause")){
-            if (!this.paused){
-                this.createPauseMenu();
-            }
-        }
-
-        if (this.infiniteMana){
-            (<PlayerController>this.player.ai).mana = 1000;
-        }
-        let mana = (<PlayerController>this.player.ai).mana;
-        this.manaCountLabel.text = "Mana: " + mana;
-        this.manaBar.size.x = mana/1000 * 300;
-        this.manaBar.position.x = (mana/1000 * 300)/2 + 25;
-
-        // Handle events and update the UI if needed
-        while(this.receiver.hasNextEvent()){
-            let event = this.receiver.getNextEvent();
-            
-            switch(event.type){
-                case space_wizard_events.PLAYER_DAMAGE: {
-                    if (this.infiniteLives) {
-                        break;
-                    }
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDamage", loop: false, holdReference: false});
-                    if ((<PlayerController> this.player.ai).damage()) {
-                        this.player.animation.playIfNotAlready("DEATH", false, space_wizard_events.GAME_OVER);
-                    }
-                    else {
-                        if (!this.player.animation.isPlaying("DEATH")){
-                            this.player.animation.playIfNotAlready("DAMAGE", false);
-                        }
-                        this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
-                    }
-                    break;
-                }
-                case space_wizard_events.GAME_OVER:{
-                    this.sceneManager.changeToScene(MainMenu,{},{});
-                    break;
-                }
             }
         }
     }

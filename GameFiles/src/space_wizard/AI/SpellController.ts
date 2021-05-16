@@ -36,6 +36,14 @@ export default class SpellController extends ControllerAI {
     // Size of explosion
     explosionSize: number;
 
+    // Number of enemies hit
+    enemiesHit: number;
+
+    // Tower levels when spell is augmented
+    pierceLevel: number;
+    explosionLevel: number;
+    forkLevel: number;
+
     /** A list of enemies the tower has collided with */
     /** This is to prevent the tower from hitting the same tower twice */
 
@@ -49,6 +57,9 @@ export default class SpellController extends ControllerAI {
         this.spell = options.spell;
 
         this.explosionSize = 1;
+        this.enemiesHit = 0;
+
+        this.spell.distanceTimer.start(this.spell.distance);
 
         this.emitter = new Emitter();
     }
@@ -65,6 +76,12 @@ export default class SpellController extends ControllerAI {
         }
 
         if (!this.dead){
+
+            // Kill spell at the end of its distance
+            if (this.spell.distanceTimer.isStopped()){
+                this.destroySpell();
+            }
+
             // Rotate the meteor in the direction of movement
             this.owner.rotation = Vec2.UP.angleToCCW(this.direction) + Math.PI/2;
 
@@ -74,18 +91,23 @@ export default class SpellController extends ControllerAI {
                 if (this.owner.collisionShape.overlaps(tower.owner.collisionShape)) {
                     if (tower.displayName === "ExplosionTower" && !this.spell.explosion){
                         this.spell.explosion = true;
-                        this.explosionSize = 5;
+                        this.explosionSize = ((<GameLevel>this.owner.getScene()).explosionLevel - 1) * 2 + 5;
                     }
                     else if (tower.displayName === "PierceTower"){
                         this.spell.pierce = true;
                     }
                     else if (tower.displayName === "ForkTower" && !this.spell.fork){
                         // Do not fork again after forking once
+                        let forkLevel = (<GameLevel>this.owner.getScene()).forkLevel;
                         this.spell.fork = true;
-                        this.spell.use(this.owner, this.direction.rotateCCW(Math.PI/8).clone());
-                        this.direction.rotateCCW(-1 * Math.PI/8);
-                        this.spell.use(this.owner, this.direction.rotateCCW(-1 * Math.PI/8).clone());
-                        this.direction.rotateCCW(Math.PI/8);
+                        this.spell.use(this.owner, this.direction.rotateCCW(Math.PI/12 * 2).clone());
+
+
+                        for (let i = 0; i < forkLevel - 1; i++) {
+                            this.spell.use(this.owner, this.direction.rotateCCW(-1 * 4/forkLevel * Math.PI/12).clone());
+                        }
+                        this.direction.rotateCCW(-1 * 4/forkLevel * Math.PI/12);
+                        this.spell.distanceTimer.start(this.spell.distance);
                     }
                 }
             }
@@ -135,6 +157,7 @@ export default class SpellController extends ControllerAI {
             }
             if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape) && !this.spell.enemiesHit.includes(enemy)) {
                 this.spell.enemiesHit.push(enemy);
+                this.enemiesHit = 1;
 
                 // If the enemy is a shield enemy. Check if the enemy is shielded
                 if (enemy.type.displayName == "shieldEnemy"){
@@ -168,7 +191,7 @@ export default class SpellController extends ControllerAI {
                 if (enemy.damage(this.spell.damage)){
                     enemy.owner.animation.play("DYING", false);
                 }
-                if (!this.spell.pierce) {
+                if (!this.spell.pierce || this.enemiesHit > (<GameLevel>this.owner.getScene()).pierceLevel + 1) {
                     this.destroySpell(this.explosionSize);
                 }
                 offset -= 1;

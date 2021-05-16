@@ -25,18 +25,12 @@ export default class CurrencyAI extends ControllerAI {
     }
 
     update(deltaT: number): void {
-        // Do nothing if game is paused
-        let gamelevel = <GameLevel> this.owner.getScene();
-        if (gamelevel.isPaused()){
-            return;
-        }
-
         // Move towards player, the closer you are, the faster you are
         let distance = this.owner.position.distanceSqTo(this.player.position);
         let direction = this.owner.position.dirTo(this.player.position);
-        let speed = 1/distance * 500000;
-        if (speed >= 1000){
-            speed = 1000;
+        let speed = 1/distance * 5000000;
+        if (speed >= 1500){
+            speed = 1500;
         }
         this.owner.move(direction.normalized().scale(deltaT * speed));
 
