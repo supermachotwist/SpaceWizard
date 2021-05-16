@@ -1,0 +1,34 @@
+{
+    "enemies": [
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [350, 100]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [450, 100]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [100, 450]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [100, 550]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "Laser",
+            "position": [1000, 450]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [1000, 550]
+        }         
+    ]
+}

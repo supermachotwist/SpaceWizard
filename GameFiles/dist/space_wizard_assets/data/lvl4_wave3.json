@@ -1,0 +1,25 @@
+{
+    "enemies": [
+        {
+            "type": "enemyUFO",
+            "loot": "Blackhole",
+            "position": [500, 200]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [300, 200]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [200, 500]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [1000, 500]
+        }
+   
+    ]
+}
