@@ -17,26 +17,28 @@ import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import GameLevel from "./Gamelevel";
 import Level2 from "./Level2";
 import MainMenu from "./MainMenu";
+import { space_wizard_events } from "../space_wizard_events";
 
 
 
 export default class Level1 extends GameLevel {
 
+    startScene(): void {
+        super.startScene();
+        this.nextLevel = Level2;
+    }
+
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 
-        if (this.enemies.length == 0){
-            this.wave += 1;
-            if (this.wave == 5){
-                this.sceneManager.changeToScene(MainMenu,{
-                infiniteLives: this.infiniteLives,
-                infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
-            },{});
+        this.waveLabel.text = "Wave: " + this.wave + "/4";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 4){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
             }
             else {
-                this.waveLabel.text = "Wave: " + this.wave + "/4";
-                this.spawnEnemies();
+                this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
     }

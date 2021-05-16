@@ -92,7 +92,22 @@ export default class MainMenu extends Scene {
             this.setting?{}:this.sceneManager.changeToScene(LevelSelection,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
+                allSpells: this.allSpells,
+
+                meteorLevel: null,
+                cometLevel: null,
+                laserLevel: null,
+                blackholeLevel: null,
+
+                forkLevel: null,
+                pierceLevel: null,
+                explosionLevel: null,
+
+                speedLevel: null,
+                rangeLevel: null,
+                manaRegenLevel: null,
+
+                currencyCount: 0
             },{});
         }
         return playButton;

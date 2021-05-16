@@ -5,7 +5,11 @@ export enum space_wizard_events {
     PLAYER_DEATH = "player_death",
     PLAYER_DAMAGE = "player_damage",
     GAME_OVER = "game_over",
-    PICKUP_STARDUST = "pickup_stardust"
+    PICKUP_STARDUST = "pickup_stardust",
+    NEXT_LEVEL = "next_level",
+    LEVEL_END = "level_end",
+    WAVE_END = "wave_end",
+    SPAWN_ENEMIES = "spawn_enemies"
 }
 
 export enum space_wizard_names {

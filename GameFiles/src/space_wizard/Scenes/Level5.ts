@@ -33,6 +33,8 @@ import disruptor from "../GameSystems/Enemys/EnemyTypes/Disruptor";
 import GameLevel from "./Gamelevel";
 import Level4 from "./Level4";
 import Bulletman from "../GameSystems/Enemys/EnemyTypes/Bulletman";
+import Level3 from "./Level3";
+import Level6 from "./Level6";
 
 
 
@@ -62,6 +64,7 @@ export default class level5 extends GameLevel {
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
         super.startScene();
+        this.nextLevel = Level6;
     }
 
     spawnEnemies(): void {
@@ -108,19 +111,14 @@ export default class level5 extends GameLevel {
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 
-        if (this.enemies.length == 0){
-            (<PlayerController>this.player.ai).mana = 1000;
-            this.wave += 1;
-            if (this.wave == 5){
-                this.sceneManager.changeToScene(MainMenu,{
-                infiniteLives: this.infiniteLives,
-                infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
-            },{});
+        this.waveLabel.text = "Wave: " + this.wave + "/4";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 4){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
             }
             else {
-                this.waveLabel.text = "Wave: " + this.wave + "/4";
-                this.spawnEnemies();
+                this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
     }

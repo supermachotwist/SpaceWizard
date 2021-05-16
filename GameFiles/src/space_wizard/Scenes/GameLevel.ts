@@ -34,6 +34,8 @@ import shieldEnemy from "../GameSystems/Enemys/EnemyTypes/ShieldEnemy";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import CurrencyAI from "../AI/CurrencyAI";
+import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 
 
 export default class GameLevel extends Scene {
@@ -53,6 +55,10 @@ export default class GameLevel extends Scene {
     graph: PositionGraph;
 
     paused: boolean;
+
+    nextLevel: new (...args: any) => GameLevel;
+
+    waveEnd: boolean;
 
     // Levels for all the spells
     meteorLevel: number;
@@ -75,6 +81,8 @@ export default class GameLevel extends Scene {
     protected currencyLabel: Label;
     protected currencyCount: number;
     protected shopButton: Button;
+    protected levelEndLabel: Label;
+    protected waveEndLabel: Label;
 
     background: Sprite;
 
@@ -95,6 +103,21 @@ export default class GameLevel extends Scene {
         this.infiniteLives = init.infiniteLives;
         this.infiniteMana = init.infiniteMana;
         this.allSpells = init.allSpells;
+
+        this.meteorLevel = init.meteorLevel;
+        this.laserLevel = init.laserLevel;
+        this.cometLevel = init.cometLevel;
+        this.blackholeLevel = init.blackholeLevel;
+
+        this.forkLevel = init.forkLevel;
+        this.pierceLevel = init.pierceLevel;
+        this.explosionLevel = init.explosionLevel;
+
+        this.speedLevel = init.speedLevel;
+        this.rangeLevel = init.rangeLevel;
+        this.manaRegenLevel = init.manaRegenLevel;
+
+        this.currencyCount = init.currencyCount;
     }
 
     loadScene(): void {
@@ -159,21 +182,43 @@ export default class GameLevel extends Scene {
         // Initialize wave number
         this.wave = 1;
 
+        this.waveEnd = false;
+
         // Initialize spells levels
-        this.meteorLevel = 0;
-        this.laserLevel = 0;
-        this.cometLevel = 0;
-        this.blackholeLevel = 0;
+        if (!this.meteorLevel) {
+            this.meteorLevel = 0;
+        }
+        if (!this.laserLevel){
+            this.laserLevel = 0;
+        }
+        if (!this.cometLevel){
+            this.cometLevel = 0;
+        }
+        if (!this.blackholeLevel){
+            this.blackholeLevel = 0;
+        }
 
         // Tower Levels
-        this.forkLevel = 1;
-        this.pierceLevel = 1;
-        this.explosionLevel = 1;
+        if (!this.forkLevel){
+            this.forkLevel = 1;
+        }
+        if (!this.pierceLevel){
+            this.pierceLevel = 1;
+        }
+        if (!this.explosionLevel){
+            this.explosionLevel = 1;
+        }
 
         // Character levels
-        this.speedLevel = 1;
-        this.manaRegenLevel = 1;
-        this.rangeLevel = 1;
+        if (!this.speedLevel){
+            this.speedLevel = 1;
+        }
+        if (!this.manaRegenLevel){
+            this.manaRegenLevel = 1;
+        }
+        if (!this.rangeLevel){
+            this.rangeLevel = 1;
+        }
 
         // Initialize array of towers
         this.towers = new Array();
@@ -310,16 +355,16 @@ export default class GameLevel extends Scene {
         // Create the inventory
         this.inventory = new SpellManager(this, 4, "inventorySlot", new Vec2(64,755.2), 48);
 
-        // Add Laser spell
-        this.laserLevel++;
-        this.inventory.changeSlot(0);
-        let laserSprite = this.add.sprite("laserSprite", "primary");
-        laserSprite.scale.scale(2.8);
-        laserSprite.rotation += Math.PI/4;
-        let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
-        this.inventory.addItem(thirdSpell);
-
         if (this.allSpells){
+            // Add Laser spell
+            this.laserLevel++;
+            this.inventory.changeSlot(0);
+            let laserSprite = this.add.sprite("laserSprite", "primary");
+            laserSprite.scale.scale(2.8);
+            laserSprite.rotation += Math.PI/4;
+            let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
+            this.inventory.addItem(thirdSpell);
+
             // Add Comet spell
             this.inventory.changeSlot(1);
             let cometSprite = this.add.sprite("cometSprite", "primary");
@@ -345,6 +390,62 @@ export default class GameLevel extends Scene {
 
             this.inventory.changeSlot(0);
         }
+        else {
+            // Bring laser spell up to previous upgrade par
+            if (this.laserLevel == 0){
+                // Add Laser spell
+                this.laserLevel++;
+                this.inventory.changeSlot(0);
+                let laserSprite = this.add.sprite("laserSprite", "primary");
+                laserSprite.scale.scale(2.8);
+                laserSprite.rotation += Math.PI/4;
+                let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
+                this.inventory.addItem(thirdSpell);
+            }
+            else {
+                // Add Laser spell
+                this.laserLevel++;
+                this.inventory.changeSlot(0);
+                let laserSprite = this.add.sprite("laserSprite", "primary");
+                laserSprite.scale.scale(2.8);
+                laserSprite.rotation += Math.PI/4;
+                let thirdSpell = new Spell(laserSprite, new Laser(), this.towers, this.enemies);
+                thirdSpell.incDamage(this.laserLevel - 1);
+                this.inventory.addItem(thirdSpell);
+            }
+            
+            if (this.cometLevel > 0){
+                // Add Comet spell
+                this.inventory.changeSlot(1);
+                let cometSprite = this.add.sprite("cometSprite", "primary");
+                cometSprite.scale.scale(2.8);
+                cometSprite.rotation += Math.PI/4;
+                let secondSpell = new Spell(cometSprite, new Comet(), this.towers, this.enemies);
+                secondSpell.incDamage(5 * (this.cometLevel - 1));
+                this.inventory.addItem(secondSpell);
+            }
+
+            if (this.meteorLevel > 0){
+                // Add Meteor spell
+                this.inventory.changeSlot(2);
+                let meteorSprite = this.add.sprite("meteorSprite", "primary");
+                meteorSprite.scale.scale(2.8);
+                let startingSpell = new Spell(meteorSprite, new Meteor(), this.towers, this.enemies);
+                startingSpell.incDamage(this.meteorLevel - 1);
+                this.inventory.addItem(startingSpell);
+            }
+
+            if (this.blackholeLevel > 0){
+                // Add Blackhole spell
+                this.inventory.changeSlot(3);
+                let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
+                blackholeSprite.scale.scale(2.8);
+                blackholeSprite.rotation += Math.PI/4;
+                let fourthSpell = new Spell(blackholeSprite, new Blackhole(), this.towers, this.enemies);
+                fourthSpell.incDamage(5 * (this.blackholeLevel - 1));
+                this.inventory.addItem(fourthSpell);
+            }
+        }
 
         // Get center of viewport
         let center = this.viewport.getCenter();
@@ -356,7 +457,7 @@ export default class GameLevel extends Scene {
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
         this.player.addAI(PlayerController,{
             inventory: this.inventory,
-            speed:300
+            speed:300 + ((this.speedLevel - 1) * 50)
         });
 
         // Start player is idle animation on loop
@@ -418,7 +519,43 @@ export default class GameLevel extends Scene {
                     this.currencyLabel.text = "Stardust: " + this.currencyCount;
                     break;
                 }
+                case space_wizard_events.WAVE_END:{
+                    this.wave++;
+                    this.waveEndLabel.tweens.play("slideIn");
+                    break;
+                }
+                case space_wizard_events.SPAWN_ENEMIES:{
+                    this.spawnEnemies();
+                    this.waveEnd = false;
+                    break;
+                }
+                case space_wizard_events.LEVEL_END:{
+                    this.levelEndLabel.tweens.play("slideIn");
+                    break;
+                }
+                case space_wizard_events.NEXT_LEVEL:{
+                    this.sceneManager.changeToScene(this.nextLevel,{
+                        infiniteLives: this.infiniteLives,
+                        infiniteMana: this.infiniteMana,
+                        allSpells: this.allSpells,
 
+                        meteorLevel: this.meteorLevel,
+                        cometLevel: this.cometLevel,
+                        laserLevel: this.laserLevel,
+                        blackholeLevel: this.blackholeLevel,
+
+                        forkLevel: this.forkLevel,
+                        pierceLevel: this.pierceLevel,
+                        explosionLevel: this.explosionLevel,
+
+                        speedLevel: this.speedLevel,
+                        rangeLevel: this.rangeLevel,
+                        manaRegenLevel: this.manaRegenLevel,
+
+                        currencyCount: this.currencyCount
+                    },{});
+                    break;
+                }
             }
         }
     }
@@ -666,7 +803,7 @@ export default class GameLevel extends Scene {
                 if (this.currencyCount >= this.meteorLevel * 20){
                     this.inventory.changeSlot(2);
                     curSpell = this.inventory.getItem();
-                    curSpell.incDamage(2);
+                    curSpell.incDamage(1);
                     this.currencyCount -= this.meteorLevel * 20;
                     this.meteorLevel++;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -998,6 +1135,56 @@ export default class GameLevel extends Scene {
         this.waveLabel.textColor = new Color(91,91,91,1);
         this.waveLabel.font = "AstroSpace";
 
+        // End of wave label (start off screen)
+        this.waveEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(-1200, 300), text: "Wave Complete"});
+        this.waveEndLabel.size.set(1200, 60);
+        this.waveEndLabel.borderRadius = 0;
+        this.waveEndLabel.backgroundColor = new Color(34, 32, 52);
+        this.waveEndLabel.textColor = Color.WHITE;
+        this.waveEndLabel.fontSize = 48;
+        this.waveEndLabel.font = "AstroSpace";
+
+        // Add a tween to move the label on screen
+        this.waveEndLabel.tweens.add("slideIn", {
+            startDelay: 0,
+            duration: 2000,
+            reverseOnComplete: true,
+            onEnd: space_wizard_events.SPAWN_ENEMIES,
+            effects: [
+                {
+                    property: TweenableProperties.posX,
+                    start: -1200,
+                    end: 600,
+                    ease: EaseFunctionType.OUT_SINE
+                }
+            ]
+        });
+
+        // End of level label (start off screen)
+        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(-1200, 300), text: "Level Complete"});
+        this.levelEndLabel.size.set(1200, 60);
+        this.levelEndLabel.borderRadius = 0;
+        this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
+        this.levelEndLabel.textColor = Color.WHITE;
+        this.levelEndLabel.fontSize = 48;
+        this.levelEndLabel.font = "AstroSpace";
+
+        // Add a tween to move the label on screen
+        this.levelEndLabel.tweens.add("slideIn", {
+            startDelay: 0,
+            duration: 2000,
+            onEnd: space_wizard_events.NEXT_LEVEL,
+            reverseOnComplete: true,
+            effects: [
+                {
+                    property: TweenableProperties.posX,
+                    start: -1200,
+                    end: 600,
+                    ease: EaseFunctionType.OUT_SINE
+                }
+            ]
+        });
+
         this.createNextLevel();
     }
 
@@ -1005,7 +1192,11 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe([
             space_wizard_events.PLAYER_DAMAGE,
             space_wizard_events.GAME_OVER,
-            space_wizard_events.PICKUP_STARDUST
+            space_wizard_events.PICKUP_STARDUST,
+            space_wizard_events.WAVE_END,
+            space_wizard_events.SPAWN_ENEMIES,
+            space_wizard_events.LEVEL_END,
+            space_wizard_events.NEXT_LEVEL
         ]);
     }
     
