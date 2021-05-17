@@ -10,8 +10,8 @@ export default class Level7 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
-        this.load.object("wave1", "space_wizard_assets/data/lvl6_wave1.json");
-        this.load.object("towerData", "space_wizard_assets/data/lvl6_towers.json");
+        this.load.object("wave1", "space_wizard_assets/data/lvl7_wave1.json");
+        this.load.object("towerData", "space_wizard_assets/data/lvl7_towers.json");
 
         this.load.image("space", "space_wizard_assets/images/Space2.png");
         this.load.image("planet", "space_wizard_assets/images/Moon.png");

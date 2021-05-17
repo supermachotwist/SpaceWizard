@@ -34,7 +34,7 @@ import GameLevel from "./Gamelevel";
 import Level4 from "./Level4";
 import Bulletman from "../GameSystems/Enemys/EnemyTypes/Bulletman";
 import Level3 from "./Level3";
-import Level6 from "./Level7";
+import Level7 from "./Level7";
 
 
 
@@ -63,17 +63,17 @@ export default class level5 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
-        this.load.object("wave1", "space_wizard_assets/data/lvl5_wave1.json");
-        this.load.object("wave2", "space_wizard_assets/data/lvl5_wave2.json");
-        this.load.object("wave3", "space_wizard_assets/data/lvl5_wave3.json");
-        this.load.object("wave4", "space_wizard_assets/data/lvl5_wave4.json");
-        this.load.object("wave5", "space_wizard_assets/data/lvl5_wave5.json");
-        this.load.object("wave6", "space_wizard_assets/data/lvl5_wave6.json");
-        this.load.object("wave7", "space_wizard_assets/data/lvl5_wave7.json");
-        this.load.object("wave8", "space_wizard_assets/data/lvl5_wave8.json");
-        this.load.object("wave9", "space_wizard_assets/data/lvl5_wave9.json");
-        this.load.object("wave10", "space_wizard_assets/data/lvl5_wave10.json");
-        this.load.image("spaceBack", "space_wizard_assets/images/Level5Background.png");
+        this.load.object("wave1", "space_wizard_assets/data/lvl6_wave1.json");
+        this.load.object("wave2", "space_wizard_assets/data/lvl6_wave2.json");
+        this.load.object("wave3", "space_wizard_assets/data/lvl6_wave3.json");
+        this.load.object("wave4", "space_wizard_assets/data/lvl6_wave4.json");
+        this.load.object("wave5", "space_wizard_assets/data/lvl6_wave5.json");
+        this.load.object("wave6", "space_wizard_assets/data/lvl6_wave6.json");
+        this.load.object("wave7", "space_wizard_assets/data/lvl6_wave7.json");
+        this.load.object("wave8", "space_wizard_assets/data/lvl6_wave8.json");
+        this.load.object("wave9", "space_wizard_assets/data/lvl6_wave9.json");
+        this.load.object("wave10", "space_wizard_assets/data/lvl6_wave10.json");
+        this.load.image("spaceBack", "space_wizard_assets/images/Level6Background.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -81,6 +81,6 @@ export default class level5 extends GameLevel {
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
         super.startScene();
-        this.nextLevel = Level6;
+        this.nextLevel = Level7;
     }
 }

@@ -602,6 +602,10 @@ export default class GameLevel extends Scene {
                     this.levelEndLabel.tweens.play("slideIn");
                     break;
                 }
+                case space_wizard_events.SPAWN_BULLETMAN:{
+                    console.log("sup");
+                    break;
+                }
                 case space_wizard_events.NEXT_LEVEL:{
                     this.sceneManager.changeToScene(this.nextLevel,{
                         infiniteLives: this.infiniteLives,
@@ -1205,7 +1209,7 @@ export default class GameLevel extends Scene {
         this.paused = true;
         this.viewport.follow(null);
 
-        this.shopButton.destroy();
+        //this.shopButton.destroy();
 
         let center = new Vec2(600, 400);
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});
@@ -1239,7 +1243,7 @@ export default class GameLevel extends Scene {
         this.currencyLabel.textColor = Color.WHITE;
         this.currencyLabel.font = "AstroSpace";
 
-        this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1064, 760), text: "Wave: " + this.wave + "/4"});
+        this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1064, 760), text: "Wave: " + this.wave + "/10"});
         this.waveLabel.textColor = new Color(91,91,91,1);
         this.waveLabel.font = "AstroSpace";
 

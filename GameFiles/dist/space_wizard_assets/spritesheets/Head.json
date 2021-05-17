@@ -1,0 +1,103 @@
+{
+    "name": "Head",
+    "spriteSheetImage": "Head.png",
+    "spriteWidth": 128,
+    "spriteHeight": 128,
+    "columns": 3,
+    "rows": 4,
+    "animations": [
+        {
+            "name": "IDLE",
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 10
+                },
+                {
+                    "index": 1,
+                    "duration": 10
+                },
+                {
+                    "index": 2,
+                    "duration": 10
+                },
+                {
+                    "index": 3,
+                    "duration": 10
+                },
+                {
+                    "index": 4,
+                    "duration": 10
+                },
+                {
+                    "index": 5,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "DAMAGE",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 6
+                },
+                {
+                    "index": 1,
+                    "duration": 6
+                },
+                {
+                    "index": 2,
+                    "duration": 6
+                },
+                {
+                    "index": 3,
+                    "duration": 6
+                },
+                {
+                    "index": 4,
+                    "duration": 6
+                },
+                {
+                    "index": 5,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "DYING",
+            "frames": [
+                {
+                    "index": 5,
+                    "duration": 5
+                },
+                {
+                    "index": 6,
+                    "duration": 5
+                },
+                {
+                    "index": 7,
+                    "duration": 5
+                },
+                {
+                    "index": 8,
+                    "duration": 5
+                },
+                {
+                    "index": 9,
+                    "duration": 5
+                },
+                {
+                    "index": 10,
+                    "duration": 5
+                },
+                {
+                    "index":11,
+                    "duration": 5
+                }
+            ]
+        }
+    ]
+    }
+

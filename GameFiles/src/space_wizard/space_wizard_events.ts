@@ -9,7 +9,8 @@ export enum space_wizard_events {
     NEXT_LEVEL = "next_level",
     LEVEL_END = "level_end",
     WAVE_END = "wave_end",
-    SPAWN_ENEMIES = "spawn_enemies"
+    SPAWN_ENEMIES = "spawn_enemies",
+    SPAWN_BULLETMAN = "spawn_bulletman"
 }
 
 export enum space_wizard_names {
