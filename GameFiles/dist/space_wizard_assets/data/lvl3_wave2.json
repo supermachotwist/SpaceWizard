@@ -3,22 +3,12 @@
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [100, 200]
-        },
-        {
-            "type": "spikeEnemy",
-            "loot": "NULL",
             "position": [100, 300]
         },
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [100, 400]
-        },
-        {
-            "type": "spikeEnemy",
-            "loot": "NULL",
-            "position": [100, 600]
+            "position": [100, 500]
         },
         {
             "type": "spikeEnemy",
@@ -28,22 +18,32 @@
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [100, 500]
+            "position": [100, 1200]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [100, 1400]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "NULL",
+            "position": [100, 1000]
         },        
         {
             "type": "disruptor",
             "loot": "NULL",
-            "position": [350, 425]
+            "position": [1550, 625]
         },
         {
             "type": "disruptor",
             "loot": "NULL",
-            "position": [650, 425]
+            "position": [1250, 625]
         },
         {
             "type": "disruptor",
             "loot": "NULL",
-            "position": [950, 425]
+            "position": [950, 625]
         }
    
     ]

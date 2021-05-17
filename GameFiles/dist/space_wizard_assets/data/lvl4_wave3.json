@@ -3,22 +3,22 @@
         {
             "type": "enemyUFO",
             "loot": "Blackhole",
-            "position": [500, 200]
+            "position": [1100, 600]
         },
         {
             "type": "enemyUFO",
             "loot": "NULL",
-            "position": [300, 200]
+            "position": [1100, 1200]
         },
         {
             "type": "enemyUFO",
             "loot": "NULL",
-            "position": [200, 500]
+            "position": [200, 1000]
         },
         {
             "type": "enemyUFO",
             "loot": "NULL",
-            "position": [1000, 500]
+            "position": [2000, 1000]
         }
    
     ]

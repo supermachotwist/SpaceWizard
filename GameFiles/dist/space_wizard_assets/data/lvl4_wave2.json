@@ -3,32 +3,32 @@
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [350, 100]
+            "position": [1100, 200]
         },
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [450, 100]
+            "position": [1300, 200]
         },
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [100, 450]
+            "position": [200, 800]
+        },
+        {
+            "type": "spikeEnemy",
+            "loot": "Meteor",
+            "position": [200, 1000]
         },
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [100, 550]
-        },
-        {
-            "type": "spikeEnemy",
-            "loot": "Laser",
-            "position": [1000, 450]
+            "position": [2000, 800]
         },
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [1000, 550]
+            "position": [2000, 1000]
         }         
     ]
 }
