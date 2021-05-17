@@ -10,7 +10,7 @@ import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
 import Level7 from "./Level7";
-import Level6 from "./Level7";
+import Level6 from "./Level6";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelection extends Scene {

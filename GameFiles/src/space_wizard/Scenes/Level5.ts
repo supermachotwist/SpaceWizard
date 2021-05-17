@@ -34,7 +34,7 @@ import GameLevel from "./Gamelevel";
 import Level4 from "./Level4";
 import Bulletman from "../GameSystems/Enemys/EnemyTypes/Bulletman";
 import Level3 from "./Level3";
-import Level6 from "./Level7";
+import Level6 from "./Level6";
 
 
 

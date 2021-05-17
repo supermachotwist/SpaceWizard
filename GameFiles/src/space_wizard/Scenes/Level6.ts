@@ -88,7 +88,7 @@ export default class level6 extends GameLevel {
         this.load.object("wave8", "space_wizard_assets/data/lvl6_wave8.json");
         this.load.object("wave9", "space_wizard_assets/data/lvl6_wave9.json");
         this.load.object("wave10", "space_wizard_assets/data/lvl6_wave10.json");
-        this.load.image("spaceBack", "space_wizard_assets/images/Level6Background.png");
+        this.load.image("spaceBack", "space_wizard_assets/images/space2.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
