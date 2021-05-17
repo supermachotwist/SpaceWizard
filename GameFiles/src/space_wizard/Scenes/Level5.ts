@@ -49,9 +49,6 @@ export default class level5 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
-        // Enemy Spritesheets
-        this.load.spritesheet("bulletman", "space_wizard_assets/spritesheets/bulletman.json");
-
         this.load.object("towerData", "space_wizard_assets/data/lvl3_towers.json");
         this.load.object("wave1", "space_wizard_assets/data/lvl5_wave1.json");
         this.load.object("wave2", "space_wizard_assets/data/lvl5_wave2.json");
@@ -65,47 +62,6 @@ export default class level5 extends GameLevel {
     startScene(): void {
         super.startScene();
         this.nextLevel = Level6;
-    }
-
-    spawnEnemies(): void {
-        console.log("in spawn enemies");
-        let enemyData;
-        // Get the enemy data
-        if (this.wave%4 == 1){
-            enemyData = this.load.getObject("wave1");
-        } else if (this.wave%4 == 2){
-            enemyData = this.load.getObject("wave2");
-        } else if (this.wave%4 == 3){
-            enemyData = this.load.getObject("wave3");
-        } else if (this.wave%4 == 0){
-            enemyData = this.load.getObject("wave4");
-        }
-
-        for (let enemy of enemyData.enemies) {
-            let enemySprite;
-            let enemyType;
-            let towerData = this.load.getObject("towerData");
-            // Spawn appropriate enemy
-            if (enemy.type == "bulletman"){
-                console.log("hi");
-                enemySprite = this.add.animatedSprite("bulletman", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new Bulletman();
-
-            }
-            
-            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
-            enemySprite.addAI(EnemyAI, {
-                player: this.player,
-                enemy: enemyClass,
-                towerData: towerData
-            });
-            enemySprite.animation.play("IDLE", true);
-            this.enemies.push(enemyClass);
-        }
     }
 
     updateScene(deltaT: number) {

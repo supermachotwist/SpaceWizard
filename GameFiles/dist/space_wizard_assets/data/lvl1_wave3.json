@@ -3,17 +3,17 @@
         {
             "type": "shieldEnemy",
             "loot": "Blackhole",
-            "position": [600, 400]
+            "position": [1200, 800]
         },
         {
             "type": "shieldEnemy",
             "loot": "NULL",
-            "position": [800, 400]
+            "position": [1600, 800]
         },
         {
             "type": "shieldEnemy",
             "loot": "NULL",
-            "position": [400, 400]
+            "position": [800, 800]
         }
     ]
 }

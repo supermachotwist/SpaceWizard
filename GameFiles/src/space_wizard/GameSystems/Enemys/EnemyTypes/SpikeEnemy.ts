@@ -8,6 +8,6 @@ export default class spikeEnemy extends EnemyType {
         this.cooldown = 100;
         this.speed = 20;
         this.health = 100;
-        this.drop = 5;
+        this.drop = 30;
     }
 }

@@ -1,0 +1,69 @@
+{
+    "enemies": [
+        {
+            "type": "shieldEnemy",
+            "loot": "Blackhole",
+            "position": [1200, 800]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [1600, 800]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [800, 800]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [950, 1050]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [600, 900]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [600, 950]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [600, 1000]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [200, -200]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [250, -250]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [150, -250]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [1200, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [900, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [1500, 400]
+        }
+    ]
+}

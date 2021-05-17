@@ -60,14 +60,13 @@ export default class Enemy {
     damageNumber: Array<Label>;
     labelTimer: Array<Timer>;
 
-    constructor(owner: AnimatedSprite, enemyType: EnemyType, loot: String){
+    constructor(owner: AnimatedSprite, enemyType: EnemyType){
         this.owner = owner;
         this.type = enemyType;
         this.displayName = this.type.displayName;
         this.speed = this.type.speed;
         this.health = this.type.health;
         this.dead = false;
-        this.loot = loot;
 
         this.slowedTimer = new Timer(5000);
         this.burningTimer = new Timer(5000);
@@ -171,7 +170,6 @@ export default class Enemy {
                 player: (<GameLevel> this.owner.getScene()).player
             })  
         }
-    
         else
         {
             let projectileSprite = this.owner.getScene().add.animatedSprite("enemyProjectile", "primary");
@@ -183,7 +181,7 @@ export default class Enemy {
                 direction: direction,
                 player: (<GameLevel> this.owner.getScene()).player
             })  
-        }        
+        }      
     }
 
     //unit moves to the target location really fast

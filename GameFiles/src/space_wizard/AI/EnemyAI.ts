@@ -10,6 +10,12 @@ import PlayerController from "./PlayerController";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import { space_wizard_events } from "../space_wizard_events";
 import Spell from "../GameSystems/Spells/Spell";
+import Bulletman from "../GameSystems/Enemys/EnemyTypes/Bulletman";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import EnemyType from "../GameSystems/Enemys/EnemyType";
+import enemyUFO from "../GameSystems/Enemys/EnemyTypes/EnemyUFO";
+import enemySpaceship from "../GameSystems/Enemys/EnemyTypes/EnemySpaceship";
 
 
 export default class EnemyAI extends ControllerAI
@@ -195,6 +201,7 @@ export default class EnemyAI extends ControllerAI
                     {   
                         this.enemy.cooldownTimer.start();
                         this.enemy.speed = this.enemy.speed*1.2;
+                        this.enemy.owner.animation.playIfNotAlready("ATTACKING");
                         this.owner.move(lookDirection.normalized().scale(this.enemy.speed*deltaT));
                     }
                 
@@ -216,9 +223,78 @@ export default class EnemyAI extends ControllerAI
                     }
                 }                
             }
+
+            else if (this.enemy.type.displayName == "deathstar"){
+                if (this.moveDirection.isZero()) {
+                    this.moveDirection.set(1,1);
+                }
+                let viewport = (<GameLevel>this.enemy.owner.getScene()).getViewport()
+                // Bounce the enemy around the viewport
+                if (viewport.includes(this.enemy.owner)) {
+                    if (this.enemy.owner.position.x >= viewport.getView().right - 32){
+                        this.moveDirection.x = -1;
+                    }
+                    if (this.enemy.owner.position.x < viewport.getView().left + 32){
+                        this.moveDirection.x = 1;
+                    }
+                    if (this.enemy.owner.position.y >= viewport.getView().bottom - 100){
+                        this.moveDirection.y = -1;
+                    }
+                    if (this.enemy.owner.position.y < viewport.getView().top + 32){
+                        this.moveDirection.y = 1;
+                    }
+                }
+                this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT))
+            }
+            
+            // Stargate -> periodically spawns enemies
+            else if (this.enemy.type.displayName == "stargate"){
+                if (this.enemy.cooldownTimer.isStopped()){
+                    let rand = Math.random();
+                    let enemySprite: AnimatedSprite;
+                    let enemyType: EnemyType;
+
+                    if (rand <= 0.33){
+                        enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("bulletman", "primary");
+                        // Add collision to sprite
+                        enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
+                        enemySprite.position.set(this.enemy.owner.position.x, this.enemy.owner.position.y);
+
+                        enemyType = new Bulletman();
+                    }
+                    else if (rand >= 0.66){
+                        enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("enemyUFO", "primary");
+                        // Add collision to sprite
+                        enemySprite.scale.scale(2);
+                        enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
+                        enemySprite.position.set(this.enemy.owner.position.x, this.enemy.owner.position.y);
+
+                        enemyType = new enemyUFO();
+                    }
+                    else {
+                        enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("enemySpaceship", "primary");
+                        enemySprite.scale.scale(0.5);
+                        // Add collision to sprite
+                        enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
+                        enemySprite.position.set(this.enemy.owner.position.x, this.enemy.owner.position.y);
+
+                        enemyType = new enemySpaceship();
+                    }
+                    
+
+                    let enemyClass = new Enemy(enemySprite, enemyType);
+                    enemySprite.addAI(EnemyAI, {
+                        player: this.player,
+                        enemy: enemyClass
+                    });
+                    enemySprite.animation.play("IDLE", true);
+                    (<GameLevel>this.owner.getScene()).enemies.push(enemyClass);
+                    this.enemy.cooldownTimer.start();
+                }
+            }
             
             for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
-                if (this.enemy == enemy){
+                if (this.enemy == enemy || this.enemy.type.displayName == "stargate" || this.enemy.type.displayName == "deathstar"){
                     continue;
                 }
                 // Push enemies out of each other if they overlap

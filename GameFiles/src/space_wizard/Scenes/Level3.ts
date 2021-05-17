@@ -43,52 +43,6 @@ export default class Level3 extends GameLevel {
         super.startScene();
     }
 
-    spawnEnemies(): void {
-        let enemyData;
-        // Get the enemy data
-        if (this.wave%4 == 1){
-            enemyData = this.load.getObject("wave1");
-        } else if (this.wave%4 == 2){
-            enemyData = this.load.getObject("wave2");
-        } else if (this.wave%4 == 3){
-            enemyData = this.load.getObject("wave3");
-        } else if (this.wave%4 == 0){
-            enemyData = this.load.getObject("wave4");
-        }
-
-        for (let enemy of enemyData.enemies) {
-            let enemySprite;
-            let enemyType;
-            let towerData = this.load.getObject("towerData");
-            // Spawn appropriate enemy
-            if (enemy.type == "spikeEnemy"){
-                enemySprite = this.add.animatedSprite("spikeEnemy", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new spikeEnemy();
-            }
-            else if (enemy.type == "disruptor"){
-                enemySprite = this.add.animatedSprite("disruptor", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new disruptor();
-            }
-            
-            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
-            enemySprite.addAI(EnemyAI, {
-                player: this.player,
-                enemy: enemyClass,
-                towerData: towerData
-            });
-            enemySprite.animation.play("IDLE", true);
-            this.enemies.push(enemyClass);
-        }
-    }
-
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 

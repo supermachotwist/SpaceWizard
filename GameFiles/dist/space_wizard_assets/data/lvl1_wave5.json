@@ -1,6 +1,21 @@
 {
     "enemies": [
         {
+            "type": "shieldEnemy",
+            "loot": "Blackhole",
+            "position": [1200, 800]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [1600, 800]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [800, 800]
+        },
+        {
             "type": "enemySpaceship",
             "loot": "NULL",
             "position": [1200, -100]
