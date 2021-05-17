@@ -46,6 +46,26 @@ export default class level6 extends GameLevel {
         this.allSpells = init.allSpells;
     }
     
+    loadScene(): void {
+        super.loadScene();
+
+        this.load.object("wave1", "space_wizard_assets/data/lvl6_wave1.json");
+        this.load.object("wave2", "space_wizard_assets/data/lvl6_wave2.json");
+        this.load.object("wave3", "space_wizard_assets/data/lvl6_wave3.json");
+        this.load.object("wave4", "space_wizard_assets/data/lvl6_wave4.json");
+        this.load.object("wave5", "space_wizard_assets/data/lvl6_wave5.json");
+        this.load.object("wave6", "space_wizard_assets/data/lvl6_wave6.json");
+        this.load.object("wave7", "space_wizard_assets/data/lvl6_wave7.json");
+        this.load.object("wave8", "space_wizard_assets/data/lvl6_wave8.json");
+        this.load.object("wave9", "space_wizard_assets/data/lvl6_wave9.json");
+        this.load.object("wave10", "space_wizard_assets/data/lvl6_wave10.json");
+        this.load.object("towerData", "space_wizard_assets/data/lvl6_towers.json");
+
+        this.load.image("spaceBack", "space_wizard_assets/images/space2.png");
+
+        this.load.spritesheet("sun","space_wizard_assets/spritesheets/Sun.json");
+    }
+    
     createBackground(): void {
         this.background = this.add.sprite("spaceBack", "background");
 
@@ -55,9 +75,10 @@ export default class level6 extends GameLevel {
         this.background.position.set(center.x, center.y);
 
         // Create the cookie planet background
-        let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
-        cookiePlanet.scale.scale(20);
-        cookiePlanet.position.set(center.x, 2*center.y  - 64);
+        let cookiePlanet = this.add.animatedSprite("sun", "cookie");
+        cookiePlanet.scale.scale(8);
+        cookiePlanet.position.set(center.x, center.y);
+        cookiePlanet.animation.play("PLAY", true);
     }
 
     updateScene(deltaT: number) {
@@ -73,22 +94,6 @@ export default class level6 extends GameLevel {
                 this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
-    }
-
-    loadScene(): void {
-        super.loadScene();
-
-        this.load.object("wave1", "space_wizard_assets/data/lvl6_wave1.json");
-        this.load.object("wave2", "space_wizard_assets/data/lvl6_wave2.json");
-        this.load.object("wave3", "space_wizard_assets/data/lvl6_wave3.json");
-        this.load.object("wave4", "space_wizard_assets/data/lvl6_wave4.json");
-        this.load.object("wave5", "space_wizard_assets/data/lvl6_wave5.json");
-        this.load.object("wave6", "space_wizard_assets/data/lvl6_wave6.json");
-        this.load.object("wave7", "space_wizard_assets/data/lvl6_wave7.json");
-        this.load.object("wave8", "space_wizard_assets/data/lvl6_wave8.json");
-        this.load.object("wave9", "space_wizard_assets/data/lvl6_wave9.json");
-        this.load.object("wave10", "space_wizard_assets/data/lvl6_wave10.json");
-        this.load.image("spaceBack", "space_wizard_assets/images/space2.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,

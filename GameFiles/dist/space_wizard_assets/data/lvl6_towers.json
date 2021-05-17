@@ -1,0 +1,16 @@
+{
+    "towers": [
+        {
+            "type": "fork",
+            "position": [1050, 800]
+        },
+        {
+            "type": "explosion",
+            "position": [1350, 800]
+        },
+        {
+            "type": "pierce",
+            "position": [1200, 1000]
+        }
+    ]
+}

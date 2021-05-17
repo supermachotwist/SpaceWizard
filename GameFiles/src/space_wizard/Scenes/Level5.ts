@@ -57,7 +57,7 @@ export default class level5 extends GameLevel {
         // Create the cookie planet background
         let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
         cookiePlanet.scale.scale(20);
-        cookiePlanet.position.set(center.x, 2*center.y  - 64);
+        cookiePlanet.position.set(center.x, 2*center.y  - 200);
     }
 
     updateScene(deltaT: number) {
