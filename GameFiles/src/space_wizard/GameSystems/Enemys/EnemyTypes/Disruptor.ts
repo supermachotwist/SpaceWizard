@@ -7,7 +7,7 @@ export default class disruptor extends EnemyType {
         this.displayName = "disruptor";
         this.cooldown = 0;
         this.speed = 0;
-        this.health = 30;
+        this.health = 50;
         this.drop = 20;
     }
 }

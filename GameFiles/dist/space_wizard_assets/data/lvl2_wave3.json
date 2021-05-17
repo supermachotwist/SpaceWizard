@@ -1,6 +1,121 @@
 {
     "enemies": [
         {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [100, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [300, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [400, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [500, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [600, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [700, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [800, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [900, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1000, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1100, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1200, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1300, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1400, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1500, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1600, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1700, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1800, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1900, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [2000, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [2100, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [2200, 400]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [2300, 400]
+        },
+        {
             "type": "deathstar",
             "loot": "NULL",
             "position": [900, 1000]

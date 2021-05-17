@@ -10,6 +10,9 @@ export default class Level6 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
+        this.load.object("wave1", "space_wizard_assets/data/lvl6_wave1.json");
+        this.load.object("towerData", "space_wizard_assets/data/lvl6_towers.json");
+
         this.load.image("space", "space_wizard_assets/images/Space2.png");
         this.load.image("planet", "space_wizard_assets/images/Moon.png");
     }
@@ -22,7 +25,7 @@ export default class Level6 extends GameLevel {
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 
-        this.waveLabel.text = "Wave: " + this.wave + "/10";
+        this.waveLabel.text = "Wave: " + this.wave + "/INF";
         if (this.enemies.length == 0 && !this.waveEnd){
             this.waveEnd = true;
             if (this.wave == 10){

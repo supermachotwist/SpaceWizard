@@ -249,10 +249,12 @@ export default class EnemyAI extends ControllerAI
             
             // Stargate -> periodically spawns enemies
             else if (this.enemy.type.displayName == "stargate"){
-                if (this.enemy.cooldownTimer.isStopped()){
+                if (this.enemy.cooldownTimer.isStopped() && (<GameLevel>this.owner.getScene()).getEnemies().length < 10){
                     let rand = Math.random();
                     let enemySprite: AnimatedSprite;
                     let enemyType: EnemyType;
+
+                    
 
                     if (rand <= 0.33){
                         enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("bulletman", "primary");

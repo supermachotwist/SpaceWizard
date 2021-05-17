@@ -28,6 +28,7 @@ export default class Level2 extends GameLevel {
         this.load.object("wave8", "space_wizard_assets/data/lvl2_wave8.json");
         this.load.object("wave9", "space_wizard_assets/data/lvl2_wave9.json");
         this.load.object("wave10", "space_wizard_assets/data/lvl2_wave10.json");
+        this.load.object("towerData", "space_wizard_assets/data/lvl2_towers.json");
 
         this.load.spritesheet("background","space_wizard_assets/spritesheets/AsteroidBelt.json");
         this.load.spritesheet("asteroid", "space_wizard_assets/spritesheets/asteroid.json");

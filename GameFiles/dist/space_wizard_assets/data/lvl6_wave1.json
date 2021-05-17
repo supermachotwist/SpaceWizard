@@ -3,32 +3,27 @@
         {
             "type": "stargate",
             "loot": "NULL",
-            "position": [200, 400]
+            "position": [-64, -64]
         },
         {
             "type": "stargate",
             "loot": "NULL",
-            "position": [1100, 400]
+            "position": [1000, -64]
         },
         {
             "type": "stargate",
             "loot": "NULL",
-            "position": [2200, 400]
+            "position": [2464, -64]
         },
         {
             "type": "stargate",
             "loot": "NULL",
-            "position": [1300, 400]
+            "position": [600, 1664]
         },
         {
             "type": "stargate",
             "loot": "NULL",
-            "position": [900, 400]
-        },
-        {
-            "type": "stargate",
-            "loot": "NULL",
-            "position": [1500, 400]
+            "position": [2464, 1664]
         }
     ]
 }
