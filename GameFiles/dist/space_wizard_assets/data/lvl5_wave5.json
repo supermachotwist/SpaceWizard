@@ -1,0 +1,23 @@
+{
+    "enemies": [
+        {
+            "type": "bulletman",
+            "loot": "none",
+            "position": [200, -200]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [400, 1000]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [500, 1050]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [300, 1050]
+        }]
+    }

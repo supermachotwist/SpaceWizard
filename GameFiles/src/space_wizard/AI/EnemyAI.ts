@@ -11,6 +11,10 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import { space_wizard_events } from "../space_wizard_events";
 import Spell from "../GameSystems/Spells/Spell";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import enemySpaceship from "../GameSystems/Enemys/EnemyTypes/EnemySpaceship";
+import enemyUFO from "../GameSystems/Enemys/EnemyTypes/EnemyUFO";
+import Bulletman from "../GameSystems/Enemys/EnemyTypes/Bulletman";
+import EnemyType from "../GameSystems/Enemys/EnemyType";
 
 
 export default class EnemyAI extends ControllerAI {
@@ -196,6 +200,9 @@ export default class EnemyAI extends ControllerAI {
                     if (Math.random() < 0.005) {
                         this.enemy.cooldownTimer.start();
                         this.enemy.speed = this.enemy.speed*1.2;
+                        if(this.enemy.speed>200){
+                            this.enemy.speed =200;
+                        }
                         this.enemy.owner.animation.playIfNotAlready("ATTACKING");
                         this.owner.move(lookDirection.normalized().scale(this.enemy.speed*deltaT));
                     }
@@ -254,10 +261,12 @@ export default class EnemyAI extends ControllerAI {
             
             // Stargate -> periodically spawns enemies
             else if (this.enemy.type.displayName == "stargate"){
-                if (this.enemy.cooldownTimer.isStopped()){
+                if (this.enemy.cooldownTimer.isStopped() && (<GameLevel>this.owner.getScene()).getEnemies().length < 10){
                     let rand = Math.random();
                     let enemySprite: AnimatedSprite;
                     let enemyType: EnemyType;
+
+                    
 
                     if (rand <= 0.33){
                         enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("bulletman", "primary");

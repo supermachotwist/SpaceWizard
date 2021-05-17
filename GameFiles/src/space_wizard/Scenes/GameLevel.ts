@@ -92,10 +92,9 @@ export default class GameLevel extends Scene {
     background: Sprite;
 
     infiniteLives: boolean;
-
     infiniteMana: boolean;
-
     allSpells: boolean;
+    infiniteStardust: boolean;
 
     wave: number;
 
@@ -108,6 +107,7 @@ export default class GameLevel extends Scene {
         this.infiniteLives = init.infiniteLives;
         this.infiniteMana = init.infiniteMana;
         this.allSpells = init.allSpells;
+        this.infiniteStardust = init.infiniteStardust,
 
         this.meteorLevel = init.meteorLevel;
         this.laserLevel = init.laserLevel;
@@ -214,6 +214,10 @@ export default class GameLevel extends Scene {
             this.blackholeLevel = 0;
         }
 
+        if (!this.currencyCount){
+            this.currencyCount = 0;
+        }
+
         // Tower Levels
         if (!this.forkLevel){
             this.forkLevel = 1;
@@ -247,8 +251,6 @@ export default class GameLevel extends Scene {
 
         // Initialize array of currency drops
         this.currency = new Array;
-
-        this.currencyCount = 0;
 
         this.paused = false;
 
@@ -609,6 +611,7 @@ export default class GameLevel extends Scene {
                         infiniteLives: this.infiniteLives,
                         infiniteMana: this.infiniteMana,
                         allSpells: this.allSpells,
+                        infiniteStardust: this.infiniteStardust,
 
                         meteorLevel: this.meteorLevel,
                         cometLevel: this.cometLevel,
@@ -769,9 +772,11 @@ export default class GameLevel extends Scene {
             laserButton.fontSize -= 6;
             laserButton.onClick = () =>{
                 if (this.laserLevel == 0){
-                    if (this.currencyCount >= 30){
+                    if (this.currencyCount >= 30 || this.infiniteStardust){
                         // Add Laser spell
-                        this.currencyCount -= 30;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= 30;
+                        }
                         this.laserLevel++;
                         this.inventory.changeSlot(0);
                         let laserSprite = this.add.sprite("laserSprite", "primary");
@@ -786,11 +791,13 @@ export default class GameLevel extends Scene {
                     }
                 }
                 else {
-                    if (this.currencyCount >= this.laserLevel * 20){
+                    if (this.currencyCount >= this.laserLevel * 20 || this.infiniteStardust){
                         this.inventory.changeSlot(0);
                         curSpell = this.inventory.getItem();
                         curSpell.incDamage(1);
-                        this.currencyCount -= this.laserLevel * 20;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= this.laserLevel * 20;
+                        }
                         this.laserLevel++;
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                         laserButton.text = "Laser lvl" + this.laserLevel + ": " + this.laserLevel * 20;
@@ -808,11 +815,13 @@ export default class GameLevel extends Scene {
             laserButton.font = "AstroSpace";
             laserButton.fontSize -= 6;
             laserButton.onClick = () =>{
-                if (this.currencyCount >= this.laserLevel * 20){
+                if (this.currencyCount >= this.laserLevel * 20 || this.infiniteStardust){
                     this.inventory.changeSlot(0);
                     curSpell = this.inventory.getItem();
                     curSpell.incDamage(1);
-                    this.currencyCount -= this.laserLevel * 20;
+                    if (!this.infiniteStardust){
+                        this.currencyCount -= this.laserLevel * 20;
+                    }
                     this.laserLevel++;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                     laserButton.text = "Laser lvl" + this.laserLevel + ": " + this.laserLevel * 20;
@@ -832,9 +841,11 @@ export default class GameLevel extends Scene {
             meteorButton.fontSize -= 6;
             meteorButton.onClick = () =>{
                 if (this.meteorLevel == 0){
-                    if (this.currencyCount >= 30){
+                    if (this.currencyCount >= 30 || this.infiniteStardust){
                         // Add meteor spell
-                        this.currencyCount -= 30;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= 30;
+                        }
                         this.meteorLevel++;
                         this.inventory.changeSlot(2);
                         let meteorSprite = this.add.sprite("meteorSprite", "primary");
@@ -849,11 +860,13 @@ export default class GameLevel extends Scene {
                     }
                 }
                 else {
-                    if (this.currencyCount >= this.meteorLevel * 20){
+                    if (this.currencyCount >= this.meteorLevel * 20 || this.infiniteStardust){
                         this.inventory.changeSlot(2);
                         curSpell = this.inventory.getItem();
                         curSpell.incDamage(1);
-                        this.currencyCount -= this.meteorLevel * 20;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= this.meteorLevel * 20;
+                        }
                         this.meteorLevel++;
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                         meteorButton.text = "Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20;
@@ -871,11 +884,13 @@ export default class GameLevel extends Scene {
             meteorButton.font = "AstroSpace";
             meteorButton.fontSize -= 6;
             meteorButton.onClick = () =>{
-                if (this.currencyCount >= this.meteorLevel * 20){
+                if (this.currencyCount >= this.meteorLevel * 20 || this.infiniteStardust){
                     this.inventory.changeSlot(2);
                     curSpell = this.inventory.getItem();
                     curSpell.incDamage(1);
-                    this.currencyCount -= this.meteorLevel * 20;
+                    if (!this.infiniteStardust){
+                        this.currencyCount -= this.meteorLevel * 20;
+                    }
                     this.meteorLevel++;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                     meteorButton.text = "Meteor lvl" + this.meteorLevel + ": " + this.meteorLevel * 20;
@@ -895,9 +910,11 @@ export default class GameLevel extends Scene {
             cometButton.fontSize -= 6;
             cometButton.onClick = () =>{
                 if (this.cometLevel == 0){
-                    if (this.currencyCount >= 30){
+                    if (this.currencyCount >= 30 || this.infiniteStardust){
                         // Add comet spell
-                        this.currencyCount -= 30;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= 30;
+                        }
                         this.cometLevel++;
                         this.inventory.changeSlot(1);
                         let cometSprite = this.add.sprite("cometSprite", "primary");
@@ -912,11 +929,13 @@ export default class GameLevel extends Scene {
                     }
                 }
                 else {
-                    if (this.currencyCount >= this.cometLevel * 20){
+                    if (this.currencyCount >= this.cometLevel * 20 || this.infiniteStardust){
                         this.inventory.changeSlot(1);
                         curSpell = this.inventory.getItem();
                         curSpell.incDamage(5);
-                        this.currencyCount -= this.cometLevel * 20;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= this.cometLevel * 20;
+                        }
                         this.cometLevel++;
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                         cometButton.text = "Comet lvl" + this.cometLevel + ": " + this.cometLevel * 20;
@@ -934,11 +953,13 @@ export default class GameLevel extends Scene {
             cometButton.font = "AstroSpace";
             cometButton.fontSize -= 6;
             cometButton.onClick = () =>{
-                if (this.currencyCount >= this.cometLevel * 20){
+                if (this.currencyCount >= this.cometLevel * 20 || this.infiniteStardust){
                     this.inventory.changeSlot(1);
                     curSpell = this.inventory.getItem();
                     curSpell.incDamage(5);
-                    this.currencyCount -= this.cometLevel * 20;
+                    if (!this.infiniteStardust){
+                        this.currencyCount -= this.cometLevel * 20;
+                    }
                     this.cometLevel++;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                     cometButton.text = "Comet lvl" + this.cometLevel + ": " + this.cometLevel * 20;
@@ -958,9 +979,11 @@ export default class GameLevel extends Scene {
             blackholeButton.fontSize -= 6;
             blackholeButton.onClick = () =>{
                 if (this.blackholeLevel == 0){
-                    if (this.currencyCount >= 30){
+                    if (this.currencyCount >= 30 || this.infiniteStardust){
                         // Add blackhole spell
-                        this.currencyCount -= 30;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= 30;
+                        }
                         this.blackholeLevel++;
                         this.inventory.changeSlot(3);
                         let blackholeSprite = this.add.sprite("blackholeSprite", "primary");
@@ -975,11 +998,13 @@ export default class GameLevel extends Scene {
                     }
                 }
                 else {
-                    if (this.currencyCount >= this.blackholeLevel * 20){
+                    if (this.currencyCount >= this.blackholeLevel * 20 || this.infiniteStardust){
                         this.inventory.changeSlot(3);
                         curSpell = this.inventory.getItem();
                         curSpell.incDamage(5);
-                        this.currencyCount -= this.blackholeLevel * 20;
+                        if (!this.infiniteStardust){
+                            this.currencyCount -= this.blackholeLevel * 20;
+                        }
                         this.blackholeLevel++;
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                         blackholeButton.text = "Blackhole lvl" + this.blackholeLevel + ": " + this.blackholeLevel * 20;
@@ -997,11 +1022,13 @@ export default class GameLevel extends Scene {
             blackholeButton.font = "AstroSpace";
             blackholeButton.fontSize -= 6;
             blackholeButton.onClick = () =>{
-                if (this.currencyCount >= this.blackholeLevel * 20){
+                if (this.currencyCount >= this.blackholeLevel * 20 || this.infiniteStardust){
                     this.inventory.changeSlot(3);
                     curSpell = this.inventory.getItem();
                     curSpell.incDamage(5);
-                    this.currencyCount -= this.blackholeLevel * 20;
+                    if (!this.infiniteStardust){
+                        this.currencyCount -= this.blackholeLevel * 20;
+                    }
                     this.blackholeLevel++;
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
                     blackholeButton.text = "Blackhole lvl" + this.blackholeLevel + ": " + this.blackholeLevel * 20;
@@ -1019,8 +1046,10 @@ export default class GameLevel extends Scene {
         forkButton.font = "AstroSpace";
         forkButton.fontSize -= 6;
         forkButton.onClick = () =>{
-            if (this.currencyCount >= this.forkLevel * 30){
-                this.currencyCount -= this.forkLevel * 30
+            if (this.currencyCount >= this.forkLevel * 30 || this.infiniteStardust){
+                if (!this.infiniteStardust){
+                    this.currencyCount -= this.forkLevel * 30
+                }
                 this.forkLevel++;
                 forkButton.text = "Fork Tower lvl" + this.forkLevel + ": " + this.forkLevel * 30;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -1036,8 +1065,10 @@ export default class GameLevel extends Scene {
         pierceButton.font = "AstroSpace";
         pierceButton.fontSize -= 6;
         pierceButton.onClick = () =>{
-            if (this.currencyCount >= this.pierceLevel * 30){
-                this.currencyCount -= this.pierceLevel * 30
+            if (this.currencyCount >= this.pierceLevel * 30 || this.infiniteStardust){
+                if (!this.infiniteStardust){
+                    this.currencyCount -= this.pierceLevel * 30
+                }
                 this.pierceLevel++;
                 pierceButton.text = "Pierce Tower lvl" + this.pierceLevel + ": " + this.pierceLevel * 30;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -1053,8 +1084,10 @@ export default class GameLevel extends Scene {
         explosionButton.font = "AstroSpace";
         explosionButton.fontSize -= 6;
         explosionButton.onClick = () =>{
-            if (this.currencyCount >= this.explosionLevel * 30){
-                this.currencyCount -= this.explosionLevel * 30
+            if (this.currencyCount >= this.explosionLevel * 30 || this.infiniteStardust){
+                if (!this.infiniteStardust){
+                    this.currencyCount -= this.explosionLevel * 30;
+                }
                 this.explosionLevel++;
                 explosionButton.text = "Explosion Tower lvl" + this.explosionLevel + ": " + this.explosionLevel * 30;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -1064,14 +1097,16 @@ export default class GameLevel extends Scene {
             }
         }
 
-        let healthButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x, 500),text:"First Aid Kit: " + 5});
+        let healthButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x, 500),text:"First Aid Kit: " + 20});
         healthButton.setBackgroundColor(new Color(53, 53, 53));
         healthButton.setPadding(new Vec2(50, 30));
         healthButton.font = "AstroSpace";
         healthButton.fontSize -= 6;
         healthButton.onClick = () =>{
-            if (this.currencyCount >= 5){
-                this.currencyCount -= 5;
+            if (this.currencyCount >= 20 || this.infiniteStardust){
+                if (!this.infiniteStardust){
+                    this.currencyCount -= 20;
+                }
                 (<PlayerController>this.player.ai).health++;
                 this.healthCountLabel.text = "Health: " + (<PlayerController>this.player.ai).health;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
@@ -1087,8 +1122,10 @@ export default class GameLevel extends Scene {
         speedButton.font = "AstroSpace";
         speedButton.fontSize -= 6;
         speedButton.onClick = () =>{
-            if (this.currencyCount >= this.speedLevel * 20){
-                this.currencyCount -= this.speedLevel * 20; 
+            if (this.currencyCount >= this.speedLevel * 20 || this.infiniteStardust){
+                if (!this.infiniteStardust){
+                    this.currencyCount -= this.speedLevel * 20;
+                }
                 (<PlayerController> this.player.ai).incSpeed(50);
                 this.speedLevel++;
                 speedButton.text = "Speed lvl" + this.speedLevel + ": " + this.speedLevel * 20;
@@ -1105,8 +1142,10 @@ export default class GameLevel extends Scene {
         manaRegenButton.font = "AstroSpace";
         manaRegenButton.fontSize -= 6;
         manaRegenButton.onClick = () =>{
-            if (this.currencyCount >= this.manaRegenLevel * 20){
-                this.currencyCount -= this.manaRegenLevel * 20; 
+            if (this.currencyCount >= this.manaRegenLevel * 20 || this.infiniteStardust){
+                if (!this.infiniteStardust){
+                    this.currencyCount -= this.manaRegenLevel * 20;
+                }
                 (<PlayerController> this.player.ai).incManaRegenRate();
                 this.manaRegenLevel++;
                 manaRegenButton.text = "Mana Regen lvl" + this.manaRegenLevel + ": " + this.manaRegenLevel * 20;
@@ -1123,8 +1162,10 @@ export default class GameLevel extends Scene {
         rangeButton.font = "AstroSpace";
         rangeButton.fontSize -= 6;
         rangeButton.onClick = () =>{
-            if (this.currencyCount >= this.rangeLevel * 20){
-                this.currencyCount -= this.rangeLevel * 20; 
+            if (this.currencyCount >= this.rangeLevel * 20 || this.infiniteStardust){
+                if (!this.infiniteStardust){
+                    this.currencyCount -= this.rangeLevel * 20;
+                }
                 this.rangeLevel++;
                 rangeButton.text = "Range lvl" + this.rangeLevel + ": " + this.rangeLevel * 20;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});

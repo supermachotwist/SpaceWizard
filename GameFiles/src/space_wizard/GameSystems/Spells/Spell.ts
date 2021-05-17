@@ -163,7 +163,8 @@ export default class Spell {
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bang", loop: false});
                 let blackhole = owner.getScene().add.animatedSprite("blackhole", "spell");
                 blackhole.position.set(owner.position.x, owner.position.y);
-                blackhole.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+                blackhole.scale.scale(2);
+                blackhole.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
                 blackhole.addAI(SpellController,{
                     owner: blackhole,
                     speed: 200,

@@ -9,7 +9,8 @@ import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
-import Level6 from "./Level6";
+import Level7 from "./Level7";
+import Level6 from "./Level7";
 import MainMenu from "./MainMenu";
 
 export default class LevelSelection extends Scene {
@@ -18,11 +19,13 @@ export default class LevelSelection extends Scene {
     private infiniteLives: boolean;
     private infiniteMana: boolean;
     private allSpells: boolean;
+    private infiniteStardust: boolean;
 
     initScene(init: Record<string, any>):void {
         this.infiniteLives = init.infiniteLives;
         this.infiniteMana = init.infiniteMana;
         this.allSpells = init.allSpells;
+        this.infiniteStardust = init.infiniteStardust
     }
 
     loadScene():void{
@@ -69,7 +72,8 @@ export default class LevelSelection extends Scene {
             this.sceneManager.changeToScene(Level1,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
+                allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust
             },{});
         }
 
@@ -84,7 +88,8 @@ export default class LevelSelection extends Scene {
             this.sceneManager.changeToScene(Level2,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
+                allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust
             },{});
         }
 
@@ -99,7 +104,8 @@ export default class LevelSelection extends Scene {
             this.sceneManager.changeToScene(Level3,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
+                allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust
             },{});
         }
 
@@ -114,7 +120,8 @@ export default class LevelSelection extends Scene {
             this.sceneManager.changeToScene(Level4,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
+                allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust
             },{});
         }
 
@@ -129,7 +136,8 @@ export default class LevelSelection extends Scene {
             this.sceneManager.changeToScene(Level5,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
+                allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust
             },{});
         }
 
@@ -144,7 +152,24 @@ export default class LevelSelection extends Scene {
             this.sceneManager.changeToScene(Level6,{
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
+                allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust
+            },{});
+        }
+
+        let level7 = <Button> this.add.uiElement(UIElementType.BUTTON,"primary",{ position:new Vec2(midpoint.x,midpoint.y - 95),text:"Endless Mode"});
+        level7.backgroundColor = new Color(73, 73, 73, 0.5);
+        level7.borderColor = Color.BLACK;
+        level7.borderRadius = 10;
+        level7.setPadding(new Vec2(50, 10));
+        level7.font = "AstroSpace";
+        level7.onClick = () => {
+            console.log("Activated Level7 Button");
+            this.sceneManager.changeToScene(Level7,{
+                infiniteLives: this.infiniteLives,
+                infiniteMana: this.infiniteMana,
+                allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust
             },{});
         }
     }

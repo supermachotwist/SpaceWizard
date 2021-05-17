@@ -23,6 +23,7 @@ export default class MainMenu extends Scene {
     private infiniteLives: boolean;
     private infiniteMana: boolean;
     private allSpells: boolean;
+    private infiniteStardust: boolean;
 
     private playButton: Button;
     private helpButton: Button;
@@ -94,6 +95,7 @@ export default class MainMenu extends Scene {
                 infiniteLives: this.infiniteLives,
                 infiniteMana: this.infiniteMana,
                 allSpells: this.allSpells,
+                infiniteStardust: this.infiniteStardust,
 
                 meteorLevel: null,
                 cometLevel: null,
@@ -167,7 +169,7 @@ export default class MainMenu extends Scene {
 
         // Create cheat buttons
         let midpoint = this.viewport.getCenter();
-        let infiniteLives = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + - 75),text:"Infinite Lives"});
+        let infiniteLives = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + - 100),text:"Infinite Lives"});
         infiniteLives.backgroundColor = new Color(73, 73, 73, 0.5);
         infiniteLives.font = "AstroSpace";
         infiniteLives.fontSize -= 10;
@@ -185,7 +187,7 @@ export default class MainMenu extends Scene {
             }
         }
 
-        let infiniteMana = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y),text:"Infinite Mana"});
+        let infiniteMana = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y - 25),text:"Infinite Mana"});
         infiniteMana.backgroundColor = new Color(73, 73, 73, 0.5);
         infiniteMana.font = "AstroSpace";
         infiniteMana.fontSize -= 10;
@@ -203,7 +205,7 @@ export default class MainMenu extends Scene {
             }
         }
 
-        let allSpells = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + 75),text:"All Spells Unlocked"});
+        let allSpells = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + 50),text:"All Spells Unlocked"});
         allSpells.backgroundColor = new Color(73, 73, 73, 0.5);
         allSpells.font = "AstroSpace";
         allSpells.fontSize -= 10;
@@ -221,7 +223,25 @@ export default class MainMenu extends Scene {
             }
         }
 
-        let exitButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+200),text:"EXIT"});
+        let infiniteStardust = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{ position:new Vec2(midpoint.x,midpoint.y + 125),text:"Infinite Stardust"});
+        infiniteStardust.backgroundColor = new Color(73, 73, 73, 0.5);
+        infiniteStardust.font = "AstroSpace";
+        infiniteStardust.fontSize -= 10;
+        infiniteStardust.textColor = Color.WHITE;
+        infiniteStardust.borderColor = Color.BLACK;
+        infiniteStardust.borderRadius = 10;
+        infiniteStardust.setPadding(new Vec2(50, 10));
+        infiniteStardust.onClick = () => {
+            console.log("Activated infiniteStardust Button");
+            this.infiniteStardust = !this.infiniteStardust;
+            if (this.infiniteStardust){
+                infiniteStardust.backgroundColor = new Color(53, 53, 53);
+            } else {
+                infiniteStardust.backgroundColor = new Color(73, 73, 73, 0.5);
+            }
+        }
+
+        let exitButton = <Button> this.add.uiElement(UIElementType.BUTTON,"settingMenu",{position:new Vec2(center.x,center.y+ 200),text:"EXIT"});
         exitButton.backgroundColor = new Color(73, 73, 73, 0.5);
         exitButton.font = "AstroSpace";
         exitButton.fontSize -= 10;
@@ -235,6 +255,7 @@ export default class MainMenu extends Scene {
             infiniteLives.destroy();
             infiniteMana.destroy();
             allSpells.destroy();
+            infiniteStardust.destroy();
             exitButton.destroy();
             settingBackground.destroy();
             this.playButton = this.makePlayButton();

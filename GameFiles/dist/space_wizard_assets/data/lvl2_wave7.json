@@ -14,6 +14,21 @@
             "type": "deathstar",
             "loot": "NULL",
             "position": [1500, 1000]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [200, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [1200, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [2200, 400]
         }
     ]
 }
