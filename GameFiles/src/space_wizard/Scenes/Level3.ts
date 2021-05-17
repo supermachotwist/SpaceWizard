@@ -17,17 +17,17 @@ export default class Level3 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
-        // Enemy Spritesheets
-        this.load.spritesheet("disruptor", "space_wizard_assets/spritesheets/disruptor.json");
-        this.load.spritesheet("spikeEnemy", "space_wizard_assets/spritesheets/spike_enemy.json");
-        this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
-        
-
         this.load.object("towerData", "space_wizard_assets/data/lvl3_towers.json");
         this.load.object("wave1", "space_wizard_assets/data/lvl3_wave1.json");
         this.load.object("wave2", "space_wizard_assets/data/lvl3_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl3_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl3_wave4.json");
+        this.load.object("wave5", "space_wizard_assets/data/lvl3_wave5.json");
+        this.load.object("wave6", "space_wizard_assets/data/lvl3_wave6.json");
+        this.load.object("wave7", "space_wizard_assets/data/lvl3_wave7.json");
+        this.load.object("wave8", "space_wizard_assets/data/lvl3_wave8.json");
+        this.load.object("wave9", "space_wizard_assets/data/lvl3_wave9.json");
+        this.load.object("wave10", "space_wizard_assets/data/lvl3_wave10.json");
 
         this.load.image("space", "space_wizard_assets/images/Space_Alternate.png");
         this.load.image("planet", "space_wizard_assets/images/Red Planet.png");
@@ -39,15 +39,21 @@ export default class Level3 extends GameLevel {
     startScene(): void {
         super.startScene();
         this.nextLevel = Level4;
+
     }
 
+    initializePlayer(): void {
+        super.initializePlayer();
+        this.player.position.set(1200, 900);
+    }
+    
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 
-        this.waveLabel.text = "Wave: " + this.wave + "/4";
+        this.waveLabel.text = "Wave: " + this.wave + "/10";
         if (this.enemies.length == 0 && !this.waveEnd){
             this.waveEnd = true;
-            if (this.wave == 4){
+            if (this.wave == 10){
                 this.emitter.fireEvent(space_wizard_events.LEVEL_END);
             }
             else {
