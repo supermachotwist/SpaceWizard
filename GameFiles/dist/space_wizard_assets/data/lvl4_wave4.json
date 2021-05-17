@@ -3,63 +3,62 @@
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [300, 100]
+            "position": [1000, 200]
         },
         {
             "type": "enemySpaceship",
             "loot": "NULL",
-            "position": [600, 100]
+            "position": [1200, 200]
         },
         {
             "type": "enemyUFO",
             "loot": "NULL",
-            "position": [900, 100]
+            "position": [1400, 200]
         },
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [200, 300]
+            "position": [200, 700]
         },
         {
             "type": "enemyUFO",
             "loot": "NULL",
-            "position": [200, 400]
+            "position": [200, 900]
         },
         {
             "type": "enemySpaceship",
             "loot": "NULL",
-            "position": [200, 500]
+            "position": [200, 1100]
         },
         {
             "type": "spikeEnemy",
             "loot": "NULL",
-            "position": [1000, 300]
+            "position": [2000, 700]
         },
         {
             "type": "enemyUFO",
             "loot": "NULL",
-            "position": [1000, 400]
+            "position": [2000, 900]
         },
         {
             "type": "enemySpaceship",
             "loot": "NULL",
-            "position": [1000, 500]
+            "position": [2000, 1100]
         },         
         {
             "type": "disruptor",
             "loot": "NULL",
-            "position": [500, 325]
+            "position": [1100, 825]
         },
         {
             "type": "disruptor",
             "loot": "NULL",
-            "position": [800, 325]
+            "position": [1400, 825]
         },
         {
             "type": "disruptor",
             "loot": "NULL",
-            "position": [650, 525]
+            "position": [1250, 1025]
         }
-   
     ]
 }

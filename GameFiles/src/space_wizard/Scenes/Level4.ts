@@ -42,6 +42,8 @@ export default class Level4 extends GameLevel {
         this.load.object("wave2", "space_wizard_assets/data/lvl4_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl4_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl4_wave4.json");
+
+        this.load.image("space", "space_wizard_assets/images/Space_Alternate.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -56,8 +58,9 @@ export default class Level4 extends GameLevel {
 
     initializePlayer(): void {
         super.initializePlayer();
-        this.player.position.set(600, 400);
+        this.player.position.set(1200, 900);
     }
+
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 
@@ -73,7 +76,7 @@ export default class Level4 extends GameLevel {
         }
 
         if (this.asteroidTimer.isStopped()){
-            this.spawnAsteroid(new Vec2(Math.random() * 1100 + 50,  64));
+            this.spawnAsteroid(new Vec2(Math.random() * 2200 + 50,  300));
             this.asteroidTimer.start();
         }
     }
@@ -81,7 +84,7 @@ export default class Level4 extends GameLevel {
     spawnAsteroid(position: Vec2){
         let rand = Math.random();
         let projectileSprite = this.add.animatedSprite("asteroid", "primary");
-        projectileSprite.scale.scale(rand * 2 + 0.5);
+        projectileSprite.scale.scale(rand * 4 + 0.5);
         projectileSprite.position.set(position.x, position.y);
         projectileSprite.addPhysics(new Circle(Vec2.ZERO, 50));
         //asteroid will go in a random diagonal direction

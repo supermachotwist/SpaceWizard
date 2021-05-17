@@ -2,15 +2,15 @@
     "towers": [
         {
             "type": "fork",
-            "position": [900, 400]
+            "position": [1500, 600]
         },
         {
             "type": "explosion",
-            "position": [600, 400]
+            "position": [1200, 600]
         },
         {
             "type": "pierce",
-            "position": [300, 400]
+            "position": [900, 600]
         }
     ]
 }
