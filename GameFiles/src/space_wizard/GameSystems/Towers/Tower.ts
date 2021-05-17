@@ -13,6 +13,12 @@ export default class Tower {
     // Display name to show on UI
     displayName: String;
 
+    disabled: boolean;
+
+    constructor() {
+        this.disabled = false;
+    }
+
     moveSprite(position: Vec2, layer?: string){
         // Change the layer if needed
         if(layer){
@@ -29,5 +35,9 @@ export default class Tower {
 
     playAnimation(){
         this.owner.animation.play("ACTIVE", true);
+    }
+
+    stopAnimation(){
+        this.owner.animation.stop();
     }
 }

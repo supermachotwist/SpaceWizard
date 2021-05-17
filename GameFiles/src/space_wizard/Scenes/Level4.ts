@@ -50,6 +50,8 @@ export default class Level4 extends GameLevel {
     startScene(): void {
         super.startScene();
         this.asteroidTimer = new Timer(2000);
+
+        this.nextLevel = level5;
     }
 
     spawnEnemies(): void {
@@ -123,27 +125,20 @@ export default class Level4 extends GameLevel {
     }
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
-   
-        if (this.enemies.length == 0){
-            this.createShop();
-            this.wave += 1;
-            if (this.wave == 5){
-                this.sceneManager.changeToScene(level5,{
-                infiniteLives: this.infiniteLives,
-                infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
-            },{});
-            this.emitter.fireEvent(space_wizard_events.LEVEL_END);
+
+        this.waveLabel.text = "Wave: " + this.wave + "/4";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 4){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
             }
             else {
-                this.waveLabel.text = "Wave: " + this.wave + "/4";
-                this.spawnEnemies();
                 this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
 
         if (this.asteroidTimer.isStopped()){
-            this.spawnAsteroid(new Vec2(Math.random() * 1100 + 50,  0));
+            this.spawnAsteroid(new Vec2(Math.random() * 1100 + 50,  64));
             this.asteroidTimer.start();
         }
     }

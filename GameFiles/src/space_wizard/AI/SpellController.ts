@@ -88,7 +88,7 @@ export default class SpellController extends ControllerAI {
 
             // See if the spell collides with the tower hitbox
             for (let tower of this.spell.towers){
-                if (this.owner.collisionShape.overlaps(tower.owner.collisionShape)) {
+                if (this.owner.collisionShape.overlaps(tower.owner.collisionShape) && tower.disabled == false) {
                     if (tower.displayName === "ExplosionTower" && !this.spell.explosion){
                         this.spell.explosion = true;
                         this.explosionSize = ((<GameLevel>this.owner.getScene()).explosionLevel - 1) * 2 + 5;

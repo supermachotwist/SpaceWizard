@@ -208,33 +208,13 @@ export default class EnemyAI extends ControllerAI
             // disruptor -> Disables tower function until it's destroyed
             else if (this.enemy.type.displayName == "disruptor") 
             {
-                /* for (let tower of this.towerData.towers)
+                for (let tower of (<GameLevel>this.owner.getScene()).towers)
                 {
-                    for (let sp of this.spellData.spells)
-                    {
-                        if(tower.type === "fork" || tower.type === "explosion"
-                        || tower.type === "pierce")
-                        {
-                            if(sp.type == "meteor"|| sp.type === "comet"
-                            || sp.type === "laser" || sp.type === "blackhole")
-                            {
-                                this.spell.fork = false;
-                                this.spell.explosion = false;
-                                this.spell.pierce = false;
-                            }
-                        }
+                    if (this.enemy.owner.collisionShape.overlaps(tower.owner.collisionShape)){
+                        tower.stopAnimation();
+                        tower.disabled = true;
                     }
-                }*/
-
-                let lookDirection = this.owner.position.dirTo(Vec2.ZERO);
-                // Enemy shouldn't shoot (just enforces it)
-                if (this.enemy.cooldownTimer.isStopped()){
-                    if (Math.random() < 0){
-                        this.enemy.shoot(lookDirection);
-                        this.enemy.cooldownTimer.start();
-                    }
-                }
-                
+                }                
             }
             
             for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
@@ -266,6 +246,15 @@ export default class EnemyAI extends ControllerAI
                     label.destroy();
                     label = null;
                 }
+            }
+            if (this.enemy.displayName == "disruptor") {
+                for (let tower of (<GameLevel>this.owner.getScene()).towers)
+                {
+                    if (this.enemy.owner.collisionShape.overlaps(tower.owner.collisionShape)){
+                        tower.playAnimation();
+                        tower.disabled = false;
+                    }
+                } 
             }
             this.owner.visible = false;
             this.owner.destroy();
