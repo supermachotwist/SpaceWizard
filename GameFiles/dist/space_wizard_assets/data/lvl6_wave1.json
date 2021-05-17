@@ -1,0 +1,8 @@
+{
+    "enemies": [
+        {
+            "type": "Head",
+            "loot": "none",
+            "position": [200, 150]
+        }]
+    }

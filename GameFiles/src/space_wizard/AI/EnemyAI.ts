@@ -10,6 +10,7 @@ import PlayerController from "./PlayerController";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import { space_wizard_events } from "../space_wizard_events";
 import Spell from "../GameSystems/Spells/Spell";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 
 
 export default class EnemyAI extends ControllerAI {
@@ -205,50 +206,14 @@ export default class EnemyAI extends ControllerAI {
 
             }
 
-            else if (this.enemy.type.displayName == "hand") {
+            else if (this.enemy.type.displayName == "Head") {
+                if(this.timer>=240){
+                    console.log("This is the cooldown");
+                this.emitter.fireEvent(space_wizard_events.SPAWN_BULLETMAN);
+            this.timer=0;}
+            else{
                 this.timer++;
-                if (this.mode == 0) {
-                    if (this.timer <= 240) {
-                    }
-                    else {
-                        this.timer = 0;
-                        this.mode = 1; //windup
-                        //lockon
-                        this.placeHolder = new Vec2(this.player.positionX, this.player.positionY);
-                        let lookDirection = this.owner.position.dirTo(this.player.position);
-                        this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
-
-                        //move
-                        this.enemy.speed = -100
-                        this.moveDirection = lookDirection;
-                        this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
-                    }
-                }
-                else if (this.mode == 1) {
-                    this.timer++;
-                    if (this.timer < 30) {
-                        //windup
-                        this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
-                    }
-                    else {
-                        //move
-                        this.enemy.speed = 150;
-                        this.mode = 2;//attack
-                    }
-                }
-                else if (this.mode == 2) {
-                    if(this.owner.collisionShape.containsPoint(this.placeHolder)){
-                        //cooldown
-                        this.mode=0;
-                        this.timer =0;
-                    }
-                    else{
-                        //move
-                        this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
-
-                    }
-                }
-
+            }
             }
 
             // disruptor -> Disables tower function until it's destroyed

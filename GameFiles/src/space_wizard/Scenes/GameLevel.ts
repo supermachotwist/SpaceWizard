@@ -533,6 +533,10 @@ export default class GameLevel extends Scene {
                     this.levelEndLabel.tweens.play("slideIn");
                     break;
                 }
+                case space_wizard_events.SPAWN_BULLETMAN:{
+                    console.log("sup");
+                    break;
+                }
                 case space_wizard_events.NEXT_LEVEL:{
                     this.sceneManager.changeToScene(this.nextLevel,{
                         infiniteLives: this.infiniteLives,
