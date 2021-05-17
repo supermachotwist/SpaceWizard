@@ -40,12 +40,6 @@ import Level6 from "./Level6";
 
 export default class level5 extends GameLevel {
 
-    initScene(init: Record<string, any>):void {
-        this.infiniteLives = init.infiniteLives;
-        this.infiniteMana = init.infiniteMana;
-        this.allSpells = init.allSpells;
-    }
-
     loadScene(): void {
         super.loadScene();
 
@@ -54,6 +48,9 @@ export default class level5 extends GameLevel {
         this.load.object("wave2", "space_wizard_assets/data/lvl5_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl5_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl5_wave4.json");
+
+        this.load.image("space", "space_wizard_assets/images/Space_Alternate.png");
+        this.load.spritesheet("planet","space_wizard_assets/spritesheets/Sun.json");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -77,5 +74,20 @@ export default class level5 extends GameLevel {
                 this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
+    }
+
+    createBackground(): void {
+        this.background = this.add.sprite("space", "background");
+
+        // Now, let's make sure our logo is in a good position
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
+
+        // Create the cookie planet background
+        let redPlanet = this.add.animatedSprite("planet", "cookie");
+        redPlanet.scale.scale(8);
+        redPlanet.position.set(center.x, center.y);
+        redPlanet.animation.play("PLAY", true);
     }
 }

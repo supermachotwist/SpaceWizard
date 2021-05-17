@@ -5,7 +5,15 @@ import MainMenu from "./MainMenu";
 
 
 
+
 export default class Level6 extends GameLevel {
+    loadScene(): void {
+        super.loadScene();
+
+        this.load.image("space", "space_wizard_assets/images/Space2.png");
+        this.load.image("planet", "space_wizard_assets/images/Moon.png");
+    }
+
     startScene(): void {
         super.startScene();
         this.nextLevel = Level1;
@@ -24,5 +32,19 @@ export default class Level6 extends GameLevel {
                 this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
+    }
+
+    createBackground(): void {
+        this.background = this.add.sprite("space", "background");
+
+        // Now, let's make sure our logo is in a good position
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
+
+        // Create the cookie planet background
+        let redPlanet = this.add.sprite("planet", "cookie");
+        redPlanet.scale.scale(8);
+        redPlanet.position.set(center.x, center.y);
     }
 }

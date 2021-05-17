@@ -74,6 +74,7 @@ export default class MainMenu extends Scene {
         this.load.keepSpritesheet("background");
         this.load.keepAudio("mainMenuMusic");
         this.load.keepAudio("levelMusic");
+        this.load.keepSpritesheet("background");
     }
 
     makePlayButton():Button{

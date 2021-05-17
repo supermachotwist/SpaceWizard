@@ -7,6 +7,7 @@ import EnemyProjectileController from "../AI/EnemyProjectileController";
 import { space_wizard_events } from "../space_wizard_events";
 import GameLevel from "./Gamelevel";
 import Level1 from "./Level1";
+import Level3 from "./Level3";
 import MainMenu from "./MainMenu";
 
 
@@ -28,13 +29,14 @@ export default class Level2 extends GameLevel {
         this.load.object("wave9", "space_wizard_assets/data/lvl2_wave9.json");
         this.load.object("wave10", "space_wizard_assets/data/lvl2_wave10.json");
 
-        this.load.spritesheet("asteroidBelt","space_wizard_assets/spritesheets/AsteroidBelt.json");
+        this.load.spritesheet("background","space_wizard_assets/spritesheets/AsteroidBelt.json");
         this.load.spritesheet("asteroid", "space_wizard_assets/spritesheets/asteroid.json");
     }
 
     startScene(): void {
         super.startScene();
         this.asteroidTimer = new Timer(1000);
+        this.nextLevel = Level3;
     }
 
     updateScene(deltaT: number) {
@@ -88,7 +90,7 @@ export default class Level2 extends GameLevel {
     }
 
     createBackground(): void {
-        this.background = this.add.animatedSprite("asteroidBelt", "background");
+        this.background = this.add.animatedSprite("background", "background");
         this.background.position.set(1200, 800);
         this.background.scale.set(8,8);
         (<AnimatedSprite>this.background).animation.play("PLAY", true);
