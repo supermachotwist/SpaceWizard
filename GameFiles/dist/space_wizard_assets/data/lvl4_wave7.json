@@ -1,0 +1,34 @@
+{
+    "enemies": [
+{
+    "type": "enemyUFO",
+    "loot": "NULL",
+    "position": [1400, 1000]
+},
+{
+    "type": "enemyUFO",
+    "loot": "NULL",
+    "position": [800, 1000]
+},
+{
+    "type": "enemyUFO",
+    "loot": "NULL",
+    "position": [300, 1000]
+},
+{
+    "type": "enemyUFO",
+    "loot": "NULL",
+    "position": [1400, 200]
+},
+{
+    "type": "enemyUFO",
+    "loot": "NULL",
+    "position": [800, 200]
+},
+{
+    "type": "enemyUFO",
+    "loot": "NULL",
+    "position": [300, 200]
+}
+    ]
+}

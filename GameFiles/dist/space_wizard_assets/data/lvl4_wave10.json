@@ -1,0 +1,99 @@
+{
+    "enemies": [
+        {
+            "type": "shieldEnemy",
+            "loot": "Blackhole",
+            "position": [1200, 500]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [1600, 500]
+        },
+        {
+            "type": "shieldEnemy",
+            "loot": "NULL",
+            "position": [800, 500]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [700, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [800, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [900, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1000, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1100, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1250, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1400, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1500, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1600, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1700, 100]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [400, 200]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [500, 300]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [600, 400]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [1200, 200]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [1300, 300]
+        },
+        {
+            "type": "enemySpaceship",
+            "loot": "NULL",
+            "position": [1400, 400]
+        }
+    ]
+}

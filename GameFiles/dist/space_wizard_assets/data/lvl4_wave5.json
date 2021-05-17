@@ -1,0 +1,59 @@
+{
+    "enemies": [
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1000, 200]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1100, 200]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1200, 200]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1300, 200]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [1400, 200]
+        },
+        {
+            "type": "bulltetman",
+            "loot": "NULL",
+            "position": [200, 700]
+        },
+        {
+            "type": "bulltetman",
+            "loot": "NULL",
+            "position": [200, 800]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [200, 900]
+        },
+        {
+            "type": "bulltetman",
+            "loot": "NULL",
+            "position": [200, 1000]
+        },
+        {
+            "type": "bullteman",
+            "loot": "NULL",
+            "position": [200, 1100]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [200, 1300]
+        } 
+    ]
+}
