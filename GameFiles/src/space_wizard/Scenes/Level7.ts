@@ -6,7 +6,7 @@ import MainMenu from "./MainMenu";
 
 
 
-export default class Level6 extends GameLevel {
+export default class Level7 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
