@@ -45,6 +45,20 @@ export default class level5 extends GameLevel {
         this.infiniteMana = init.infiniteMana;
         this.allSpells = init.allSpells;
     }
+    
+    createBackground(): void {
+        this.background = this.add.sprite("spaceBack", "background");
+
+        // Now, let's make sure our logo is in a good position
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
+
+        // Create the cookie planet background
+        let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
+        cookiePlanet.scale.scale(20);
+        cookiePlanet.position.set(center.x, 2*center.y  - 64);
+    }
 
     loadScene(): void {
         super.loadScene();
@@ -57,6 +71,7 @@ export default class level5 extends GameLevel {
         this.load.object("wave2", "space_wizard_assets/data/lvl5_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl5_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl5_wave4.json");
+        this.load.image("spaceBack", "space_wizard_assets/images/Level5Background.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -87,7 +102,6 @@ export default class level5 extends GameLevel {
             let towerData = this.load.getObject("towerData");
             // Spawn appropriate enemy
             if (enemy.type == "bulletman"){
-                console.log("hi");
                 enemySprite = this.add.animatedSprite("bulletman", "primary");
                 // Add collision to sprite
                 enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));

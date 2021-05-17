@@ -1097,7 +1097,7 @@ export default class GameLevel extends Scene {
         this.paused = true;
         this.viewport.follow(null);
 
-        this.shopButton.destroy();
+        //this.shopButton.destroy();
 
         let center = new Vec2(600, 400);
         let settingBackground = <Rect>this.add.graphic(GraphicType.RECT,"settingMenuBackGround",{position:new Vec2(center.x,center.y),size:new Vec2(900,600)});

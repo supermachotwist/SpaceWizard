@@ -12,8 +12,7 @@ import { space_wizard_events } from "../space_wizard_events";
 import Spell from "../GameSystems/Spells/Spell";
 
 
-export default class EnemyAI extends ControllerAI
-{
+export default class EnemyAI extends ControllerAI {
     // Emitter
     emitter: Emitter;
 
@@ -40,20 +39,26 @@ export default class EnemyAI extends ControllerAI
 
     burncount: number;
 
-    activate(options: Record<string, any>): void {}
+    mode: number = 0;
 
-    handleEvent(event: GameEvent): void {}
+    timer: number = 0;
+
+    placeHolder: Vec2;
+
+    activate(options: Record<string, any>): void { }
+
+    handleEvent(event: GameEvent): void { }
 
     update(deltaT: number): void {
         // Do nothing if game is paused
-        let gamelevel = <GameLevel> this.owner.getScene();
-        if (gamelevel.isPaused()){
+        let gamelevel = <GameLevel>this.owner.getScene();
+        if (gamelevel.isPaused()) {
             return;
         }
 
         // Damage label timer
         for (let i = 0; i < this.enemy.damageNumber.length; i++) {
-            if (this.enemy.labelTimer[i].isStopped()){
+            if (this.enemy.labelTimer[i].isStopped()) {
                 this.enemy.damageNumber[i].destroy();
                 // Remove label from array of labels
                 this.enemy.damageNumber.splice(i, 1);
@@ -63,23 +68,23 @@ export default class EnemyAI extends ControllerAI
         }
 
         //If the enemy is burning
-        if (!this.enemy.burningTimer.isStopped()){
+        if (!this.enemy.burningTimer.isStopped()) {
             this.burncount += deltaT;
             // Damage enemy per second
-            if (this.burncount >= 1){
+            if (this.burncount >= 1) {
                 this.enemy.damage(5 + (<GameLevel>this.enemy.owner.getScene()).meteorLevel * 2);
                 this.burncount--;
             }
         }
 
         // If the enemy is slowed
-        if (!this.enemy.slowedTimer.isStopped()){
+        if (!this.enemy.slowedTimer.isStopped()) {
             // Slowdown enemy
             deltaT /= 2;
         }
 
-        if (!this.enemy.dead){
-            if(!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")){
+        if (!this.enemy.dead) {
+            if (!this.owner.animation.isPlaying("DAMAGE") && !this.owner.animation.isPlaying("DYING")) {
                 this.owner.animation.playIfNotAlready("IDLE", true);
             }
 
@@ -89,7 +94,7 @@ export default class EnemyAI extends ControllerAI
 
             // Enemy Types. Change behavior of enemy based on their display name
             // enemySpaceship -> Follows player and shoots on a cooldown randomly
-            if (this.enemy.type.displayName == "enemySpaceship"){
+            if (this.enemy.type.displayName == "enemySpaceship") {
                 // Look in the direction of the player
                 let lookDirection = this.owner.position.dirTo(this.player.position);
                 this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
@@ -98,38 +103,38 @@ export default class EnemyAI extends ControllerAI
                 this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
 
                 // Enemy will occasionally shoot on cooldown
-                if (this.enemy.cooldownTimer.isStopped()){
-                    if (Math.random() < 0.01){
+                if (this.enemy.cooldownTimer.isStopped()) {
+                    if (Math.random() < 0.01) {
                         this.enemy.shoot(lookDirection);
                         this.enemy.cooldownTimer.start();
                     }
                 }
-            } 
+            }
             // Flies around randombly and shoots rapidly in 8 directions
             else if (this.enemy.type.displayName == "enemyUFO") {
                 let viewport = this.enemy.owner.getScene().getViewport()
                 let owner = this.enemy.owner;
                 let xprob = 1200 - owner.position.x;
                 let yprob = 800 - owner.position.y;
-                xprob = (xprob/1200);
-                yprob = (yprob/800);
+                xprob = (xprob / 1200);
+                yprob = (yprob / 800);
 
                 // Enemy will occasionally shoot on cooldown
-                if (this.enemy.cooldownTimer.isStopped()){
+                if (this.enemy.cooldownTimer.isStopped()) {
                     let rand = Math.random();
 
-                    if (rand < 0.01){
+                    if (rand < 0.01) {
                         rand = Math.random();
-                        if (rand >= xprob && rand >= yprob){
+                        if (rand >= xprob && rand >= yprob) {
                             this.moveDirection = new Vec2(-1, -1);
                         }
-                        else if (rand >= xprob && rand < yprob){
+                        else if (rand >= xprob && rand < yprob) {
                             this.moveDirection = new Vec2(-1, 1);
                         }
-                        else if (rand < xprob && rand < yprob){
+                        else if (rand < xprob && rand < yprob) {
                             this.moveDirection = new Vec2(1, 1);
                         }
-                        else if (rand < xprob && rand >= yprob){
+                        else if (rand < xprob && rand >= yprob) {
                             this.moveDirection = new Vec2(1, -1);
                         }
                         this.enemy.shoot(Vec2.UP);
@@ -158,13 +163,12 @@ export default class EnemyAI extends ControllerAI
             }
 
             else if (this.enemy.type.displayName == "shieldEnemy") {
-                
+
             }
-            
+
             // Fires a slower, larger, less frequent shot (make unique projectile later)
             // Has a random chance of deploying a disruptor on a tower on projectile collision (still needs implementing)
-            else if (this.enemy.type.displayName == "spikeEnemy")
-            {
+            else if (this.enemy.type.displayName == "spikeEnemy") {
                 // Look in the direction of the player
                 let lookDirection = this.owner.position.dirTo(this.player.position);
                 this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
@@ -174,40 +178,81 @@ export default class EnemyAI extends ControllerAI
                 this.owner.animation.playIfNotAlready("MOVING", true);
 
                 // Enemy will occasionally shoot on cooldown
-                if (this.enemy.cooldownTimer.isStopped)
-                {
-                    if (Math.random() < 0.005)
-                    {
+                if (this.enemy.cooldownTimer.isStopped) {
+                    if (Math.random() < 0.005) {
                         this.enemy.shoot(lookDirection);
                         this.enemy.cooldownTimer.start();
                     }
                 }
             }
 
-            else if (this.enemy.type.displayName == "bulletman"){
-                //just like a bullet in 5 minute :()
+            else if (this.enemy.type.displayName == "bulletman") {
+                //just like a bullet in 5 minute :(
                 let lookDirection = this.owner.position.dirTo(this.player.position);
                 this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
                 this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT))
-                if (this.enemy.cooldownTimer.isStopped)
-                {
-                    if (Math.random() < 0.005)
-                    {   
+                if (this.enemy.cooldownTimer.isStopped) {
+                    if (Math.random() < 0.005) {
                         this.enemy.cooldownTimer.start();
-                        this.enemy.speed = this.enemy.speed*1.2;
-                        this.owner.move(lookDirection.normalized().scale(this.enemy.speed*deltaT));
+                        this.enemy.speed = this.enemy.speed * 1.2;
+                        this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
                     }
-                
-                    else{
+
+                    else {
                         this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT))
                     }
                 }
 
             }
 
+            else if (this.enemy.type.displayName == "hand") {
+                this.timer++;
+                if (this.mode == 0) {
+                    if (this.timer <= 240) {
+                    }
+                    else {
+                        this.timer = 0;
+                        this.mode = 1; //windup
+                        //lockon
+                        this.placeHolder = new Vec2(this.player.positionX, this.player.positionY);
+                        let lookDirection = this.owner.position.dirTo(this.player.position);
+                        this.owner.rotation = (Vec2.UP.angleToCCW(lookDirection));
+
+                        //move
+                        this.enemy.speed = -100
+                        this.moveDirection = lookDirection;
+                        this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
+                    }
+                }
+                else if (this.mode == 1) {
+                    this.timer++;
+                    if (this.timer < 30) {
+                        //windup
+                        this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
+                    }
+                    else {
+                        //move
+                        this.enemy.speed = 150;
+                        this.mode = 2;//attack
+                    }
+                }
+                else if (this.mode == 2) {
+                    if(this.owner.collisionShape.containsPoint(this.placeHolder)){
+                        //cooldown
+                        this.mode=0;
+                        this.timer =0;
+                    }
+                    else{
+                        //move
+                        this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT));
+
+                    }
+                }
+
+            }
+
             // disruptor -> Disables tower function until it's destroyed
-            else if (this.enemy.type.displayName == "disruptor") 
-            {
+            else if (this.enemy.type.displayName == "disruptor") {
                 /* for (let tower of this.towerData.towers)
                 {
                     for (let sp of this.spellData.spells)
@@ -228,40 +273,40 @@ export default class EnemyAI extends ControllerAI
 
                 let lookDirection = this.owner.position.dirTo(Vec2.ZERO);
                 // Enemy shouldn't shoot (just enforces it)
-                if (this.enemy.cooldownTimer.isStopped()){
-                    if (Math.random() < 0){
+                if (this.enemy.cooldownTimer.isStopped()) {
+                    if (Math.random() < 0) {
                         this.enemy.shoot(lookDirection);
                         this.enemy.cooldownTimer.start();
                     }
                 }
-                
+
             }
-            
-            for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
-                if (this.enemy == enemy){
+
+            for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()) {
+                if (this.enemy == enemy) {
                     continue;
                 }
                 // Push enemies out of each other if they overlap
                 if (this.owner.collisionShape.overlaps(enemy.owner.collisionShape)) {
-                    if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x){
+                    if (this.owner.collisionShape.center.x > enemy.owner.collisionShape.center.x) {
                         this.owner.move(Vec2.RIGHT.scaled(this.enemy.speed * deltaT));
                     }
-                    if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x){
+                    if (this.owner.collisionShape.center.x < enemy.owner.collisionShape.center.x) {
                         this.owner.move(Vec2.LEFT.scaled(this.enemy.speed * deltaT));
                     }
-                    if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y){
+                    if (this.owner.collisionShape.center.y > enemy.owner.collisionShape.center.y) {
                         this.owner.move(Vec2.DOWN.scaled(this.enemy.speed * deltaT));
                     }
-                    if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y){
+                    if (this.owner.collisionShape.center.y < enemy.owner.collisionShape.center.y) {
                         this.owner.move(Vec2.UP.scaled(this.enemy.speed * deltaT));
                     }
                 }
             }
         }
         // Destroy dead enemy
-        else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")){
+        else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")) {
             // Only destroy dead enemy when dying animation is done
-            for (let label of this.enemy.damageNumber){
+            for (let label of this.enemy.damageNumber) {
                 if (label != null) {
                     label.destroy();
                     label = null;
@@ -272,8 +317,7 @@ export default class EnemyAI extends ControllerAI
         }
     }
 
-    initializeAI(owner: AnimatedSprite, options: Record<string, any>): void 
-    {
+    initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.moveDirection = Vec2.ZERO;
 
