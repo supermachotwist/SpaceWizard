@@ -1,0 +1,40 @@
+{
+    "enemies": [
+        {
+            "type": "enemyUFO",
+            "loot": "Meteor",
+            "position": [1100, 600]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [1100, 1200]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [200, 1000]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [2000, 1000]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1550, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1250, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [950, 625]
+        }
+   
+    ]
+}

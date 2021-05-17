@@ -1,0 +1,75 @@
+{
+    "enemies": [
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [700, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [800, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [900, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1000, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1100, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1250, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1400, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1500, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1600, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1700, 100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [1800, 100]
+        },        
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1550, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1250, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [950, 625]
+        }
+   
+    ]
+}

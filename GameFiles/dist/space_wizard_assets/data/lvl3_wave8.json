@@ -1,0 +1,34 @@
+{
+    "enemies": [
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [200, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [1050, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [1900, 400]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1550, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1250, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [950, 625]
+        }
+    ]
+}

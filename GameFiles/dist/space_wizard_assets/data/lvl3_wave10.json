@@ -1,0 +1,90 @@
+{
+    "enemies": [
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 200]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 225]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 250]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 275]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 300]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 325]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 350]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 1000]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 1025]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 1050]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 1075]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 1100]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 1125]
+        },
+        {
+            "type": "bulletman",
+            "loot": "NULL",
+            "position": [200, 1125]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1550, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [1250, 625]
+        },
+        {
+            "type": "disruptor",
+            "loot": "NULL",
+            "position": [950, 625]
+        }
+   
+    ]
+}
