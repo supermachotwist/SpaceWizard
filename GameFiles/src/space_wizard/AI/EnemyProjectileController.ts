@@ -69,12 +69,23 @@ export default class EnemyProjectileController extends ControllerAI {
             this.owner.move(this.direction.normalized().scale(this.speed * deltaT));
 
             // Detonate the spell on impact with side of screen
-            if (this.owner.position.x < 16 || this.owner.position.x > (<GameLevel>this.owner.getScene()).background.boundary.right- 16 || this.owner.position.y < 16 || this.owner.position.y > (<GameLevel>this.owner.getScene()).background.boundary.bottom - 16) {
-                this.destroyProjectile();
-            } else {
-                this.owner.animation.playIfNotAlready("MOVING", true);
+            let boundary = (<GameLevel>this.owner.getScene()).background.boundary;
+            let view = (<GameLevel>this.owner.getScene()).getViewport().getView();
+            if (this.owner.imageId == "asteroid") {
+                if (this.owner.position.x < boundary.left + 16 || this.owner.position.x > boundary.right - 16 || this.owner.position.y < boundary.top + 16 || this.owner.position.y > boundary.bottom - 16) {
+                    this.destroyProjectile();
+                } else {
+                    this.owner.animation.playIfNotAlready("MOVING", true);
+                }
             }
-
+            else {
+                if (this.owner.position.x < view.left + 16 || this.owner.position.x > view.right - 16 || this.owner.position.y < view.top + 16 || this.owner.position.y > view.bottom - 16) {
+                    this.destroyProjectile();
+                } else {
+                    this.owner.animation.playIfNotAlready("MOVING", true);
+                }
+            }
+            
             // If the projectile hits the player
             if (this.owner.collisionShape.overlaps(this.player.collisionShape)) {
                 this.destroyProjectile();

@@ -60,6 +60,21 @@ export default class level5 extends GameLevel {
         cookiePlanet.position.set(center.x, 2*center.y  - 64);
     }
 
+    updateScene(deltaT: number) {
+        super.updateScene(deltaT);
+
+        this.waveLabel.text = "Wave: " + this.wave + "/10";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 10){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
+            }
+            else {
+                this.emitter.fireEvent(space_wizard_events.WAVE_END);
+            }
+        }
+    }
+
     loadScene(): void {
         super.loadScene();
 

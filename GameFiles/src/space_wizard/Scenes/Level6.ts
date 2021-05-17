@@ -38,7 +38,7 @@ import Level7 from "./Level7";
 
 
 
-export default class level5 extends GameLevel {
+export default class level6 extends GameLevel {
 
     initScene(init: Record<string, any>):void {
         this.infiniteLives = init.infiniteLives;
@@ -58,6 +58,21 @@ export default class level5 extends GameLevel {
         let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
         cookiePlanet.scale.scale(20);
         cookiePlanet.position.set(center.x, 2*center.y  - 64);
+    }
+
+    updateScene(deltaT: number) {
+        super.updateScene(deltaT);
+
+        this.waveLabel.text = "Wave: " + this.wave + "/10";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 10){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
+            }
+            else {
+                this.emitter.fireEvent(space_wizard_events.WAVE_END);
+            }
+        }
     }
 
     loadScene(): void {

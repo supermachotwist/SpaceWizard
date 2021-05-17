@@ -28,11 +28,14 @@ export default class Splash extends Scene {
     animatedSprite: AnimatedSprite;
     loadScene(): void {
         this.load.image("splash", "space_wizard_assets/images/Space Wizard Logo.png");
+        this.load.image("space", "space_wizard_assets/images/Space.png");
+        this.load.image("redPlanet", "space_wizard_assets/images/Red Planet.png");
+        this.load.image("greenPlanet", "space_wizard_assets/images/Green Planet.png");
+        this.load.image("moon", "space_wizard_assets/images/Moon.png");
 
         //Load music and sound effects
         this.load.audio("mainMenuMusic", "space_wizard_assets/music/menu music.wav");
         this.load.audio("levelMusic", "space_wizard_assets/music/level music.wav");
-
     }
 
     unloadScene():void{
@@ -42,12 +45,30 @@ export default class Splash extends Scene {
 
     startScene(): void {
         this.addUILayer("splashScreen");
-        this.logo = this.add.sprite("splash", "splashScreen")
+        this.addLayer("background", -50);
+        this.addLayer("planet", -49);
+        this.logo = this.add.sprite("splash", "splashScreen");
         let center = this.viewport.getCenter();
         this.logo.position.set(center.x, center.y);
         this.viewport.setFocus(this.viewport.getHalfSize());
 
-        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, { key: "splashMusic", loop: false, holdReference: true });
+        // Create background images
+        let background = this.add.sprite("space", "background");
+        background.position.set(center.x, center.y);
+
+        let redPlanet = this.add.sprite("redPlanet", "planet");
+        redPlanet.scale.set(4,4);
+        redPlanet.position.set(center.x - 300, center.y);
+
+        let moon = this.add.sprite("moon", "planet");
+        moon.scale.set(4,4);
+        moon.position.set(center.x, center.y);
+
+        let greenPlanet = this.add.sprite("greenPlanet", "planet");
+        greenPlanet.scale.set(4,4);
+        greenPlanet.position.set(center.x + 300, center.y);
+
+        this.emitter.fireEvent(GameEventType.PLAY_MUSIC, { key: "mainMenuMusic", loop: true, holdReference: true });
 
         let clickToContinue = <Label> this.add.uiElement(UIElementType.LABEL,"splashScreen",{position: new Vec2(center.x,center.y+200),text:"Click To Start"});
         clickToContinue.textColor = Color.WHITE;
@@ -56,7 +77,7 @@ export default class Splash extends Scene {
 
     updateScene(): void {
         if (Input.isMousePressed()) {
-          //  this.emitter.fireEvent(GameEventType.PLAY_MUSIC, { key: "splashMusic", loop: false, holdReference: true });
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "mainMenuMusic"});
             this.sceneManager.changeToScene(MainMenu, {}, {});
         }
 
