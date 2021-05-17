@@ -225,12 +225,12 @@ export default class EnemyAI extends ControllerAI
             }
 
             else if (this.enemy.type.displayName == "deathstar"){
-                if (this.moveDirection.isZero()) {
-                    this.moveDirection.set(1,1);
-                }
                 let viewport = (<GameLevel>this.enemy.owner.getScene()).getViewport()
                 // Bounce the enemy around the viewport
                 if (viewport.includes(this.enemy.owner)) {
+                    if (this.moveDirection.isZero()) {
+                        this.moveDirection.set(1,1);
+                    }
                     if (this.enemy.owner.position.x >= viewport.getView().right - 32){
                         this.moveDirection.x = -1;
                     }
@@ -243,8 +243,8 @@ export default class EnemyAI extends ControllerAI
                     if (this.enemy.owner.position.y < viewport.getView().top + 32){
                         this.moveDirection.y = 1;
                     }
+                    this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT))
                 }
-                this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT))
             }
             
             // Stargate -> periodically spawns enemies
