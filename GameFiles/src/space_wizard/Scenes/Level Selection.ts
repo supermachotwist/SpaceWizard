@@ -26,6 +26,7 @@ export default class LevelSelection extends Scene {
     }
 
     loadScene():void{
+        super.loadScene();
     }
 
     startScene():void{
@@ -52,6 +53,7 @@ export default class LevelSelection extends Scene {
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "mainMenuMusic"});
         this.load.keepAudio("mainMenuMusic");
         this.load.keepAudio("levelMusic");
+        this.load.keepSpritesheet("background");
     }
 
     createLevelSelection():void{

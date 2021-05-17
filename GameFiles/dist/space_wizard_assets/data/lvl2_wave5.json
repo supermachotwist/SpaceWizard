@@ -1,0 +1,19 @@
+{
+    "enemies": [
+        {
+            "type": "deathstar",
+            "loot": "NULL",
+            "position": [900, 1000]
+        },
+        {
+            "type": "deathstar",
+            "loot": "NULL",
+            "position": [1200, 1000]
+        },
+        {
+            "type": "deathstar",
+            "loot": "NULL",
+            "position": [1500, 1000]
+        }
+    ]
+}

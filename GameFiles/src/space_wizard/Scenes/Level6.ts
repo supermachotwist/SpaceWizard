@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import PlayerController from "../AI/PlayerController";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -240,13 +241,62 @@ export default class level6 extends GameLevel {
                     },{});
                     break;
                 }
+=======
+import { space_wizard_events } from "../space_wizard_events";
+import GameLevel from "./Gamelevel";
+import Level1 from "./Level1";
+import MainMenu from "./MainMenu";
+
+
+
+
+export default class Level6 extends GameLevel {
+    loadScene(): void {
+        super.loadScene();
+
+        this.load.image("space", "space_wizard_assets/images/Space2.png");
+        this.load.image("planet", "space_wizard_assets/images/Moon.png");
+    }
+
+    startScene(): void {
+        super.startScene();
+        this.nextLevel = Level1;
+    }
+
+    updateScene(deltaT: number) {
+        super.updateScene(deltaT);
+
+        this.waveLabel.text = "Wave: " + this.wave + "/10";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 10){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
+            }
+            else {
+                this.emitter.fireEvent(space_wizard_events.WAVE_END);
+>>>>>>> c9a60f1e41a59ea05b867c3982eb371abc9b8b42
             }
         }
     }
 
+<<<<<<< HEAD
 
     subscribeToEvents() {
         super.subscribeToEvents();
         this.receiver.subscribe([space_wizard_events.SPAWN_BULLETMAN]);
+=======
+    createBackground(): void {
+        this.background = this.add.sprite("space", "background");
+
+        // Now, let's make sure our logo is in a good position
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
+
+        // Create the cookie planet background
+        let redPlanet = this.add.sprite("planet", "cookie");
+        redPlanet.scale.scale(8);
+        redPlanet.position.set(center.x, center.y);
+>>>>>>> c9a60f1e41a59ea05b867c3982eb371abc9b8b42
     }
 }

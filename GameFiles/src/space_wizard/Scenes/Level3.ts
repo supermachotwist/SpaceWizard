@@ -14,12 +14,6 @@ import Level4 from "./Level4";
 
 export default class Level3 extends GameLevel {
 
-    initScene(init: Record<string, any>):void {
-        this.infiniteLives = init.infiniteLives;
-        this.infiniteMana = init.infiniteMana;
-        this.allSpells = init.allSpells;
-    }
-
     loadScene(): void {
         super.loadScene();
 
@@ -34,6 +28,9 @@ export default class Level3 extends GameLevel {
         this.load.object("wave2", "space_wizard_assets/data/lvl3_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl3_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl3_wave4.json");
+
+        this.load.image("space", "space_wizard_assets/images/Space_Alternate.png");
+        this.load.image("planet", "space_wizard_assets/images/Red Planet.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -41,73 +38,35 @@ export default class Level3 extends GameLevel {
     // Once again, this occurs strictly after loadScene(), so anything you loaded there will be available
     startScene(): void {
         super.startScene();
-    }
-
-    spawnEnemies(): void {
-        let enemyData;
-        // Get the enemy data
-        if (this.wave%4 == 1){
-            enemyData = this.load.getObject("wave1");
-        } else if (this.wave%4 == 2){
-            enemyData = this.load.getObject("wave2");
-        } else if (this.wave%4 == 3){
-            enemyData = this.load.getObject("wave3");
-        } else if (this.wave%4 == 0){
-            enemyData = this.load.getObject("wave4");
-        }
-
-        for (let enemy of enemyData.enemies) {
-            let enemySprite;
-            let enemyType;
-            let towerData = this.load.getObject("towerData");
-            // Spawn appropriate enemy
-            if (enemy.type == "spikeEnemy"){
-                enemySprite = this.add.animatedSprite("spikeEnemy", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new spikeEnemy();
-            }
-            else if (enemy.type == "disruptor"){
-                enemySprite = this.add.animatedSprite("disruptor", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new disruptor();
-            }
-            
-            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
-            enemySprite.addAI(EnemyAI, {
-                player: this.player,
-                enemy: enemyClass,
-                towerData: towerData
-            });
-            enemySprite.animation.play("IDLE", true);
-            this.enemies.push(enemyClass);
-        }
+        this.nextLevel = Level4;
     }
 
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 
-        if (this.enemies.length == 0){
-            this.createShop();
-            this.wave += 1;
-            if (this.wave == 5){
-                this.sceneManager.changeToScene(Level4,{
-                infiniteLives: this.infiniteLives,
-                infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
-            },{});
-            this.emitter.fireEvent(space_wizard_events.LEVEL_END);
+        this.waveLabel.text = "Wave: " + this.wave + "/4";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 4){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
             }
             else {
-                this.waveLabel.text = "Wave: " + this.wave + "/4";
-                this.spawnEnemies();
                 this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
+    }
+
+    createBackground(): void {
+        this.background = this.add.sprite("space", "background");
+
+        // Now, let's make sure our logo is in a good position
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
+
+        // Create the cookie planet background
+        let redPlanet = this.add.sprite("planet", "cookie");
+        redPlanet.scale.scale(8);
+        redPlanet.position.set(center.x, center.y);
     }
 }

@@ -70,7 +70,7 @@
             ]
         },
         {
-            "name": "FIRING",
+            "name": "ATTACKING",
             "frames": [
                 {
                     "index": 4,

@@ -63,9 +63,6 @@ export default class level5 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
-        // Enemy Spritesheets
-        this.load.spritesheet("bulletman", "space_wizard_assets/spritesheets/bulletman.json");
-
         this.load.object("towerData", "space_wizard_assets/data/lvl3_towers.json");
         this.load.object("wave1", "space_wizard_assets/data/lvl5_wave1.json");
         this.load.object("wave2", "space_wizard_assets/data/lvl5_wave2.json");
@@ -111,7 +108,7 @@ export default class level5 extends GameLevel {
 
             }
             
-            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
+            let enemyClass = new Enemy(enemySprite, enemyType);
             enemySprite.addAI(EnemyAI, {
                 player: this.player,
                 enemy: enemyClass,
@@ -136,4 +133,19 @@ export default class level5 extends GameLevel {
             }
         }
     }
+
+    // createBackground(): void {
+    //     this.background = this.add.sprite("space", "background");
+
+    //     // Now, let's make sure our logo is in a good position
+    //     this.background.scale.set(2,2);
+    //     let center = this.background.boundary.getHalfSize();
+    //     this.background.position.set(center.x, center.y);
+
+    //     // Create the cookie planet background
+    //     let redPlanet = this.add.animatedSprite("planet", "cookie");
+    //     redPlanet.scale.scale(8);
+    //     redPlanet.position.set(center.x, center.y);
+    //     redPlanet.animation.play("PLAY", true);
+    // }
 }

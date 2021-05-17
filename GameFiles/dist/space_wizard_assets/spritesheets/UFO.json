@@ -77,6 +77,24 @@
             ]
         },
         {
+            "name": "ATTACKING",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 18,
+                    "duration": 6
+                },
+                {
+                    "index": 19,
+                    "duration": 6
+                },
+                {
+                    "index": 20,
+                    "duration": 6
+                }
+            ]
+        },
+        {
             "name": "DYING",
             "repeat": false,
             "frames": [

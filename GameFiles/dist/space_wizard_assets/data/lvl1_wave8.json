@@ -1,0 +1,19 @@
+{
+    "enemies": [
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [1200, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [900, 400]
+        },
+        {
+            "type": "stargate",
+            "loot": "NULL",
+            "position": [1500, 400]
+        }
+    ]
+}

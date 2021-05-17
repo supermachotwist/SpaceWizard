@@ -36,6 +36,11 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import CurrencyAI from "../AI/CurrencyAI";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
+import stargateEnemy from "../GameSystems/Enemys/EnemyTypes/Stargate";
+import Deathstar from "../GameSystems/Enemys/EnemyTypes/DeathStar";
+import Bulletman from "../GameSystems/Enemys/EnemyTypes/Bulletman";
+import spikeEnemy from "../GameSystems/Enemys/EnemyTypes/SpikeEnemy";
+import disruptor from "../GameSystems/Enemys/EnemyTypes/Disruptor";
 
 
 export default class GameLevel extends Scene {
@@ -138,6 +143,11 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("enemyUFO", "space_wizard_assets/spritesheets/UFO.json");
         this.load.spritesheet("enemySpaceship", "space_wizard_assets/spritesheets/enemy_spaceship.json");
         this.load.spritesheet("shieldEnemy", "space_wizard_assets/spritesheets/shield_enemy.json");
+        this.load.spritesheet("stargate", "space_wizard_assets/spritesheets/stargate.json");
+        this.load.spritesheet("bulletman", "space_wizard_assets/spritesheets/bulletman.json");
+        this.load.spritesheet("deathstar", "space_wizard_assets/spritesheets/DeathStar.json");
+        this.load.spritesheet("disruptor", "space_wizard_assets/spritesheets/disruptor.json");
+        this.load.spritesheet("spikeEnemy", "space_wizard_assets/spritesheets/spike_enemy.json");
         this.load.spritesheet("enemyProjectile", "space_wizard_assets/spritesheets/EnemyProjectile.json");
 
         // Currency Spritesheet
@@ -153,11 +163,17 @@ export default class GameLevel extends Scene {
         this.load.image("laserSprite", "space_wizard_assets/sprites/laser.png");
         this.load.image("blackholeSprite", "space_wizard_assets/sprites/blackhole.png");
 
-        this.load.object("towerData", "space_wizard_assets/data/towers.json");
+        this.load.object("towerData", "space_wizard_assets/data/lvl1_towers.json");
         this.load.object("wave1", "space_wizard_assets/data/lvl1_wave1.json");
         this.load.object("wave2", "space_wizard_assets/data/lvl1_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl1_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl1_wave4.json");
+        this.load.object("wave5", "space_wizard_assets/data/lvl1_wave5.json");
+        this.load.object("wave6", "space_wizard_assets/data/lvl1_wave6.json");
+        this.load.object("wave7", "space_wizard_assets/data/lvl1_wave7.json");
+        this.load.object("wave8", "space_wizard_assets/data/lvl1_wave8.json");
+        this.load.object("wave9", "space_wizard_assets/data/lvl1_wave9.json");
+        this.load.object("wave10", "space_wizard_assets/data/lvl1_wave10.json");
 
         // Navmesh for Enemies
         this.load.object("navmesh", "space_wizard_assets/data/navmesh.json");
@@ -293,20 +309,32 @@ export default class GameLevel extends Scene {
         // Create the cookie planet background
         let cookiePlanet = this.add.sprite("cookiePlanet", "cookie");
         cookiePlanet.scale.scale(20);
-        cookiePlanet.position.set(center.x, 2*center.y  - 64);
+        cookiePlanet.position.set(center.x, 2*center.y  - 200);
     }
 
     spawnEnemies(): void {
         let enemyData;
         // Get the enemy data
-        if (this.wave%4 == 1){
+        if (this.wave == 1){
             enemyData = this.load.getObject("wave1");
-        } else if (this.wave%4 == 2){
+        } else if (this.wave == 2){
             enemyData = this.load.getObject("wave2");
-        } else if (this.wave%4 == 3){
+        } else if (this.wave == 3){
             enemyData = this.load.getObject("wave3");
-        } else if (this.wave%4 == 0){
+        } else if (this.wave == 4){
             enemyData = this.load.getObject("wave4");
+        } else if (this.wave == 5){
+            enemyData = this.load.getObject("wave5");
+        } else if (this.wave == 6){
+            enemyData = this.load.getObject("wave6");
+        } else if (this.wave == 7){
+            enemyData = this.load.getObject("wave7");
+        } else if (this.wave == 8){
+            enemyData = this.load.getObject("wave8");
+        } else if (this.wave == 9){
+            enemyData = this.load.getObject("wave9");
+        } else if (this.wave == 10){
+            enemyData = this.load.getObject("wave10");
         }
 
         for (let enemy of enemyData.enemies) {
@@ -340,8 +368,50 @@ export default class GameLevel extends Scene {
 
                 enemyType = new shieldEnemy();
             }
-            
-            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
+            else if(enemy.type == "stargate") {
+                enemySprite = this.add.animatedSprite("stargate", "primary");
+                enemySprite.scale.scale(3);
+                // Add collision to sprite
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
+                enemyType = new stargateEnemy();
+            }
+            else if(enemy.type == "deathstar") {
+                enemySprite = this.add.animatedSprite("deathstar", "primary");
+                enemySprite.scale.scale(2);
+                // Add collision to sprite
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
+                enemyType = new Deathstar();
+            }
+            else if (enemy.type == "bulletman"){
+                enemySprite = this.add.animatedSprite("bulletman", "primary");
+                // Add collision to sprite
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
+                enemyType = new Bulletman()
+            }
+            else if (enemy.type == "spikeEnemy"){
+                enemySprite = this.add.animatedSprite("spikeEnemy", "primary");
+                // Add collision to sprite
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
+                enemyType = new spikeEnemy();
+            }
+            else if (enemy.type == "disruptor"){
+                enemySprite = this.add.animatedSprite("disruptor", "primary");
+                // Add collision to sprite
+                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
+                enemySprite.position.set(enemy.position[0], enemy.position[1]);
+
+                enemyType = new disruptor();
+            }
+
+            let enemyClass = new Enemy(enemySprite, enemyType);
             enemySprite.addAI(EnemyAI, {
                 player: this.player,
                 enemy: enemyClass
@@ -447,13 +517,10 @@ export default class GameLevel extends Scene {
             }
         }
 
-        // Get center of viewport
-        let center = this.viewport.getCenter();
-
         // Create the player
         this.player = this.add.animatedSprite("player", "primary");
         this.player.scale.scale(0.5);
-        this.player.position.set(center.x, center.y + 300);
+        this.player.position.set(1200, 1500);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(25, 25)));
         this.player.addAI(PlayerController,{
             inventory: this.inventory,
@@ -955,7 +1022,7 @@ export default class GameLevel extends Scene {
             if (this.currencyCount >= this.forkLevel * 30){
                 this.currencyCount -= this.forkLevel * 30
                 this.forkLevel++;
-                forkButton.text = "Fork Tower lvl" + this.forkLevel + ": " + this.forkLevel * 50;
+                forkButton.text = "Fork Tower lvl" + this.forkLevel + ": " + this.forkLevel * 30;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
             }
             else {
@@ -972,7 +1039,7 @@ export default class GameLevel extends Scene {
             if (this.currencyCount >= this.pierceLevel * 30){
                 this.currencyCount -= this.pierceLevel * 30
                 this.pierceLevel++;
-                pierceButton.text = "Pierce Tower lvl" + this.pierceLevel + ": " + this.pierceLevel * 50;
+                pierceButton.text = "Pierce Tower lvl" + this.pierceLevel + ": " + this.pierceLevel * 30;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
             }
             else {
@@ -989,7 +1056,7 @@ export default class GameLevel extends Scene {
             if (this.currencyCount >= this.explosionLevel * 30){
                 this.currencyCount -= this.explosionLevel * 30
                 this.explosionLevel++;
-                explosionButton.text = "Explosion Tower lvl" + this.explosionLevel + ": " + this.explosionLevel * 50;
+                explosionButton.text = "Explosion Tower lvl" + this.explosionLevel + ": " + this.explosionLevel * 30;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "purchase", loop: false, holdReference: false});
             }
             else {

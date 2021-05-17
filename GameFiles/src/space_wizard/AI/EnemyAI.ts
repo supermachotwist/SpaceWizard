@@ -195,8 +195,9 @@ export default class EnemyAI extends ControllerAI {
                 if (this.enemy.cooldownTimer.isStopped) {
                     if (Math.random() < 0.005) {
                         this.enemy.cooldownTimer.start();
-                        this.enemy.speed = this.enemy.speed * 1.2;
-                        this.owner.move(lookDirection.normalized().scale(this.enemy.speed * deltaT));
+                        this.enemy.speed = this.enemy.speed*1.2;
+                        this.enemy.owner.animation.playIfNotAlready("ATTACKING");
+                        this.owner.move(lookDirection.normalized().scale(this.enemy.speed*deltaT));
                     }
 
                     else {
@@ -217,38 +218,88 @@ export default class EnemyAI extends ControllerAI {
             }
 
             // disruptor -> Disables tower function until it's destroyed
-            else if (this.enemy.type.displayName == "disruptor") {
-                /* for (let tower of this.towerData.towers)
+            else if (this.enemy.type.displayName == "disruptor") 
+            {
+                for (let tower of (<GameLevel>this.owner.getScene()).towers)
                 {
-                    for (let sp of this.spellData.spells)
-                    {
-                        if(tower.type === "fork" || tower.type === "explosion"
-                        || tower.type === "pierce")
-                        {
-                            if(sp.type == "meteor"|| sp.type === "comet"
-                            || sp.type === "laser" || sp.type === "blackhole")
-                            {
-                                this.spell.fork = false;
-                                this.spell.explosion = false;
-                                this.spell.pierce = false;
-                            }
-                        }
+                    if (this.enemy.owner.collisionShape.overlaps(tower.owner.collisionShape)){
+                        tower.stopAnimation();
+                        tower.disabled = true;
                     }
-                }*/
-
-                let lookDirection = this.owner.position.dirTo(Vec2.ZERO);
-                // Enemy shouldn't shoot (just enforces it)
-                if (this.enemy.cooldownTimer.isStopped()) {
-                    if (Math.random() < 0) {
-                        this.enemy.shoot(lookDirection);
-                        this.enemy.cooldownTimer.start();
-                    }
-                }
-
+                }                
             }
 
-            for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()) {
-                if (this.enemy == enemy) {
+            else if (this.enemy.type.displayName == "deathstar"){
+                let viewport = (<GameLevel>this.enemy.owner.getScene()).getViewport()
+                // Bounce the enemy around the viewport
+                if (viewport.includes(this.enemy.owner)) {
+                    if (this.moveDirection.isZero()) {
+                        this.moveDirection.set(1,1);
+                    }
+                    if (this.enemy.owner.position.x >= viewport.getView().right - 32){
+                        this.moveDirection.x = -1;
+                    }
+                    if (this.enemy.owner.position.x < viewport.getView().left + 32){
+                        this.moveDirection.x = 1;
+                    }
+                    if (this.enemy.owner.position.y >= viewport.getView().bottom - 100){
+                        this.moveDirection.y = -1;
+                    }
+                    if (this.enemy.owner.position.y < viewport.getView().top + 32){
+                        this.moveDirection.y = 1;
+                    }
+                    this.owner.move(this.moveDirection.normalized().scale(this.enemy.speed * deltaT))
+                }
+            }
+            
+            // Stargate -> periodically spawns enemies
+            else if (this.enemy.type.displayName == "stargate"){
+                if (this.enemy.cooldownTimer.isStopped()){
+                    let rand = Math.random();
+                    let enemySprite: AnimatedSprite;
+                    let enemyType: EnemyType;
+
+                    if (rand <= 0.33){
+                        enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("bulletman", "primary");
+                        // Add collision to sprite
+                        enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
+                        enemySprite.position.set(this.enemy.owner.position.x, this.enemy.owner.position.y);
+
+                        enemyType = new Bulletman();
+                    }
+                    else if (rand >= 0.66){
+                        enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("enemyUFO", "primary");
+                        // Add collision to sprite
+                        enemySprite.scale.scale(2);
+                        enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
+                        enemySprite.position.set(this.enemy.owner.position.x, this.enemy.owner.position.y);
+
+                        enemyType = new enemyUFO();
+                    }
+                    else {
+                        enemySprite = (<GameLevel>this.owner.getScene()).add.animatedSprite("enemySpaceship", "primary");
+                        enemySprite.scale.scale(0.5);
+                        // Add collision to sprite
+                        enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
+                        enemySprite.position.set(this.enemy.owner.position.x, this.enemy.owner.position.y);
+
+                        enemyType = new enemySpaceship();
+                    }
+                    
+
+                    let enemyClass = new Enemy(enemySprite, enemyType);
+                    enemySprite.addAI(EnemyAI, {
+                        player: this.player,
+                        enemy: enemyClass
+                    });
+                    enemySprite.animation.play("IDLE", true);
+                    (<GameLevel>this.owner.getScene()).enemies.push(enemyClass);
+                    this.enemy.cooldownTimer.start();
+                }
+            }
+            
+            for (let enemy of (<GameLevel>this.owner.getScene()).getEnemies()){
+                if (this.enemy == enemy || this.enemy.type.displayName == "stargate" || this.enemy.type.displayName == "deathstar"){
                     continue;
                 }
                 // Push enemies out of each other if they overlap
@@ -276,6 +327,15 @@ export default class EnemyAI extends ControllerAI {
                     label.destroy();
                     label = null;
                 }
+            }
+            if (this.enemy.displayName == "disruptor") {
+                for (let tower of (<GameLevel>this.owner.getScene()).towers)
+                {
+                    if (this.enemy.owner.collisionShape.overlaps(tower.owner.collisionShape)){
+                        tower.playAnimation();
+                        tower.disabled = false;
+                    }
+                } 
             }
             this.owner.visible = false;
             this.owner.destroy();

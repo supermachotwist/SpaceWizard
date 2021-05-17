@@ -19,12 +19,6 @@ export default class Level4 extends GameLevel {
 
     asteroidTimer: Timer;
 
-    initScene(init: Record<string, any>):void {
-        this.infiniteLives = init.infiniteLives;
-        this.infiniteMana = init.infiniteMana;
-        this.allSpells = init.allSpells;
-    }
-
     loadScene(): void {
         super.loadScene();
 
@@ -42,6 +36,9 @@ export default class Level4 extends GameLevel {
         this.load.object("wave2", "space_wizard_assets/data/lvl4_wave2.json");
         this.load.object("wave3", "space_wizard_assets/data/lvl4_wave3.json");
         this.load.object("wave4", "space_wizard_assets/data/lvl4_wave4.json");
+
+        this.load.image("space", "space_wizard_assets/images/Space2.png");
+        this.load.image("planet", "space_wizard_assets/images/Green Planet.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,
@@ -50,100 +47,30 @@ export default class Level4 extends GameLevel {
     startScene(): void {
         super.startScene();
         this.asteroidTimer = new Timer(2000);
-    }
-
-    spawnEnemies(): void {
-        let enemyData;
-        // Get the enemy data
-        if (this.wave%4 == 1){
-            enemyData = this.load.getObject("wave1");
-        } else if (this.wave%4 == 2){
-            enemyData = this.load.getObject("wave2");
-        } else if (this.wave%4 == 3){
-            enemyData = this.load.getObject("wave3");
-        } else if (this.wave%4 == 0){
-            enemyData = this.load.getObject("wave4");
-        }
-
-        for (let enemy of enemyData.enemies) {
-            let enemySprite;
-            let enemyType;
-            let towerData = this.load.getObject("towerData");
-            // Spawn appropriate enemy
-            if (enemy.type == "enemySpaceship") {
-                enemySprite = this.add.animatedSprite("enemySpaceship", "primary");
-                enemySprite.scale.scale(0.5);
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new enemySpaceship();
-            }
-            else if (enemy.type == "enemyUFO") {
-                enemySprite = this.add.animatedSprite("enemyUFO", "primary");
-                // Add collision to sprite
-                enemySprite.scale.scale(2);
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new enemyUFO();
-            }
-
-            if (enemy.type == "spikeEnemy"){
-                enemySprite = this.add.animatedSprite("spikeEnemy", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(30, 30)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new spikeEnemy();
-            }
-            else if (enemy.type == "disruptor"){
-                enemySprite = this.add.animatedSprite("disruptor", "primary");
-                // Add collision to sprite
-                enemySprite.addPhysics(new AABB(Vec2.ZERO, new Vec2(20, 20)));
-                enemySprite.position.set(enemy.position[0], enemy.position[1]);
-
-                enemyType = new disruptor();
-            }
-            
-            let enemyClass = new Enemy(enemySprite, enemyType, enemy.loot);
-            enemySprite.addAI(EnemyAI, {
-                player: this.player,
-                enemy: enemyClass,
-                towerData: towerData
-            });
-            enemySprite.animation.play("IDLE", true);
-            this.enemies.push(enemyClass);
-        }
+        this.nextLevel = level5;
     }
 
     initializePlayer(): void {
         super.initializePlayer();
-        this.player.position.set(600, 400);
+        this.player.position.set(1200, 900);
     }
+
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
-   
-        if (this.enemies.length == 0){
-            this.createShop();
-            this.wave += 1;
-            if (this.wave == 5){
-                this.sceneManager.changeToScene(level5,{
-                infiniteLives: this.infiniteLives,
-                infiniteMana: this.infiniteMana,
-                allSpells: this.allSpells
-            },{});
-            this.emitter.fireEvent(space_wizard_events.LEVEL_END);
+
+        this.waveLabel.text = "Wave: " + this.wave + "/4";
+        if (this.enemies.length == 0 && !this.waveEnd){
+            this.waveEnd = true;
+            if (this.wave == 4){
+                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
             }
             else {
-                this.waveLabel.text = "Wave: " + this.wave + "/4";
-                this.spawnEnemies();
                 this.emitter.fireEvent(space_wizard_events.WAVE_END);
             }
         }
 
         if (this.asteroidTimer.isStopped()){
-            this.spawnAsteroid(new Vec2(Math.random() * 1100 + 50,  0));
+            this.spawnAsteroid(new Vec2(Math.random() * 2200 + 50,  300));
             this.asteroidTimer.start();
         }
     }
@@ -151,7 +78,7 @@ export default class Level4 extends GameLevel {
     spawnAsteroid(position: Vec2){
         let rand = Math.random();
         let projectileSprite = this.add.animatedSprite("asteroid", "primary");
-        projectileSprite.scale.scale(rand * 2 + 0.5);
+        projectileSprite.scale.scale(rand * 4 + 0.5);
         projectileSprite.position.set(position.x, position.y);
         projectileSprite.addPhysics(new Circle(Vec2.ZERO, 50));
         //asteroid will go in a random diagonal direction
@@ -186,6 +113,20 @@ export default class Level4 extends GameLevel {
             reverseOnComplete: false,
         });
         projectileSprite.tweens.play("spin", true);
+    }
+
+    createBackground(): void {
+        this.background = this.add.sprite("space", "background");
+
+        // Now, let's make sure our logo is in a good position
+        this.background.scale.set(2,2);
+        let center = this.background.boundary.getHalfSize();
+        this.background.position.set(center.x, center.y);
+
+        // Create the cookie planet background
+        let redPlanet = this.add.sprite("planet", "cookie");
+        redPlanet.scale.scale(8);
+        redPlanet.position.set(center.x, center.y);
     }
 }
 
