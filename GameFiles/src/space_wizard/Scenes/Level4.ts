@@ -58,10 +58,10 @@ export default class Level4 extends GameLevel {
     updateScene(deltaT: number) {
         super.updateScene(deltaT);
 
-        this.waveLabel.text = "Wave: " + this.wave + "/4";
+        this.waveLabel.text = "Wave: " + this.wave + "/10";
         if (this.enemies.length == 0 && !this.waveEnd){
             this.waveEnd = true;
-            if (this.wave == 4){
+            if (this.wave == 10){
                 this.emitter.fireEvent(space_wizard_events.LEVEL_END);
             }
             else {
@@ -89,7 +89,7 @@ export default class Level4 extends GameLevel {
             direction = new Vec2(1, 1);
         if (rand >= .5 && rand < .75)
             direction = new Vec2(-1, 1);
-        let speed = 200 * this.wave;
+        let speed = 100 * this.wave;
         //asteroids get faster w/ each wave 
         projectileSprite.addAI(EnemyProjectileController, {
             speed: speed,
