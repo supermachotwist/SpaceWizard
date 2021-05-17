@@ -259,6 +259,16 @@ export default class EnemyAI extends ControllerAI {
                 }
             }
             
+            else if (this.enemy.displayName == "disruptor") {
+                for (let tower of (<GameLevel>this.owner.getScene()).towers)
+                {    
+                    if (this.enemy.owner.collisionShape.overlaps(tower.owner.collisionShape)){
+                        tower.playAnimation();
+                        tower.disabled = false;
+                    }
+                } 
+            }
+
             // Stargate -> periodically spawns enemies
             else if (this.enemy.type.displayName == "stargate"){
                 if (this.enemy.cooldownTimer.isStopped() && (<GameLevel>this.owner.getScene()).getEnemies().length < 10){
@@ -328,23 +338,24 @@ export default class EnemyAI extends ControllerAI {
                 }
             }
         }
+
         // Destroy dead enemy
         else if (this.enemy.dead && !this.owner.animation.isPlaying("DYING")) {
             // Only destroy dead enemy when dying animation is done
-            for (let label of this.enemy.damageNumber) {
-                if (label != null) {
-                    label.destroy();
-                    label = null;
-                }
-            }
-            if (this.enemy.displayName == "disruptor") {
+            if (this.enemy.displayName == "disruptor"){
                 for (let tower of (<GameLevel>this.owner.getScene()).towers)
-                {
+                {    
                     if (this.enemy.owner.collisionShape.overlaps(tower.owner.collisionShape)){
                         tower.playAnimation();
                         tower.disabled = false;
                     }
                 } 
+            }
+            for (let label of this.enemy.damageNumber) {
+                if (label != null) {
+                    label.destroy();
+                    label = null;
+                }
             }
             this.owner.visible = false;
             this.owner.destroy();
