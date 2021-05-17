@@ -1,29 +1,8 @@
 {
     "enemies": [
         {
-            "type": "stargate",
-            "loot": "NULL",
-            "position": [-64, -64]
-        },
-        {
-            "type": "stargate",
-            "loot": "NULL",
-            "position": [1000, -64]
-        },
-        {
-            "type": "stargate",
-            "loot": "NULL",
-            "position": [2464, -64]
-        },
-        {
-            "type": "stargate",
-            "loot": "NULL",
-            "position": [600, 1664]
-        },
-        {
-            "type": "stargate",
-            "loot": "NULL",
-            "position": [2464, 1664]
-        }
-    ]
-}
+            "type": "bulletman",
+            "loot": "none",
+            "position": [200, -200]
+        }]
+    }

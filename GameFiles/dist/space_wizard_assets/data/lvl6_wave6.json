@@ -139,6 +139,21 @@
             "type": "bulletman",
             "loot": "NULL",
             "position": [1000, 500]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [400, 1000]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [500, 1050]
+        },
+        {
+            "type": "enemyUFO",
+            "loot": "NULL",
+            "position": [300, 1050]
         }          
     ]
 }

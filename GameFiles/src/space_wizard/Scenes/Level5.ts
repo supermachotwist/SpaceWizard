@@ -83,19 +83,4 @@ export default class level5 extends GameLevel {
         super.startScene();
         this.nextLevel = Level6;
     }
-
-    updateScene(deltaT: number) {
-        super.updateScene(deltaT);
-
-        this.waveLabel.text = "Wave: " + this.wave + "/4";
-        if (this.enemies.length == 0 && !this.waveEnd){
-            this.waveEnd = true;
-            if (this.wave == 4){
-                this.emitter.fireEvent(space_wizard_events.LEVEL_END);
-            }
-            else {
-                this.emitter.fireEvent(space_wizard_events.WAVE_END);
-            }
-        }
-    }
 }

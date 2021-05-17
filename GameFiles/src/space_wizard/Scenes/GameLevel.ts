@@ -1243,7 +1243,7 @@ export default class GameLevel extends Scene {
         this.currencyLabel.textColor = Color.WHITE;
         this.currencyLabel.font = "AstroSpace";
 
-        this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1064, 760), text: "Wave: " + this.wave + "/4"});
+        this.waveLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(1064, 760), text: "Wave: " + this.wave + "/10"});
         this.waveLabel.textColor = new Color(91,91,91,1);
         this.waveLabel.font = "AstroSpace";
 
